@@ -7,5 +7,10 @@ module.exports = {
     theme: {
       extend: {},
     },
+    safelist: [
+    'focus:bg-blue-100',
+    'group-hover:text-blue-500',
+    'peer-focus:text-blue-500',
+    ],
     plugins: [],
   }

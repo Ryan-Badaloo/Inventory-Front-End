@@ -2,11 +2,10 @@
 import { RouterLink, RouterView } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 
-
 </script>
 
 <template>
-  <div>
+  <div class="bg-gray-200">
     <Navbar />
     <RouterView />
   </div>

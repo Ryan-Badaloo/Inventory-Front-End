@@ -1,0 +1,231 @@
+<template>
+
+    <div>
+        <div>
+            <SearchBar v-model="filter" :onSubmit="get_items">
+                <div class="w-2/3 flex justify-around items-center">
+                    <div class="">
+                        <input type="radio" id="brand_radio" name="category" value="Brand" v-model="search_category"
+                            class="peer hidden" />
+                        <label for="brand_radio"
+                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
+                                peer-checked:bg-blue-800 peer-checked:text-white
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                            Brand
+                        </label>
+                    </div>
+
+                    <div class="">
+                        <input type="radio" id="model_radio" name="category" value="Model" v-model="search_category"
+                            class="peer hidden" />
+                        <label for="model_radio"
+                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
+                                peer-checked:bg-blue-800 peer-checked:text-white
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                            Model
+                        </label>
+                    </div>
+
+                    <div class="">
+                        <input type="radio" id="serial_number_radio" name="category" value="Serial_Number" v-model="search_category"
+                            class="peer hidden" />
+                        <label for="serial_number_radio"
+                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
+                                peer-checked:bg-blue-800 peer-checked:text-white
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                            Serial Number
+                        </label>
+                    </div>
+                </div>
+
+            </SearchBar>
+        </div>
+
+
+        <SectionTemplate v-if="items.length > 0" template-name="Assign Devices">
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Brand
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Model
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Serial Number
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Inventory Number
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                System Status
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Delivery Date
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Deployment Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in items" :key="item.Item_ID" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ item.Brand }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Model }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Serial_Number }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Inventory_Number }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.System_Status }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Delivery_Date }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Deployment_Date }}
+                            </td>
+                            <td class="px-6 py-4 inline-block align-middle">
+                                    <button @click="console.log(add_to_cart(item))" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
+                                    add
+                                    </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </SectionTemplate>
+
+        <SectionTemplate v-if="cart.length > 0" template-name="Cart">
+            <div class="mb-6 relative overflow-x-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Brand
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Model
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Serial Number
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Inventory Number
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                System Status
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Delivery Date
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Deployment Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in cart" :key="item.Item_ID" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ item.Brand }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Model }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Serial_Number }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Inventory_Number }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.System_Status }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Delivery_Date }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.Deployment_Date }}
+                            </td>
+                            <td class="px-6 py-4 inline-block align-middle">
+                                <button @click="remove_from_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
+                                close
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="w-1/2 flex flex-row-reverse mb-6 group">
+                <select id="assign_to" :class="[option_field_class]">
+                    <option selected class="text-blue-100">Choose a Client</option>
+                    <option value="">Person 1</option>
+                    <option value="">Person 2</option>
+                    <option value="">Person 3</option>
+                </select>
+                <TextLabel labelFor="assign_to" fieldName="Assign To Client: "/>
+            </div>
+
+            <AddItemButton button-name="Assign To Client"/>
+
+        </SectionTemplate>
+    </div>
+
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import SectionTemplate from '../SectionTemplate.vue';
+import SearchBar from '../SearchBar.vue';
+import AddItemButton from '../AddItemButton.vue';
+import TextLabel from '../Fields/TextLabel.vue';
+
+import { option_field_class } from '@/utils/descriptions';
+
+const filter = ref(); //store the text typed into the search bar
+const items = ref([]); // Store the search results (list of items)
+const cart = ref([]); //Store the items in the cart
+const search_category = ref();
+
+
+async function get_items() {
+    try {
+        // const response = await axios.get(`http://localhost:8080/
+        const response = await axios.get(`http://localhost:8000/get_items_by_brand/${encodeURIComponent(filter.value)}`);
+        items.value = response.data;
+    } catch (error) {
+        console.error('Error finding item:', error.response?.data || error.message);
+        alert("Failed to find item. Check console.");
+    }
+}
+
+function add_to_cart(item) {
+    const alreadyInCart = cart.value.some(cartItem => cartItem.Item_ID === item.Item_ID);
+
+    if (!alreadyInCart) {
+        cart.value.push(item);
+    }
+}
+
+function remove_from_cart(item) {
+    const index = cart.value.findIndex(cartItem => cartItem.Item_ID === item.Item_ID);
+
+    if (index !== -1) {
+        cart.value.splice(index, 1);
+    }
+}
+</script>

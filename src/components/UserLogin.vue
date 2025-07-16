@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
     <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
       <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Login</h2>
 
@@ -10,7 +10,7 @@
             type="text"
             id="username"
             v-model="username"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
 
@@ -20,17 +20,21 @@
             type="password"
             id="password"
             v-model="password"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
 
         <button
           type="submit"
-          class="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          class="w-full py-2 px-4 cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow "
         >
           Login
         </button>
       </form>
+    </div>
+
+    <div>
+      <a href="" class="underline text-blue-700 hover:text-blue-400">Click Here To Register</a>
     </div>
   </div>
 </template>
@@ -53,9 +57,10 @@ export default {
         params.append('username', this.username);
         params.append('password', this.password);
 
-        const response = await axios.post('http://localhost:8000/login', params);
+        // const response = await axios.get(`http://localhost:8080/
+        const response = await axios.post(`http://localhost:8000/login`, params);
         localStorage.setItem('token', response.data.access_token);
-        this.$router.push('/test');
+        this.$router.push('/menu');
       } catch (error) {
         console.error(error);
       }

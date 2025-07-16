@@ -10,7 +10,7 @@
             type="text"
             id="username"
             v-model="username"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
 
@@ -20,13 +20,23 @@
             type="password"
             id="password"
             v-model="password"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          />
+        </div>
+
+        <div>
+          <label for="confirm_password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm_password"
+            v-model="confirm_password"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
 
         <button
           type="submit"
-          class="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          class="w-full py-2 px-4 cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow"
         >
           Register
         </button>
@@ -40,19 +50,25 @@
 import axios from 'axios';
 
 export default {
+  // Defines the vue component
   name: 'UserRegister',
+
+  // Stores data enters in the form
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      usertype: '',
     };
   },
   methods: {
     async register() {
       try {
+       // const response = await axios.get(`http://localhost:8080/
         const response = await axios.post('http://localhost:8000/register', {
           username: this.username,
-          password: this.password
+          password: this.password,
+          usertype: "regular"
         }, {
           headers: {
             'Content-Type': 'application/json'
