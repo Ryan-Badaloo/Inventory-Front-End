@@ -1,6 +1,6 @@
 <template>
 <SectionTemplate templateName="Keyboard">
-    <form @submit.prevent="createKeyboard()" class="space-y-4">
+    <form @submit.prevent="addKeyboard()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
             <TextField id="keyboard_brand" labelFor="keyboard_brand" fieldName="Brand: " v-model="keyboard_brand"/>
 
@@ -38,28 +38,74 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="keyboard_status" :class="[option_field_class]" class="bg-white" v-model="keyboard_status">
                     <option selected class="text-blue-100">Choose a Status</option>
-                    <option value="working">Working</option>
-                    <option value="malfunctioned">Malfunctioned/Being Repaired</option>
-                    <option value="being_upgraded">Being Upgraded</option>
-                    <option value="unassigned">Unassigned</option>
-                    <option value="stolen">Stolen</option>
-                    <option value="bos">BOS</option>
+                    <option value=1>Working</option>
+                    <option value=2>Malfunctioned/Being Repaired</option>
+                    <option value=3>Being Upgraded</option>
+                    <option value=4>Unassigned</option>
+                    <option value=5>Stolen</option>
+                    <option value=6>BOS</option>
                 </select>
                 <TextLabel labelFor="keyboard_status" fieldName="System Status: "/>
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="keyboard_connection_type" :class="[option_field_class]" class="bg-white" v-model="keyboard_connection_type">
+                    <option selected class="text-blue-100">Choose a Connection Type</option>
+                    <option value=1>Networked</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                    <option value=4>Option 4</option>
+                    <option value=5>Option 5</option>
+                    <option value=6>Option 6</option>
+                </select>
+                <TextLabel labelFor="keyboard_connection_type" fieldName="Connection Type: "/>
+            </div>
         </div>
 
-        <LocationOptions 
-        id_ministry="keyboard_ministry"
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-        id_division="keyboard_division"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="keyboard_parish" :class="[option_field_class]" class="bg-white" v-model="keyboard_parish">
+                    <option selected class="text-blue-100">Choose a Parish</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="keyboard_parish" fieldName="Parish" />
+            </div>
+            
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="keyboard_location_type" :class="[option_field_class]" class="bg-white" v-model="keyboard_location_type">
+                    <option selected class="text-blue-100">Choose a Location Type</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="keyboard_location_type" fieldName="Location Type" />
+            </div>
 
-        id_section="keyboard_section"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="keyboard_location" :class="[option_field_class]" class="bg-white" v-model="keyboard_location">
+                    <option selected class="text-blue-100">Choose a Location</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="keyboard_location" fieldName="Location" />
+            </div>
 
-        id_location="keyboard_location"
-        />
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="keyboard_division" :class="[option_field_class]" class="bg-white" v-model="keyboard_division">
+                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="keyboard_division" fieldName="Division" />
+            </div>
+        </div>
 
-        <CommentField id="keyboard_comment" labelFor="keyboard_comment" fieldName="Comment: "/>
+        <CommentField id="keyboard_comment" labelFor="keyboard_comment" fieldName="Comment: " v-model="keyboard_comment"/>
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>
@@ -92,41 +138,41 @@ const keyboard_inventory_number = ref();
 const keyboard_delivery_date = ref();
 const keyboard_deployment_date = ref();
 const keyboard_status = ref();
+const keyboard_connection_type = ref();
+const keyboard_parish = ref();
+const keyboard_location_type = ref();
+const keyboard_location = ref();
+const keyboard_division = ref();
+const keyboard_comment = ref();
 
-async function createKeyboard() {
+async function addKeyboard() {
     const keyboard = {
-        Brand: keyboard_brand.value,
-        Model: keyboard_model.value,
-        Serial_Number: keyboard_serial_number.value,
-        Inventory_Number: keyboard_inventory_number.value,
-        Delivery_Date: keyboard_delivery_date.value?.toISOString().split('T')[0],
-        Deployment_Date: keyboard_deployment_date.value?.toISOString().split('T')[0],
-        System_Status: keyboard_status.value
+        category: "Keyboard",
+        division_id: keyboard_division.value,
+        brand: keyboard_brand.value,
+        model: keyboard_model.value,
+        serial_number: keyboard_serial_number.value,
+        inventory_number: keyboard_inventory_number.value,
+        delivery_date: keyboard_delivery_date.value?.toISOString().split('T')[0],
+        deployment_date: keyboard_deployment_date.value?.toISOString().split('T')[0],
+        status_id: keyboard_status.value,
+        connection_type_id: keyboard_connection_type.value, 
+    }
+
+    for (const key in keyboard) {
+        if (keyboard[key] === undefined) {
+            keyboard[key] = null;
+        }
     }
 
     try {
-       // const response = await axios.post('http://localhost:8080/create_item/', keyboard);
-        const response = await axios.post('http://localhost:8000/create_item/', keyboard);
+        const response = await axios.post('http://localhost:8000/add-mouse-keyboard/', keyboard);
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {
         console.error('Error creating item:', error.response?.data || error.message);
         alert("Failed to add item. Check console.");
     }
-}
-
-async function test() {
-    const keyboard = {
-        Brand: keyboard_brand.value,
-        Model: keyboard_model.value,
-        Serial_Number: keyboard_serial_number.value,
-        Inventory_Number: keyboard_inventory_number.value,
-        Delivery_Date: keyboard_delivery_date.value,
-        Deployment_Date: keyboard_deployment_date.value,
-        System_Status: keyboard_status.value
-    }
-
-    console.log(keyboard);
 }
 
 

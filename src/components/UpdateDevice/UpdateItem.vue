@@ -118,31 +118,7 @@
         </SectionTemplate>
     </div>
 
-    <UpdateModal v-show="showUpdateModal" @close="closeUpdateModal" modal-name="Confirm Update">
-        <div>
-            <div class="flex flex-row-reverse mb-6 group">
-                <select id="surge_protector_status" :class="[option_field_class]">
-                    <option selected class="text-blue-100">Choose a Status</option>
-                    <option value="working">Working</option>
-                    <option value="malfunctioned">Malfunctioned/Being Repaired</option>
-                    <option value="being_upgraded">Being Upgraded</option>
-                    <option value="unassigned">Unassigned</option>
-                    <option value="stolen">Stolen</option>
-                    <option value="bos">BOS</option>
-                </select>
-                <TextLabel labelFor="surge_protector_status" fieldName="New System Status: "/>
-            </div>
-
-            <div class="">
-                <h1><span class="font-bold text-xl">Serial Number: {{ itemToUpdate }}</span></h1>
-                <h1><span class="font-bold">Brand</span>: {{ item_brand }}</h1>
-                <h1><span class="font-bold">Model:</span> {{ item_model }}</h1>
-                <h1><span class="font-bold">Inventory number:</span> {{ item_inventory_number }}</h1>
-                <h1><span class="font-bold">System Status:</span> {{ item_system_status }}</h1>
-            </div>
-
-            <button @click="test()" class="mt-4 p-2 cursor-pointer bg-red-500 rounded-sm text-white font-bold hover:bg-blue-700">Confirm</button>
-        </div>
+    <UpdateModal v-show="showUpdateModal" @close="closeUpdateModal" modal-name="Confirm Update" :item-to-update="itemToUpdate">
     </UpdateModal>
 
     <DeleteModal v-show="showDeleteModal" @close="closeDeleteModal" modal-name="Confirm Delete">
@@ -216,13 +192,16 @@ function closeUpdateModal() {
 }
 
 function openUpdateModal(serial, brand, model, inventory_number, system_status) {
-    showUpdateModal.value = true;
     itemToUpdate.value = serial;
+    showUpdateModal.value = true;
+    
     
     item_brand.value = brand;
     item_model.value = model;
     item_inventory_number.value = inventory_number;
     item_system_status.value = system_status;
+
+    console.log(itemToUpdate.value)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 

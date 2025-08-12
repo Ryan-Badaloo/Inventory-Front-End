@@ -1,15 +1,15 @@
 <template>
 <AddTemplate templateName="Mouse">
-    <form @submit.prevent="" class="space-y-4">
+    <form @submit.prevent="addMouse()" class="space-y-4">
  
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="mouse_brand" labelFor="mouse_brand" fieldName="Brand: "/>
+            <TextField id="mouse_brand" labelFor="mouse_brand" fieldName="Brand: " v-model="mouse_brand"/>
 
-            <TextField id="mouse_model" labelFor="mouse_model" fieldName="Model: "/>
+            <TextField id="mouse_model" labelFor="mouse_model" fieldName="Model: " v-model="mouse_model"/>
 
-            <TextField id="mouse_serial_number" labelFor="mouse_serial_number" fieldName="Serial Number: "/>
+            <TextField id="mouse_serial_number" labelFor="mouse_serial_number" fieldName="Serial Number: " v-model="mouse_serial_number"/>
 
-            <TextField id="mouse_inventory_number" labelFor="mouse_inventory_number" fieldName="Inventory Number: "/>
+            <TextField id="mouse_inventory_number" labelFor="mouse_inventory_number" fieldName="Inventory Number: " v-model="mouse_inventory_number"/>
 
             <!-- delivery date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -38,30 +38,77 @@
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="mouse_status" :class="[option_field_class]" class="bg-white">
+                <select id="mouse_status" :class="[option_field_class]" class="bg-white" v-model="mouse_status">
                     <option selected class="text-blue-100">Choose a Status</option>
-                    <option value="working">Working</option>
-                    <option value="malfunctioned">Malfunctioned/Being Repaired</option>
-                    <option value="being_upgraded">Being Upgraded</option>
-                    <option value="unassigned">Unassigned</option>
-                    <option value="stolen">Stolen</option>
-                    <option value="bos">BOS</option>
+                    <option value=1>Working</option>
+                    <option value=2>Malfunctioned/Being Repaired</option>
+                    <option value=3>Being Upgraded</option>
+                    <option value=4>Unassigned</option>
+                    <option value=5>Stolen</option>
+                    <option value=6>BOS</option>
                 </select>
                 <TextLabel labelFor="mouse_status" fieldName="System Status: "/>
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="mouse_connection_type" :class="[option_field_class]" class="bg-white" v-model="mouse_connection_type">
+                    <option selected class="text-blue-100">Choose a Connection Type</option>
+                    <option value=1>Networked</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                    <option value=4>Option 4</option>
+                    <option value=5>Option 5</option>
+                    <option value=6>Option 6</option>
+                </select>
+                <TextLabel labelFor="mouse_connection_type" fieldName="Connection Type: "/>
+            </div>
         </div>
 
-        <LocationOptions 
-        id_ministry="mouse_ministry"
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-        id_division="mouse_division"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="mouse_parish" :class="[option_field_class]" class="bg-white" v-model="mouse_parish">
+                    <option selected class="text-blue-100">Choose a Parish</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="mouse_parish" fieldName="Parish" />
+            </div>
+            
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="mouse_location_type" :class="[option_field_class]" class="bg-white" v-model="mouse_location_type">
+                    <option selected class="text-blue-100">Choose a Location Type</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="mouse_location_type" fieldName="Location Type" />
+            </div>
 
-        id_section="mouse_section"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="mouse_location" :class="[option_field_class]" class="bg-white" v-model="mouse_location">
+                    <option selected class="text-blue-100">Choose a Location</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="mouse_location" fieldName="Location" />
+            </div>
 
-        id_location="mouse_location"
-        />
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="mouse_division" :class="[option_field_class]" class="bg-white" v-model="mouse_division">
+                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="mouse_division" fieldName="Division" />
+            </div>
+        </div>
 
-        <CommentField id="mouse_comment" labelFor="mouse_comment" fieldName="Comment: "/>
+
+        <CommentField id="mouse_comment" labelFor="mouse_comment" fieldName="Comment: " v-model="mouse_comment"/>
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>
@@ -75,6 +122,7 @@
 import { ref } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import axios from 'axios';
 
 import { option_field_class } from '@/utils/descriptions';
 import { date_field_class } from '@/utils/descriptions';
@@ -84,11 +132,52 @@ import TextField from '@/components/Fields/TextField.vue';
 import TextLabel from '@/components/Fields/TextLabel.vue';
 import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
-
 import CommentField from '../Fields/CommentField.vue';
 
 
+const mouse_brand = ref();
+const mouse_model = ref();
+const mouse_serial_number = ref();
+const mouse_inventory_number = ref();
 const mouse_delivery_date = ref();
 const mouse_deployment_date = ref();
+const mouse_status = ref();
+const mouse_connection_type = ref();
+const mouse_parish = ref();
+const mouse_location_type = ref();
+const mouse_location = ref();
+const mouse_division = ref();
+const mouse_comment = ref();
+
+
+async function addMouse() {
+    const mouse = {
+        category: "Mouse",
+        division_id: mouse_division.value,
+        brand: mouse_brand.value,
+        model: mouse_model.value,
+        serial_number: mouse_serial_number.value,
+        inventory_number: mouse_inventory_number.value,
+        delivery_date: mouse_delivery_date.value?.toISOString().split('T')[0],
+        deployment_date: mouse_deployment_date.value?.toISOString().split('T')[0],
+        status_id: mouse_status.value,
+        connection_type_id: mouse_connection_type.value, 
+    }
+
+    for (const key in mouse) {
+        if (mouse[key] === undefined) {
+            mouse[key] = null;
+        }
+    }
+
+    try {
+        const response = await axios.post('http://localhost:8000/add-mouse-keyboard/', mouse);
+        console.log("Item Added Succefully")
+        alert("Item successfully added.", response.data);
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
 
 </script>

@@ -23,4 +23,5 @@ defineProps({
 defineEmits(['update:modelValue']);
 
 const field_highlight_color = ref('bg-blue-100');
+const text_highlight_color = ref('text-blue-500')
 </script>

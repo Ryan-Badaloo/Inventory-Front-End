@@ -1,14 +1,14 @@
 <template>
 <AddTemplate templateName="Laptop">
-    <form @submit.prevent="test_function()" class="space-y-4">
+    <form @submit.prevent="addLaptop()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="laptop_brand" labelFor="laptop_brand" fieldName="Brand: "/>
+            <TextField id="laptop_brand" labelFor="laptop_brand" fieldName="Brand: " v-model="laptop_brand"/>
 
-            <TextField id="laptop_model" labelFor="laptop_model" fieldName="Model: "/>
+            <TextField id="laptop_model" labelFor="laptop_model" fieldName="Model: " v-model="laptop_model"/>
 
-            <TextField id="laptop_serial_number" labelFor="laptop_serial_number" fieldName="Serial Number: "/>
+            <TextField id="laptop_serial_number" labelFor="laptop_serial_number" fieldName="Serial Number: " v-model="laptop_serial_number"/>
 
-            <TextField id="laptop_inventory_number" labelFor="laptop_inventory_number" fieldName="Inventory Number: "/>
+            <TextField id="laptop_inventory_number" labelFor="laptop_inventory_number" fieldName="Inventory Number: " v-model="laptop_inventory_number"/>
 
             <!-- delivery date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -37,23 +37,23 @@
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="laptop_status" :class="[option_field_class]" class="bg-white">
+                <select id="laptop_status" :class="[option_field_class]" class="bg-white" v-model.number="laptop_status">
                     <option selected class="text-blue-100">Choose a Status</option>
-                    <option value="working">Working</option>
-                    <option value="malfunctioned">Malfunctioned/Being Repaired</option>
-                    <option value="being_upgraded">Being Upgraded</option>
-                    <option value="unassigned">Unassigned</option>
-                    <option value="stolen">Stolen</option>
-                    <option value="bos">BOS</option>
+                    <option value=1>Working</option>
+                    <option value=2>Malfunctioned/Being Repaired</option>
+                    <option value=3>Being Upgraded</option>
+                    <option value=4>Unassigned</option>
+                    <option value=5>Stolen</option>
+                    <option value=6>BOS</option>
                 </select>
                 <TextLabel labelFor="laptop_status" fieldName="System Status: "/>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="laptop_hard_disk_capacity" labelFor="laptop_hard_disk_capacity" fieldName="Hard Disk Capacity: "/>
+            <TextField id="laptop_hard_disk_capacity" labelFor="laptop_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="laptop_hard_disk_capacity"/>
 
-            <TextField id="laptop_memory_capacity" labelFor="laptop_memory_capacity" fieldName="Memory Capacity: "/>
+            <TextField id="laptop_memory_capacity" labelFor="laptop_memory_capacity" fieldName="Memory Capacity: " v-model="laptop_memory_capacity"/>
 
             <!-- warranty start date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -95,24 +95,30 @@
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="laptop_mac_address" labelFor="laptop_mac_address" fieldName="Mac Address: "/>
+            <TextField id="laptop_mac_address" labelFor="laptop_mac_address" fieldName="Mac Address: " v-model="laptop_mac_address"/>
         </div>
 
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="laptop_operating_system" labelFor="laptop_operating_system" fieldName="Operating System: "/>
+            <TextField id="laptop_operating_system" labelFor="laptop_operating_system" fieldName="Operating System: " v-model="laptop_operating_system"/>
 
-            <TextField id="laptop_cpu_type" labelFor="laptop_cpu_type" fieldName="CPU Type: "/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="laptop_cpu_type" :class="[option_field_class]" class="bg-white" v-model="laptop_cpu_type">
+                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option value=1>Option 1</option>
+                </select>
+                <TextLabel :labelFor="laptop_cpu_type" fieldName="CPU Type:" />
+            </div>
 
-            <TextField id="laptop_processor_speed" labelFor="laptop_processor_speed" fieldName="Processor Speed: "/>
+            <TextField id="laptop_processor_speed" labelFor="laptop_processor_speed" fieldName="Processor Speed: " v-model="laptop_processor_speed"/>
 
-            <TextField id="laptop_processor_type" labelFor="laptop_processor_type" fieldName="Processor Type: "/>
+            <TextField id="laptop_processor_type" labelFor="laptop_processor_type" fieldName="Processor Type: " v-model="laptop_processor_type"/>
 
-            <TextField id="laptop_computer_name" labelFor="laptop_computer_name" fieldName="Computer Name: "/>
+            <TextField id="laptop_computer_name" labelFor="laptop_computer_name" fieldName="Computer Name: " v-model="laptop_computer_name"/>
 
-            <TextField id="laptop_ms_office_version" labelFor="laptop_ms_office_version" fieldName="MS Office Version: "/>
+            <TextField id="laptop_ms_office_version" labelFor="laptop_ms_office_version" fieldName="MS Office Version: " v-model="laptop_ms_office_version"/>
 
-            <TextField id="laptop_antivirus" labelFor="laptop_antivirus" fieldName="Antivirus: "/>
+            <TextField id="laptop_antivirus" labelFor="laptop_antivirus" fieldName="Antivirus: " v-model="laptop_antivirus"/>
 
 
 
@@ -125,17 +131,50 @@
             </div>
         </div>
 
-        <LocationOptions 
-        id_ministry="laptop_ministry"
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-        id_division="laptop_division"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="laptop_parish" :class="[option_field_class]" class="bg-white" v-model="laptop_parish">
+                    <option selected class="text-blue-100">Choose a Parish</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="laptop_parish" fieldName="Parish" />
+            </div>
+            
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="laptop_location_type" :class="[option_field_class]" class="bg-white" v-model="laptop_location_type">
+                    <option selected class="text-blue-100">Choose a Location Type</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="laptop_location_type" fieldName="Location Type" />
+            </div>
 
-        id_section="laptop_section"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="laptop_location" :class="[option_field_class]" class="bg-white" v-model="laptop_location">
+                    <option selected class="text-blue-100">Choose a location</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="laptop_location" fieldName="Location" />
+            </div>
 
-        id_location="laptop_location"
-        />
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="laptop_division" :class="[option_field_class]" class="bg-white" v-model="laptop_division">
+                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="laptop_division" fieldName="Division" />
+            </div>
+        </div>
 
-        <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: "/>
+        <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: " v-model="laptop_comment"/>
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>
@@ -149,6 +188,7 @@
 import { ref } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import axios from 'axios';
 
 import { option_field_class } from '@/utils/descriptions';
 import { date_field_class } from '@/utils/descriptions';
@@ -160,14 +200,77 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
-const laptop_warranty_start_date = ref();
-const laptop_warranty_end_date = ref();
+
+
+const laptop_brand = ref();
+const laptop_model = ref();
+const laptop_serial_number = ref();
+const laptop_inventory_number = ref()
 const laptop_delivery_date = ref();
 const laptop_deployment_date = ref();
+const laptop_status = ref();
+const laptop_hard_disk_capacity = ref();
+const laptop_memory_capacity = ref();
+const laptop_warranty_start_date = ref();
+const laptop_warranty_end_date = ref();
 const laptop_returned_date = ref();
+const laptop_mac_address = ref();
+const laptop_operating_system = ref();
+const laptop_cpu_type = ref();
+const laptop_processor_speed = ref();
+const laptop_processor_type = ref();
+const laptop_computer_name = ref();
+const laptop_ms_office_version = ref();
+const laptop_antivirus = ref();
+const laptop_file_input = ref();
+const laptop_parish = ref();
+const laptop_location_type = ref();
+const laptop_location = ref();
+const laptop_division = ref();
+const laptop_comment = ref()
 
-function test_function() {
-    console.log("This Works")
+async function addLaptop() {
+    const laptop = {
+        category: "Laptop",
+        brand: laptop_brand.value,
+        model: laptop_model.value,
+        cpu_type_id: laptop_cpu_type.value,
+        serial_number: laptop_serial_number.value,
+        inventory_number: laptop_inventory_number.value,
+        hard_disk_capacity: laptop_hard_disk_capacity.value,
+        memory_capacity: laptop_memory_capacity.value,
+        processor_speed: laptop_processor_speed.value,
+        processor_type: laptop_processor_type.value,
+        computer_name: laptop_computer_name.value,
+        mac_address: laptop_mac_address.value,
+        operating_system: laptop_operating_system.value,
+        microsoft_office_version: laptop_ms_office_version.value,
+        antivirus: laptop_antivirus.value,
+        pdf_reader: laptop_file_input.value,
+        warranty_start_date: laptop_warranty_start_date.value?.toISOString().split('T')[0],
+        warranty_end_date: laptop_warranty_end_date.value?.toISOString().split('T')[0],
+        delivery_date: laptop_delivery_date.value?.toISOString().split('T')[0],
+        deployment_date: laptop_deployment_date.value?.toISOString().split('T')[0],
+        return_date: laptop_returned_date.value?.toISOString().split('T')[0],
+        division_id: laptop_division.value,
+        status_id: laptop_status.value,
+    }
+
+
+    for (const key in laptop) {
+        if (laptop[key] === undefined) {
+            laptop[key] = null;
+        }
+    }
+
+    try {
+        const response = await axios.post('http://localhost:8000/add-laptop/', laptop);
+        console.log("Item Added Succefully")
+        alert("Item successfully added.", response.data);
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
 }
 
 </script>

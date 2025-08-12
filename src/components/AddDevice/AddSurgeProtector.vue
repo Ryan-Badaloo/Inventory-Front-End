@@ -1,14 +1,14 @@
 <template>
 <AddTemplate templateName="Surge Protector">
-    <form @submit.prevent="" class="space-y-4">
+    <form @submit.prevent="createSurge()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="surge_protector_brand" labelFor="surge_protector_brand" fieldName="Brand: "/>
+            <TextField id="surge_protector_brand" labelFor="surge_protector_brand" fieldName="Brand: " v-model="surge_protector_brand"/>
 
-            <TextField id="surge_protector_model" labelFor="surge_protector_model" fieldName="Model: "/>
+            <TextField id="surge_protector_model" labelFor="surge_protector_model" fieldName="Model: " v-model="surge_protector_model"/>
 
-            <TextField id="surge_protector_serial_number" labelFor="surge_protector_serial_number" fieldName="Serial Number: "/>
+            <TextField id="surge_protector_serial_number" labelFor="surge_protector_serial_number" fieldName="Serial Number: " v-model="surge_protector_serial_number"/>
 
-            <TextField id="surge_protector_inventory_number" labelFor="surge_protector_inventory_number" fieldName="Inventory Number: "/>
+            <TextField id="surge_protector_inventory_number" labelFor="surge_protector_inventory_number" fieldName="Inventory Number: " v-model="surge_protector_inventory_number"/>
 
             <!-- delivery date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -37,30 +37,63 @@
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="surge_protector_status" :class="[option_field_class]" class="bg-white">
+                <select id="surge_protector_status" :class="[option_field_class]" class="bg-white" v-model="surge_protector_status">
                     <option selected class="text-blue-100">Choose a Status</option>
-                    <option value="working">Working</option>
-                    <option value="malfunctioned">Malfunctioned/Being Repaired</option>
-                    <option value="being_upgraded">Being Upgraded</option>
-                    <option value="unassigned">Unassigned</option>
-                    <option value="stolen">Stolen</option>
-                    <option value="bos">BOS</option>
+                    <option value=1>Working</option>
+                    <option value=2>Malfunctioned/Being Repaired</option>
+                    <option value=3>Being Upgraded</option>
+                    <option value=4>Unassigned</option>
+                    <option value=5>Stolen</option>
+                    <option value=6>BOS</option>
                 </select>
                 <TextLabel labelFor="surge_protector_status" fieldName="System Status: "/>
             </div>
         </div>
 
-        <LocationOptions 
-        id_ministry="surge_protector_ministry"
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-        id_division="surge_protector_division"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="surge_protector_parish" :class="[option_field_class]" class="bg-white" v-model="surge_protector_parish">
+                    <option selected class="text-blue-100">Choose a Parish</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="surge_protector_parish" fieldName="Parish" />
+            </div>
+            
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="surge_protector_location_type" :class="[option_field_class]" class="bg-white" v-model="surge_protector_location_type">
+                    <option selected class="text-blue-100">Choose a Location Type</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="surge_protector_location_type" fieldName="Location Type" />
+            </div>
 
-        id_section="surge_protector_section"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="surge_protector_location" :class="[option_field_class]" class="bg-white" v-model="surge_protector_location">
+                    <option selected class="text-blue-100">Choose a Location</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="surge_protector_location" fieldName="Location" />
+            </div>
 
-        id_location="surge_protector_location"
-        />
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="surge_protector_division" :class="[option_field_class]" class="bg-white" v-model="surge_protector_division">
+                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="surge_protector_division" fieldName="Division" />
+            </div>
+        </div>
 
-        <CommentField id="surge_protector_comment" labelFor="surge_protector_comment" fieldName="Comment: "/>
+        <CommentField id="surge_protector_comment" labelFor="surge_protector_comment" fieldName="Comment: " v-model="surge_protector_comment"/>
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>
@@ -74,6 +107,7 @@
 import { ref } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import axios from 'axios';
 
 import { option_field_class } from '@/utils/descriptions';
 import { date_field_class } from '@/utils/descriptions';
@@ -85,11 +119,49 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
-const text_highlight_color = ref('text-blue-500');
 
+
+const surge_protector_brand = ref();
+const surge_protector_model = ref();
+const surge_protector_serial_number = ref();
+const surge_protector_inventory_number = ref();
 const surge_protector_delivery_date = ref();
 const surge_protector_deployment_date = ref();
+const surge_protector_status = ref();
+const surge_protector_parish = ref();
+const surge_protector_location_type = ref();
+const surge_protector_location = ref();
+const surge_protector_division = ref();
+const surge_protector_comment = ref();
 
 
+async function createSurge() {
+    const surge = {
+        category: "Surge Protector",
+        division_id: surge_protector_division.value,
+        brand: surge_protector_brand.value,
+        model: surge_protector_model.value,
+        serial_number: surge_protector_serial_number.value,
+        inventory_number: surge_protector_inventory_number.value,
+        delivery_date: surge_protector_delivery_date.value?.toISOString().split('T')[0],
+        deployment_date: surge_protector_deployment_date.value?.toISOString().split('T')[0],
+        status_id: surge_protector_status.value,
+    }
+
+    for (const key in surge) {
+        if (surge[key] === undefined) {
+            surge[key] = null;
+        }
+    }
+
+    try {
+        const response = await axios.post('http://localhost:8000/add-device/', surge);
+        console.log("Item Added Succefully")
+        alert("Item successfully added.", response.data);
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
 
 </script>

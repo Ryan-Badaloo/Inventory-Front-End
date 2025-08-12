@@ -5,6 +5,18 @@ const isActiveLink = (routePath) => {
   const route = useRoute();
   return route.path === routePath;
 }
+
+function logout() {
+  const token = localStorage.getItem('token')
+  if (token) {
+    localStorage.removeItem('token');
+    console.log("Token has been cleared")
+  }
+
+}
+
+
+
 </script>
 
 <template>
@@ -30,14 +42,10 @@ const isActiveLink = (routePath) => {
                   >Home</RouterLink
                 >
                 <RouterLink
+                  @click="logout()"
                   to="/login"
                   :class="[isActiveLink('/login') ? 'bg-gray-700' : 'hover:bg-gray-900 hover:text-white', 'text-white', 'rounded-md', 'px-3', 'py-2']"
                   >Logout</RouterLink
-                >
-                <RouterLink
-                  to="/register"
-                  :class="[isActiveLink('/register') ? 'bg-gray-700' : 'hover:bg-gray-900 hover:text-white', 'text-white', 'rounded-md', 'px-3', 'py-2']"
-                  >Register</RouterLink
                 >
                 <RouterLink
                   to="/modify-users"

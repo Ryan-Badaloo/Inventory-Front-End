@@ -32,40 +32,36 @@
         </button>
       </form>
     </div>
-
-    <div>
-      <a href="" class="underline text-blue-700 hover:text-blue-400">Click Here To Register</a>
-    </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-export default {
-  name: 'UserLogin',
-  data() {
-    return {
-      username: '',
-      password: ''
-    };
-  },
-  methods: {
-    async login() {
-      try {
-        const params = new URLSearchParams();
-        params.append('username', this.username);
-        params.append('password', this.password);
+const username = ref('');
+const password = ref('');
+const router = useRouter();
 
-        // const response = await axios.get(`http://localhost:8080/
-        const response = await axios.post(`http://localhost:8000/login`, params);
-        localStorage.setItem('token', response.data.access_token);
-        this.$router.push('/menu');
-      } catch (error) {
-        console.error(error);
+const login = async () => {
+  try {
+    const params = new URLSearchParams();
+    params.append('username', username.value);
+    params.append('password', password.value);
+
+    const response = await axios.post('http://localhost:8000/token', params, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-    }
+    });
+
+    localStorage.setItem('token', response.data.access_token);
+    router.push('/add-item');
+  } catch (error) {
+    console.error(error);
   }
 };
 </script>
+
 

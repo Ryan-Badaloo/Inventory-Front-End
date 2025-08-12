@@ -1,14 +1,14 @@
 <template>
 <AddTemplate templateName="Projector">
-    <form @submit.prevent="" class="space-y-4">
+    <form @submit.prevent="createPojector()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="projector_brand" labelFor="projector_brand" fieldName="Brand: "/>
+            <TextField id="projector_brand" labelFor="projector_brand" fieldName="Brand: " v-model="projector_brand"/>
 
-            <TextField id="projector_model" labelFor="projector_model" fieldName="Model: "/>
+            <TextField id="projector_model" labelFor="projector_model" fieldName="Model: " v-model="projector_model"/>
 
-            <TextField id="projector_serial_number" labelFor="projector_serial_number" fieldName="Serial Number: "/>
+            <TextField id="projector_serial_number" labelFor="projector_serial_number" fieldName="Serial Number: " v-model="projector_serial_number"/>
 
-            <TextField id="projector_inventory_number" labelFor="projector_inventory_number" fieldName="Inventory Number: "/>
+            <TextField id="projector_inventory_number" labelFor="projector_inventory_number" fieldName="Inventory Number: " v-model="projector_inventory_number"/>
 
             <!-- delivery date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -37,30 +37,63 @@
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="projector_status" :class="[option_field_class]" class="bg-white">
+                <select id="projector_status" :class="[option_field_class]" class="bg-white" v-model="projector_status">
                     <option selected class="text-blue-100">Choose a Status</option>
-                    <option value="working">Working</option>
-                    <option value="malfunctioned">Malfunctioned/Being Repaired</option>
-                    <option value="being_upgraded">Being Upgraded</option>
-                    <option value="unassigned">Unassigned</option>
-                    <option value="stolen">Stolen</option>
-                    <option value="bos">BOS</option>
+                    <option value=1>Working</option>
+                    <option value=2>Malfunctioned/Being Repaired</option>
+                    <option value=3>Being Upgraded</option>
+                    <option value=4>Unassigned</option>
+                    <option value=5>Stolen</option>
+                    <option value=6>BOS</option>
                 </select>
                 <TextLabel labelFor="projector_status" fieldName="System Status: "/>
             </div>
         </div>
 
-        <LocationOptions 
-        id_ministry="projector_ministry"
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-        id_division="projector_division"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="projector_parish" :class="[option_field_class]" class="bg-white" v-model="projector_parish">
+                    <option selected class="text-blue-100">Choose a Parish</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="projector_parish" fieldName="Parish" />
+            </div>
+            
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="projector_location_type" :class="[option_field_class]" class="bg-white" v-model="projector_location_type">
+                    <option selected class="text-blue-100">Choose a Location Type</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="projector_location_type" fieldName="Location Type" />
+            </div>
 
-        id_section="projector_section"
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="projector_location" :class="[option_field_class]" class="bg-white" v-model="projector_location">
+                    <option selected class="text-blue-100">Choose a Location</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="projector_location" fieldName="Location" />
+            </div>
 
-        id_location="projector_location"
-        />
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="projector_division" :class="[option_field_class]" class="bg-white" v-model="projector_division">
+                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="projector_division" fieldName="Division" />
+            </div>
+        </div>
 
-        <CommentField id="projector_comment" labelFor="projector_comment" fieldName="Comment: "/>
+        <CommentField id="projector_comment" labelFor="projector_comment" fieldName="Comment: " v-model="projector_comment"/>
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>
@@ -74,6 +107,7 @@
 import { ref } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import axios from 'axios';
 
 import { option_field_class } from '@/utils/descriptions';
 import { date_field_class } from '@/utils/descriptions';
@@ -87,7 +121,46 @@ import CommentField from '../Fields/CommentField.vue';
 
 const text_highlight_color = ref('text-blue-500');
 
+const projector_brand = ref();
+const projector_model = ref();
+const projector_serial_number = ref();
+const projector_inventory_number = ref();
 const projector_delivery_date = ref();
 const projector_deployment_date = ref();
+const projector_status = ref();
+const projector_parish = ref();
+const projector_location_type = ref();
+const projector_location = ref();
+const projector_division = ref();
+const projector_comment = ref();
+
+async function createPojector() {
+    const projector = {
+        category: "Projector",
+        serial_number: projector_serial_number.value,
+        division_id: projector_division.value,
+        brand: projector_brand.value,
+        model: projector_model.value,
+        inventory_number: projector_inventory_number.value,
+        delivery_date: projector_delivery_date.value?.toISOString().split('T')[0],
+        deployment_date: projector_deployment_date.value?.toISOString().split('T')[0],
+        status_id: projector_status.value,
+    }
+
+    for (const key in projector) {
+        if (projector[key] === undefined) {
+            projector[key] = null;
+        }
+    }
+
+    try {
+        const response = await axios.post('http://localhost:8000/add-device/', projector);
+        console.log("Item Added Succefully")
+        alert("Item successfully added.", response.data);
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
 
 </script>
