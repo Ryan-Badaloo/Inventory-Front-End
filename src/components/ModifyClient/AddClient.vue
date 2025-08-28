@@ -1,0 +1,86 @@
+<template>
+<SectionTemplate templateName="Add Client">
+    <form @submit.prevent="addClient()" class="space-y-4">
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        
+            <TextField id="first_name" labelFor="first_name" name="first_name" fieldName="Enter First Name: " v-model="first_name"/>
+
+            <TextField id="last_name" labelFor="last_name" name="last_name" fieldName="Enter Last Name: " v-model="last_name"/>
+
+            <TextField id="username" labelFor="username" name="username" fieldName="Enter Email: " v-model="username"/>
+
+            <TextField id="phone_number" labelFor="phone_number" name="phone_number" fieldName="Enter Phone Number: " v-model="phone_number"/>
+
+            <TextField id="position" labelFor="position" name="position" fieldName="Enter Position: " v-model="position"/>
+        
+        </div>
+
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="division_id" :class="[option_field_class]" class="bg-white" v-model="division_id">
+                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option value=1>Option 1</option>
+                    <option value=2>Option 2</option>
+                    <option value=3>Option 3</option>
+                </select>
+                <TextLabel :labelFor="division_id" fieldName="Division" />
+            </div>
+        </div>
+        
+        <div class="flex justify-center">
+            <AddItemButton buttonName="Add User"/>
+        </div>
+    </form> 
+</SectionTemplate>
+</template>
+
+
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+
+import AddItemButton from '@/components/AddItemButton.vue';
+import TextField from '@/components/Fields/TextField.vue';
+import TextLabel from '@/components/Fields/TextLabel.vue';
+import SectionTemplate from '@/components/SectionTemplate.vue';
+
+import { option_field_class } from '@/utils/descriptions';
+
+const first_name = ref()
+const last_name = ref()
+const username = ref()
+const phone_number = ref()
+const position = ref()
+const division_id = ref()
+
+async function addClient() {
+    const client = {
+        firstname: first_name.value,
+        lastname: last_name.value,
+        email: username.value,
+        phone_number: phone_number.value,
+        position: position.value,
+        division_id: division_id.value,
+
+    }
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/create-client/', client, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log("Client Added Succefully")
+        alert("Client successfully added.", response.data);
+    } catch (error) {
+        console.error('Error creating client:', error.response?.data || error.message);
+        alert("Failed to add client. Check console.");
+    }
+}
+
+
+
+
+
+</script>

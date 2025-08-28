@@ -104,7 +104,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -121,18 +121,45 @@ import CommentField from '../Fields/CommentField.vue';
 
 
 
-const surge_protector_brand = ref();
-const surge_protector_model = ref();
-const surge_protector_serial_number = ref();
-const surge_protector_inventory_number = ref();
-const surge_protector_delivery_date = ref();
-const surge_protector_deployment_date = ref();
-const surge_protector_status = ref();
-const surge_protector_parish = ref();
-const surge_protector_location_type = ref();
-const surge_protector_location = ref();
-const surge_protector_division = ref();
-const surge_protector_comment = ref();
+const surgeProtectorFieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "parish", "location_type", "location",
+  "division", "comment"
+];
+
+const surgeProtectorRefs = {};
+
+surgeProtectorFieldNames.forEach(name => {
+  const key = `surge_protector_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  surgeProtectorRefs[key] = ref(saved || "");
+
+  watch(surgeProtectorRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+  surge_protector_brand,
+  surge_protector_model,
+  surge_protector_serial_number,
+  surge_protector_inventory_number,
+  surge_protector_delivery_date,
+  surge_protector_deployment_date,
+  surge_protector_status,
+  surge_protector_parish,
+  surge_protector_location_type,
+  surge_protector_location,
+  surge_protector_division,
+  surge_protector_comment,
+} = surgeProtectorRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 
 async function createSurge() {
@@ -143,19 +170,24 @@ async function createSurge() {
         model: surge_protector_model.value,
         serial_number: surge_protector_serial_number.value,
         inventory_number: surge_protector_inventory_number.value,
-        delivery_date: surge_protector_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: surge_protector_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(surge_protector_delivery_date.value),
+        deployment_date: formatDate(surge_protector_deployment_date.value),
         status_id: surge_protector_status.value,
     }
 
     for (const key in surge) {
-        if (surge[key] === undefined) {
+        if (surge[key] === undefined || surge[key] === "") {
             surge[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-device/', surge);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-device/', surge, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

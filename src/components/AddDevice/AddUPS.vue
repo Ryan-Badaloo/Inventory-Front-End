@@ -155,7 +155,12 @@ async function createUPS() {
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-device/', ups);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-device/', ups, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

@@ -116,7 +116,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -131,19 +131,46 @@ import SectionTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
-const keyboard_brand = ref();
-const keyboard_model = ref();
-const keyboard_serial_number = ref();
-const keyboard_inventory_number = ref();
-const keyboard_delivery_date = ref();
-const keyboard_deployment_date = ref();
-const keyboard_status = ref();
-const keyboard_connection_type = ref();
-const keyboard_parish = ref();
-const keyboard_location_type = ref();
-const keyboard_location = ref();
-const keyboard_division = ref();
-const keyboard_comment = ref();
+const fieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status", "connection_type", "parish", "location_type",
+  "location", "division", "comment"
+];
+
+const keyboardRefs = {};
+
+fieldNames.forEach(name => {
+  const key = `keyboard_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  keyboardRefs[key] = ref(saved || "");
+
+watch(keyboardRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+
+const {
+    keyboard_brand,
+    keyboard_model,
+    keyboard_serial_number,
+    keyboard_inventory_number,
+    keyboard_delivery_date,
+    keyboard_deployment_date,
+    keyboard_status,
+    keyboard_connection_type,
+    keyboard_parish,
+    keyboard_location_type,
+    keyboard_location,
+    keyboard_division,
+    keyboard_comment,
+} = keyboardRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 async function addKeyboard() {
     const keyboard = {
@@ -153,8 +180,8 @@ async function addKeyboard() {
         model: keyboard_model.value,
         serial_number: keyboard_serial_number.value,
         inventory_number: keyboard_inventory_number.value,
-        delivery_date: keyboard_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: keyboard_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(keyboard_delivery_date.value),
+        deployment_date: formatDate(keyboard_deployment_date.value),
         status_id: keyboard_status.value,
         connection_type_id: keyboard_connection_type.value, 
     }
@@ -166,7 +193,12 @@ async function addKeyboard() {
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-mouse-keyboard/', keyboard);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-mouse-keyboard/', keyboard, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

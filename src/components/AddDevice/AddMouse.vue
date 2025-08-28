@@ -119,7 +119,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -135,19 +135,46 @@ import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
 
-const mouse_brand = ref();
-const mouse_model = ref();
-const mouse_serial_number = ref();
-const mouse_inventory_number = ref();
-const mouse_delivery_date = ref();
-const mouse_deployment_date = ref();
-const mouse_status = ref();
-const mouse_connection_type = ref();
-const mouse_parish = ref();
-const mouse_location_type = ref();
-const mouse_location = ref();
-const mouse_division = ref();
-const mouse_comment = ref();
+const fieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status", "connection_type", "parish", "location_type",
+  "location", "division", "comment"
+];
+
+const mouseRefs = {};
+
+fieldNames.forEach(name => {
+  const key = `mouse_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  mouseRefs[key] = ref(saved || "");
+
+watch(mouseRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+
+const {
+    mouse_brand,
+    mouse_model,
+    mouse_serial_number,
+    mouse_inventory_number,
+    mouse_delivery_date,
+    mouse_deployment_date,
+    mouse_status,
+    mouse_connection_type,
+    mouse_parish,
+    mouse_location_type,
+    mouse_location,
+    mouse_division,
+    mouse_comment,
+} = mouseRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 
 async function addMouse() {
@@ -158,20 +185,25 @@ async function addMouse() {
         model: mouse_model.value,
         serial_number: mouse_serial_number.value,
         inventory_number: mouse_inventory_number.value,
-        delivery_date: mouse_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: mouse_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(mouse_delivery_date.value),
+        deployment_date: formatDate(mouse_deployment_date.value),
         status_id: mouse_status.value,
         connection_type_id: mouse_connection_type.value, 
     }
 
     for (const key in mouse) {
-        if (mouse[key] === undefined) {
+        if (mouse[key] === undefined || mouse[key] === "") {
             mouse[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-mouse-keyboard/', mouse);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-mouse-keyboard/', mouse, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

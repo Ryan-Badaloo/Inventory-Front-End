@@ -104,7 +104,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -121,18 +121,45 @@ import CommentField from '../Fields/CommentField.vue';
 
 const text_highlight_color = ref('text-blue-500');
 
-const other_equipment_brand = ref();
-const other_equipment_model = ref();
-const other_equipment_serial_number = ref();
-const other_equipment_inventory_number = ref();
-const other_equipment_delivery_date = ref();
-const other_equipment_deployment_date = ref();
-const other_equipment_status = ref();
-const other_equipment_parish = ref();
-const other_equipment_location_type = ref();
-const other_equipment_location = ref();
-const other_equipment_division = ref();
-const other_equipment_comment = ref();
+const otherEquipmentFieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "parish", "location_type", "location",
+  "division", "comment"
+];
+
+const otherEquipmentRefs = {};
+
+otherEquipmentFieldNames.forEach(name => {
+  const key = `other_equipment_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  otherEquipmentRefs[key] = ref(saved || "");
+
+  watch(otherEquipmentRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+  other_equipment_brand,
+  other_equipment_model,
+  other_equipment_serial_number,
+  other_equipment_inventory_number,
+  other_equipment_delivery_date,
+  other_equipment_deployment_date,
+  other_equipment_status,
+  other_equipment_parish,
+  other_equipment_location_type,
+  other_equipment_location,
+  other_equipment_division,
+  other_equipment_comment,
+} = otherEquipmentRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 async function createOtherEquipment() {
     const other_equipment = {
@@ -142,19 +169,24 @@ async function createOtherEquipment() {
         model: other_equipment_model.value,
         serial_number: other_equipment_serial_number.value,
         inventory_number: other_equipment_inventory_number.value,
-        delivery_date: other_equipment_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: other_equipment_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(other_equipment_delivery_date.value),
+        deployment_date: formatDate(other_equipment_deployment_date.value),
         status_id: other_equipment_status.value,
     }
 
     for (const key in other_equipment) {
-        if (other_equipment[key] === undefined) {
+        if (other_equipment[key] === undefined || other_equipment[key] === "") {
             other_equipment[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-device/', other_equipment);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-device/', other_equipment, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

@@ -44,6 +44,8 @@ const username = ref('');
 const password = ref('');
 const router = useRouter();
 
+localStorage.clear();
+
 const login = async () => {
   try {
     const params = new URLSearchParams();
@@ -59,7 +61,10 @@ const login = async () => {
     localStorage.setItem('token', response.data.access_token);
     router.push('/add-item');
   } catch (error) {
-    console.error(error);
+    if (error.response.status == 401) {
+      alert("Invalid Username or Password Entered")
+    }
+    console.log(error)
   }
 };
 </script>

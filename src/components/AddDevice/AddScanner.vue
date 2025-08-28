@@ -104,7 +104,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -119,20 +119,48 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+
 const text_highlight_color = ref('text-blue-500');
 
-const scanner_brand = ref();
-const scanner_model = ref();
-const scanner_serial_number = ref();
-const scanner_inventory_number = ref();
-const scanner_delivery_date = ref();
-const scanner_deployment_date = ref();
-const scanner_status = ref();
-const scanner_parish = ref();
-const scanner_location_type = ref();
-const scanner_location = ref();
-const scanner_division = ref();
-const scanner_comment = ref();
+const fieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "parish", "location_type", "location",
+  "division", "comment"
+];
+
+const scannerRefs = {};
+
+fieldNames.forEach(name => {
+  const key = `scanner_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  scannerRefs[key] = ref(saved || "");
+
+  watch(scannerRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+  scanner_brand,
+  scanner_model,
+  scanner_serial_number,
+  scanner_inventory_number,
+  scanner_delivery_date,
+  scanner_deployment_date,
+  scanner_status,
+  scanner_parish,
+  scanner_location_type,
+  scanner_location,
+  scanner_division,
+  scanner_comment,
+} = scannerRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 
 async function createScanner() {
@@ -143,19 +171,24 @@ async function createScanner() {
         model: scanner_model.value,
         serial_number: scanner_serial_number.value,
         inventory_number: scanner_inventory_number.value,
-        delivery_date: scanner_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: scanner_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(scanner_delivery_date.value),
+        deployment_date: formatDate(scanner_deployment_date.value),
         status_id: scanner_status.value,
     }
 
     for (const key in scanner) {
-        if (scanner[key] === undefined) {
+        if (scanner[key] === undefined || scanner[key] === "") {
             scanner[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-device/', scanner);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-device/', scanner, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

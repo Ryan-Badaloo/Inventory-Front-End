@@ -1,8 +1,9 @@
 <template>
 
     <div>
+<!-- THIS DISPLAYS THE SEARCH BAR AND RADIO BUTTONS ////////////////////////////////////////////////////////////-->
         <div>
-            <SearchBar v-model="filter" :onSubmit="get_items">
+            <SearchBar :onSubmit="get_items">
                 <div class="w-2/3 flex justify-around items-center">
                     <div class="">
                         <input type="radio" id="brand_radio" name="category" value="Brand" v-model="search_category"
@@ -41,7 +42,7 @@
             </SearchBar>
         </div>
 
-
+<!-- THIS DISPLAYS THE SEARCH RESULTS TABLE ///////////////////////////////////////////////////////////////////-->
         <SectionTemplate v-if="items.length > 0" template-name="Assign Devices">
             <div class="relative overflow-x-auto">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -51,7 +52,7 @@
                                 Brand
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Model
+                                Category
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Serial Number
@@ -60,38 +61,38 @@
                                 Inventory Number
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                System Status
+                                Model
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Status
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Delivery Date
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                Deployment Date
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items" :key="item.Item_ID" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
+                        <tr v-for="item in items" :key="item.devices_id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
                             <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ item.Brand }}
+                                {{ item.brand }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Model }}
+                                {{ item.category }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Serial_Number }}
+                                {{ item.serial_number }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Inventory_Number }}
+                                {{ item.inventory_number }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.System_Status }}
+                                {{ item.model }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Delivery_Date }}
+                                {{ item.status_description }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Deployment_Date }}
+                                {{ item.delivery_date }}
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
                                     <button @click="console.log(add_to_cart(item))" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
@@ -115,7 +116,7 @@
                                 Brand
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Model
+                                Category
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Serial Number
@@ -124,38 +125,38 @@
                                 Inventory Number
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                System Status
+                                Model
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Status
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Delivery Date
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Deployment Date
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="item in cart" :key="item.Item_ID" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
                             <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ item.Brand }}
+                                {{ item.brand }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Model }}
+                                {{ item.category }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Serial_Number }}
+                                {{ item.serial_number }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Inventory_Number }}
+                                {{ item.inventory_number }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.System_Status }}
+                                {{ item.model }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Delivery_Date }}
+                                {{ item.status_description }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.Deployment_Date }}
+                                {{ item.delivery_date }}
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
                                 <button @click="remove_from_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
@@ -196,17 +197,29 @@ import TextLabel from '../Fields/TextLabel.vue';
 
 import { option_field_class } from '@/utils/descriptions';
 
-const filter = ref(); //store the text typed into the search bar
 const items = ref([]); // Store the search results (list of items)
 const cart = ref([]); //Store the items in the cart
 const search_category = ref();
 
+const test_brand = ref('HP');
+const test_category = ref('Laptop');
+
 
 async function get_items() {
+
     try {
-        // const response = await axios.get(`http://localhost:8080/
-        const response = await axios.get(`http://localhost:8000/get_items_by_brand/${encodeURIComponent(filter.value)}`);
-        items.value = response.data;
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:8000/get-items/', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                brand: test_brand.value,
+                category: test_category.value,
+            }
+        });
+        items.value = response.data
+        console.log(items.value)
     } catch (error) {
         console.error('Error finding item:', error.response?.data || error.message);
         alert("Failed to find item. Check console.");
@@ -214,15 +227,17 @@ async function get_items() {
 }
 
 function add_to_cart(item) {
-    const alreadyInCart = cart.value.some(cartItem => cartItem.Item_ID === item.Item_ID);
+    const alreadyInCart = cart.value.some(cartItem => cartItem.devices_id === item.devices_id);
 
     if (!alreadyInCart) {
         cart.value.push(item);
+    } else if (alreadyInCart) {
+        alert("Item already in Cart")
     }
 }
 
 function remove_from_cart(item) {
-    const index = cart.value.findIndex(cartItem => cartItem.Item_ID === item.Item_ID);
+    const index = cart.value.findIndex(cartItem => cartItem.devices_id === item.devices_id);
 
     if (index !== -1) {
         cart.value.splice(index, 1);

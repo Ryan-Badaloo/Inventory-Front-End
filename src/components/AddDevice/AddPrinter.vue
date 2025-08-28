@@ -63,7 +63,7 @@
                 <TextLabel labelFor="printer_features" fieldName="Features: "/>
             </div>
 
-            <TextField id="ip_address" labelFor="ip_address" fieldName="IP Address: " v-model="ip_address"/>
+            <TextField id="ip_address" labelFor="ip_address" fieldName="IP Address: " v-model="printer_ip_address"/>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="printer_connection_type" :class="[option_field_class]" v-model="printer_connection_type">
@@ -130,7 +130,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -147,23 +147,49 @@ import CommentField from '../Fields/CommentField.vue';
 
 const text_highlight_color = ref('text-blue-500');
 
-const printer_brand = ref();
-const printer_model = ref();
-const printer_serial_number = ref();
-const printer_inventory_number = ref();
-const printer_delivery_date = ref();
-const printer_deployment_date = ref();
-const printer_status = ref();
+const printerFieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "features", "ip_address", "connection_type",
+  "parish", "location_type", "location",
+  "division", "comment"
+];
 
-const printer_features = ref();
-const ip_address = ref();
-const printer_connection_type = ref();
+const printerRefs = {};
 
-const printer_parish = ref();
-const printer_location_type = ref();
-const printer_location = ref();
-const printer_division = ref();
-const printer_comment = ref();
+printerFieldNames.forEach(name => {
+  const key = `printer_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  printerRefs[key] = ref(saved || "");
+
+  watch(printerRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+  printer_brand,
+  printer_model,
+  printer_serial_number,
+  printer_inventory_number,
+  printer_delivery_date,
+  printer_deployment_date,
+  printer_status,
+  printer_features,
+  printer_ip_address,
+  printer_connection_type,
+  printer_parish,
+  printer_location_type,
+  printer_location,
+  printer_division,
+  printer_comment,
+} = printerRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 
 async function createPrinter() {
@@ -174,22 +200,27 @@ async function createPrinter() {
         model: printer_model.value,
         serial_number: printer_serial_number.value,
         inventory_number: printer_inventory_number.value,
-        ip_address: ip_address.value,
+        ip_address: printer_ip_address.value,
         feature_id: printer_features.value,
         connection_type_id: printer_connection_type.value,
-        delivery_date: printer_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: printer_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(printer_delivery_date.value),
+        deployment_date: formatDate(printer_deployment_date.value),
         status_id: printer_status.value,
     }
 
     for (const key in printer) {
-        if (printer[key] === undefined) {
+        if (printer[key] === undefined || printer[key] === "") {
             printer[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-printer/', printer);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-printer/', printer, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {
@@ -197,5 +228,7 @@ async function createPrinter() {
         alert("Failed to add item. Check console.");
     }
 }
+
+
 
 </script>

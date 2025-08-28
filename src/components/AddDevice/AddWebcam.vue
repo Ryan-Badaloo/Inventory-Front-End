@@ -103,7 +103,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -120,18 +120,46 @@ import CommentField from '../Fields/CommentField.vue';
 
 const text_highlight_color = ref('text-blue-500');
 
-const webcam_brand = ref();
-const webcam_model = ref();
-const webcam_serial_number = ref();
-const webcam_inventory_number = ref();
-const webcam_delivery_date = ref();
-const webcam_deployment_date = ref();
-const webcam_status = ref();
-const webcam_parish = ref();
-const webcam_location_type = ref();
-const webcam_location = ref();
-const webcam_division = ref();
-const webcam_comment = ref();
+const webcamFieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "parish", "location_type", "location",
+  "division", "comment"
+];
+
+const webcamRefs = {};
+
+webcamFieldNames.forEach(name => {
+  const key = `webcam_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  webcamRefs[key] = ref(saved || "");
+
+  watch(webcamRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+  webcam_brand,
+  webcam_model,
+  webcam_serial_number,
+  webcam_inventory_number,
+  webcam_delivery_date,
+  webcam_deployment_date,
+  webcam_status,
+  webcam_parish,
+  webcam_location_type,
+  webcam_location,
+  webcam_division,
+  webcam_comment,
+} = webcamRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
+
 
 async function createWebcam() {
     const webcam = {
@@ -141,19 +169,24 @@ async function createWebcam() {
         model: webcam_model.value,
         serial_number: webcam_serial_number.value,
         inventory_number: webcam_inventory_number.value,
-        delivery_date: webcam_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: webcam_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(webcam_delivery_date.value),
+        deployment_date: formatDate(webcam_deployment_date.value),
         status_id: webcam_status.value,
     }
 
     for (const key in webcam) {
-        if (webcam[key] === undefined) {
+        if (webcam[key] === undefined || webcam[key] === "") {
             webcam[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-device/', webcam);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-device/', webcam, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

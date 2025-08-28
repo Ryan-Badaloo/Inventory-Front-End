@@ -160,7 +160,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -178,26 +178,55 @@ import CommentField from '../Fields/CommentField.vue';
 
 const text_highlight_color = ref('text-blue-500');
 
-const tablet_brand = ref();
-const tablet_model = ref();
-const tablet_serial_number = ref();
-const tablet_inventory_number = ref();
-const tablet_delivery_date = ref();
-const tablet_deployment_date = ref();
-const tablet_status = ref();
-const tablet_warranty_start_date = ref();
-const tablet_warranty_end_date = ref();
-const tablet_returned_date = ref();
-const tablet_operating_system = ref();
-const tablet_imei_number = ref();
-const tablet_version = ref();
-const tablet_division = ref();
-const tablet_hard_disk_capacity = ref();
-const tablet_memory_capacity = ref();
+const fieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "hard_disk_capacity", "memory_capacity", "warranty_start_date",
+  "warranty_end_date", "returned_date",
+  "operating_system", "imei_number", "version", "parish", "location_type",
+  "location", "division", "comment"
+];
 
-const tablet_location = ref();
-const tablet_location_type = ref();
-const tablet_parish = ref();
+const tabletRefs = {};
+
+fieldNames.forEach(name => {
+  const key = `tablet_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  tabletRefs[key] = ref(saved || "");
+
+watch(tabletRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+tablet_brand,
+tablet_model,
+tablet_serial_number,
+tablet_inventory_number,
+tablet_delivery_date,
+tablet_deployment_date,
+tablet_status,
+tablet_warranty_start_date,
+tablet_warranty_end_date,
+tablet_returned_date,
+tablet_operating_system,
+tablet_imei_number,
+tablet_version,
+tablet_division,
+tablet_hard_disk_capacity,
+tablet_memory_capacity,
+
+tablet_location,
+tablet_location_type,
+tablet_parish,
+} = tabletRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 async function addTablet() {
     const tablet = {
@@ -212,22 +241,27 @@ async function addTablet() {
         inventory_number: tablet_inventory_number.value,
         hard_disk_capacity: tablet_hard_disk_capacity.value,
         memory_capacity: tablet_memory_capacity.value,
-        warranty_start_date: tablet_warranty_start_date.value?.toISOString().split('T')[0],
-        warranty_end_date: tablet_warranty_end_date.value?.toISOString().split('T')[0],
-        delivery_date: tablet_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: tablet_deployment_date.value?.toISOString().split('T')[0],
-        return_date: tablet_returned_date.value?.toISOString().split('T')[0],
+        warranty_start_date: formatDate(tablet_warranty_start_date.value),
+        warranty_end_date: formatDate(tablet_warranty_end_date.value),
+        delivery_date: formatDate(tablet_delivery_date.value),
+        deployment_date: formatDate(tablet_deployment_date.value),
+        return_date: formatDate(tablet_returned_date.value),
         status_id: tablet_status.value,
     }
 
     for (const key in tablet) {
-        if (tablet[key] === undefined) {
+        if (tablet[key] === undefined || tablet[key] === "") {
             tablet[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-tablet/', tablet);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-tablet/', tablet, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

@@ -185,7 +185,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -201,33 +201,64 @@ import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
 
+const fieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "hard_disk_capacity", "memory_capacity", "warranty_start_date",
+  "warranty_end_date", "returned_date", "mac_address",
+  "operating_system", "cpu_type", "processor_speed",
+  "processor_type", "computer_name", "ms_office_version",
+  "antivirus", "file_input", "parish", "location_type",
+  "location", "division", "comment"
+];
 
-const laptop_brand = ref();
-const laptop_model = ref();
-const laptop_serial_number = ref();
-const laptop_inventory_number = ref()
-const laptop_delivery_date = ref();
-const laptop_deployment_date = ref();
-const laptop_status = ref();
-const laptop_hard_disk_capacity = ref();
-const laptop_memory_capacity = ref();
-const laptop_warranty_start_date = ref();
-const laptop_warranty_end_date = ref();
-const laptop_returned_date = ref();
-const laptop_mac_address = ref();
-const laptop_operating_system = ref();
-const laptop_cpu_type = ref();
-const laptop_processor_speed = ref();
-const laptop_processor_type = ref();
-const laptop_computer_name = ref();
-const laptop_ms_office_version = ref();
-const laptop_antivirus = ref();
-const laptop_file_input = ref();
-const laptop_parish = ref();
-const laptop_location_type = ref();
-const laptop_location = ref();
-const laptop_division = ref();
-const laptop_comment = ref()
+const laptopRefs = {};
+
+fieldNames.forEach(name => {
+  const key = `laptop_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  laptopRefs[key] = ref(saved || "");
+
+  watch(laptopRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+  laptop_brand,
+  laptop_model,
+  laptop_serial_number,
+  laptop_inventory_number,
+  laptop_delivery_date,
+  laptop_deployment_date,
+  laptop_status,
+  laptop_hard_disk_capacity,
+  laptop_memory_capacity,
+  laptop_warranty_start_date,
+  laptop_warranty_end_date,
+  laptop_returned_date,
+  laptop_mac_address,
+  laptop_operating_system,
+  laptop_cpu_type,
+  laptop_processor_speed,
+  laptop_processor_type,
+  laptop_computer_name,
+  laptop_ms_office_version,
+  laptop_antivirus,
+  laptop_file_input,
+  laptop_parish,
+  laptop_location_type,
+  laptop_location,
+  laptop_division,
+  laptop_comment,
+} = laptopRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
+
 
 async function addLaptop() {
     const laptop = {
@@ -247,24 +278,29 @@ async function addLaptop() {
         microsoft_office_version: laptop_ms_office_version.value,
         antivirus: laptop_antivirus.value,
         pdf_reader: laptop_file_input.value,
-        warranty_start_date: laptop_warranty_start_date.value?.toISOString().split('T')[0],
-        warranty_end_date: laptop_warranty_end_date.value?.toISOString().split('T')[0],
-        delivery_date: laptop_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: laptop_deployment_date.value?.toISOString().split('T')[0],
-        return_date: laptop_returned_date.value?.toISOString().split('T')[0],
+        warranty_start_date: formatDate(laptop_warranty_start_date.value),
+        warranty_end_date: formatDate(laptop_warranty_end_date.value),
+        delivery_date: formatDate(laptop_delivery_date.value),
+        deployment_date: formatDate(laptop_deployment_date.value),
+        return_date: formatDate(laptop_returned_date.value),
         division_id: laptop_division.value,
         status_id: laptop_status.value,
     }
 
 
     for (const key in laptop) {
-        if (laptop[key] === undefined) {
+        if (laptop[key] === undefined || laptop[key] === "") {
             laptop[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-laptop/', laptop);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-laptop/', laptop, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

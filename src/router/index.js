@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue'
 import UserLogin from '@/views/LoginPage.vue'
 import AddItem from '@/views/AddItemPage.vue'
 import ModifyUser from '@/views/ModifyUserPage.vue'
+import ModifyClient from '@/views/ModifyClientPage.vue'
 import UpdateItem from '@/views/UpdateItemPage.vue'
 import AssignItem from '@/views/AssignItemPage.vue'
 import ChangePassword from '@/views/ChangePasswordPage.vue'
@@ -17,7 +18,7 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       component: HomeView,
-      // meta: { requiresAuth: true } // Protected
+      meta: { requiresAuth: true } // Protected
     },
     {
       path: '/add-item',
@@ -30,32 +31,38 @@ const router = createRouter({
       path: '/update-item-page',
       name: 'UpdateItem',
       component: UpdateItem,
-      // meta: { requiresAuth: true } // Protected
+      meta: { requiresAuth: true } // Protected
     },
     {
       path: '/assign-item-page',
       name: 'AssignItem',
       component: AssignItem,
-      // meta: { requiresAuth: true } // Protected
+      meta: { requiresAuth: true } // Protected
     },
     {
       path: '/modify-users',
       name: 'ModifyUser',
       component: ModifyUser,
-      // meta: { requiresAuth: true, requiresAdmin: true } // Protected
+      meta: { requiresAuth: true, requiresAdmin: true } // Protected
+    },
+    {
+      path: '/modify-clients',
+      name: 'ModifyClient',
+      component: ModifyClient,
+      meta: { requiresAuth: true, requiresAdmin: true } // Protected
     },
     {
       path: '/change-password',
       name: 'ChangePassword',
       component: ChangePassword,
-      // meta: { requiresAuth: true } // Protected
+      meta: { requiresAuth: true } // Protected
     },
     {
       path: '/update-request/:passedText',
       name: 'UpdateRequest',
       component: UpdateRequest,
-      props: true
-      // meta: { requiresAuth: true } // Protected
+      props: true,
+      meta: { requiresAuth: true } // Protected
     },
     {
       path: '/login',

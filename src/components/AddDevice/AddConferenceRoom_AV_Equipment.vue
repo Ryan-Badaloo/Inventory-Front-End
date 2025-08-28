@@ -35,7 +35,7 @@
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="conference_room_av_equipment_status" :class="[option_field_class]" class="bg-white">
+                <select id="conference_room_av_equipment_status" :class="[option_field_class]" class="bg-white" v-model="conference_room_av_equipment_status">
                     <option selected class="text-blue-100">Choose a Status</option>
                     <option value=1>Working</option>
                     <option value=2>Malfunctioned/Being Repaired</option>
@@ -44,7 +44,7 @@
                     <option value=5>Stolen</option>
                     <option value=6>BOS</option>
                 </select>
-                <TextLabel labelFor="conference_room_av_equipment_status" fieldName="System Status: " v-model="conference_room_av_equipment_status"/>
+                <TextLabel labelFor="conference_room_av_equipment_status" fieldName="System Status: "/>
             </div>
 
             <TextField id="conference_room_av_equipment_name" labelFor="conference_room_av_equipment_name" fieldName="Device Name: " v-model="conference_room_av_equipment_name"/>
@@ -110,7 +110,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import '@vuepic/vue-datepicker/dist/main.css'
 import axios from 'axios';
 
@@ -125,25 +125,49 @@ import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
 
+const conferenceRoomAvEquipmentFieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "status", "name", "mac_address", "ip_address",
+  "parish", "location_type", "location",
+  "division", "comment",
+  "delivery_date", "deployment_date"
+];
 
-const conference_room_av_equipment_brand = ref();
-const conference_room_av_equipment_model = ref();
-const conference_room_av_equipment_serial_number = ref();
-const conference_room_av_equipment_inventory_number = ref();
-const conference_room_av_equipment_status = ref();
+const conferenceRoomAvEquipmentRefs = {};
 
-const conference_room_av_equipment_name = ref();
-const conference_room_av_equipment_mac_address = ref();
-const conference_room_av_equipment_ip_address = ref();
+conferenceRoomAvEquipmentFieldNames.forEach(name => {
+  const key = `conference_room_av_equipment_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  conferenceRoomAvEquipmentRefs[key] = ref(saved || "");
 
-const conference_room_av_equipment_parish = ref();
-const conference_room_av_equipment_location_type = ref();
-const conference_room_av_equipment_location = ref();
-const conference_room_av_equipment_division = ref();
-const conference_room_av_equipment_comment = ref();
+  watch(conferenceRoomAvEquipmentRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
 
-const conference_room_av_equipment_delivery_date = ref();
-const conference_room_av_equipment_deployment_date = ref();
+const {
+  conference_room_av_equipment_brand,
+  conference_room_av_equipment_model,
+  conference_room_av_equipment_serial_number,
+  conference_room_av_equipment_inventory_number,
+  conference_room_av_equipment_status,
+  conference_room_av_equipment_name,
+  conference_room_av_equipment_mac_address,
+  conference_room_av_equipment_ip_address,
+  conference_room_av_equipment_parish,
+  conference_room_av_equipment_location_type,
+  conference_room_av_equipment_location,
+  conference_room_av_equipment_division,
+  conference_room_av_equipment_comment,
+  conference_room_av_equipment_delivery_date,
+  conference_room_av_equipment_deployment_date,
+} = conferenceRoomAvEquipmentRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 async function addConferenceRoomAVEquipment() {
     const cr_equipment = {
@@ -154,8 +178,8 @@ async function addConferenceRoomAVEquipment() {
         serial_number: conference_room_av_equipment_serial_number.value,
         inventory_number: conference_room_av_equipment_inventory_number.value,
         status_id: conference_room_av_equipment_status.value,
-        delivery_date: conference_room_av_equipment_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: conference_room_av_equipment_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(conference_room_av_equipment_delivery_date.value),
+        deployment_date: formatDate(conference_room_av_equipment_deployment_date.value),
 
         name: conference_room_av_equipment_name.value,
         ip_address: conference_room_av_equipment_ip_address.value,
@@ -163,13 +187,18 @@ async function addConferenceRoomAVEquipment() {
     }
 
     for (const key in cr_equipment) {
-        if (cr_equipment[key] === undefined) {
+        if (cr_equipment[key] === undefined || cr_equipment[key] === "") {
             cr_equipment[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-crav-equipment/', cr_equipment);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-crav-equipment/', cr_equipment, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

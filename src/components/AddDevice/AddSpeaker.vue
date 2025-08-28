@@ -104,7 +104,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -121,18 +121,45 @@ import CommentField from '../Fields/CommentField.vue';
 
 const text_highlight_color = ref('text-blue-500');
 
-const speaker_brand = ref();
-const speaker_model = ref();
-const speaker_serial_number = ref();
-const speaker_inventory_number = ref();
-const speaker_delivery_date = ref();
-const speaker_deployment_date = ref();
-const speaker_status = ref();
-const speaker_parish = ref();
-const speaker_location_type = ref();
-const speaker_location = ref();
-const speaker_division = ref();
-const speaker_comment = ref();
+const speakerFieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "parish", "location_type", "location",
+  "division", "comment"
+];
+
+const speakerRefs = {};
+
+speakerFieldNames.forEach(name => {
+  const key = `speaker_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  speakerRefs[key] = ref(saved || "");
+
+  watch(speakerRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+  speaker_brand,
+  speaker_model,
+  speaker_serial_number,
+  speaker_inventory_number,
+  speaker_delivery_date,
+  speaker_deployment_date,
+  speaker_status,
+  speaker_parish,
+  speaker_location_type,
+  speaker_location,
+  speaker_division,
+  speaker_comment,
+} = speakerRefs;
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 async function createSpeaker() {
     const speaker = {
@@ -142,19 +169,24 @@ async function createSpeaker() {
         model: speaker_model.value,
         serial_number: speaker_serial_number.value,
         inventory_number: speaker_inventory_number.value,
-        delivery_date: speaker_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: speaker_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(speaker_delivery_date.value),
+        deployment_date: formatDate(speaker_deployment_date.value),
         status_id: speaker_status.value,
     }
 
     for (const key in speaker) {
-        if (speaker[key] === undefined) {
+        if (speaker[key] === undefined || speaker[key] === "") {
             speaker[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-device/', speaker);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-device/', speaker, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

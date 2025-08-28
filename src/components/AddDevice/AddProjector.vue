@@ -104,7 +104,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
@@ -121,18 +121,46 @@ import CommentField from '../Fields/CommentField.vue';
 
 const text_highlight_color = ref('text-blue-500');
 
-const projector_brand = ref();
-const projector_model = ref();
-const projector_serial_number = ref();
-const projector_inventory_number = ref();
-const projector_delivery_date = ref();
-const projector_deployment_date = ref();
-const projector_status = ref();
-const projector_parish = ref();
-const projector_location_type = ref();
-const projector_location = ref();
-const projector_division = ref();
-const projector_comment = ref();
+const projectorFieldNames = [
+  "brand", "model", "serial_number", "inventory_number",
+  "delivery_date", "deployment_date", "status",
+  "parish", "location_type", "location",
+  "division", "comment"
+];
+
+const projectorRefs = {};
+
+projectorFieldNames.forEach(name => {
+  const key = `projector_${name}`;
+  const saved = localStorage.getItem(`${key}_val`);
+  projectorRefs[key] = ref(saved || "");
+
+  watch(projectorRefs[key], val => {
+    localStorage.setItem(`${key}_val`, val);
+  });
+});
+
+const {
+  projector_brand,
+  projector_model,
+  projector_serial_number,
+  projector_inventory_number,
+  projector_delivery_date,
+  projector_deployment_date,
+  projector_status,
+  projector_parish,
+  projector_location_type,
+  projector_location,
+  projector_division,
+  projector_comment,
+} = projectorRefs;
+
+
+function formatDate(value) {
+    if (!value) return null;
+    const date = new Date(value);
+    return isNaN(date) ? null : date.toISOString().split('T')[0];
+}
 
 async function createPojector() {
     const projector = {
@@ -142,19 +170,24 @@ async function createPojector() {
         brand: projector_brand.value,
         model: projector_model.value,
         inventory_number: projector_inventory_number.value,
-        delivery_date: projector_delivery_date.value?.toISOString().split('T')[0],
-        deployment_date: projector_deployment_date.value?.toISOString().split('T')[0],
+        delivery_date: formatDate(projector_delivery_date.value),
+        deployment_date: formatDate(projector_deployment_date.value),
         status_id: projector_status.value,
     }
 
     for (const key in projector) {
-        if (projector[key] === undefined) {
+        if (projector[key] === undefined || projector[key] === "") {
             projector[key] = null;
         }
     }
 
     try {
-        const response = await axios.post('http://localhost:8000/add-device/', projector);
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:8000/add-device/', projector, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {

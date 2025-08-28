@@ -66,9 +66,16 @@ const items = ref([]); // Store the search results (list of items)
 
 async function get_items() {
     try {
-        const response = await axios.get(`http://localhost:8000/get_items_by_brand/${encodeURIComponent(filter.value)}`);
+        const response = await axios.get('http://localhost:8000/get-items/', {
+            params: {
+                serial_number: "1234",
+                brand: "HP",
+                status: 1,
+                division: 3
+            }
+        });
         console.log(response.data);
-        items.value = response.data;
+
     } catch (error) {
         console.error('Error finding item:', error.response?.data || error.message);
         alert("Failed to find item. Check console.");
