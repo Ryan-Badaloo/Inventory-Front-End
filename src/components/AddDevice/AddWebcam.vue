@@ -39,12 +39,8 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="webcam_status" :class="[option_field_class]" class="bg-white" v-model="webcam_status">
                     <option selected class="text-blue-100">Choose a Status</option>
-                    <option value=1>Working</option>
-                    <option value=2>Malfunctioned/Being Repaired</option>
-                    <option value=3>Being Upgraded</option>
-                    <option value=4>Unassigned</option>
-                    <option value=5>Stolen</option>
-                    <option value=6>BOS</option>
+                    <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
+
                 </select>
                 <TextLabel labelFor="webcam_status" fieldName="System Status: "/>
             </div>
@@ -85,11 +81,10 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="webcam_division" :class="[option_field_class]" class="bg-white" v-model="webcam_division">
                     <option selected class="text-blue-100">Choose a Division</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                    <option v-for="division in divisions" :key="division.division_id" :value=division.division_id class="text-black">{{ division.division_name }}</option>
+
                 </select>
-                <TextLabel :labelFor="webcam_division" fieldName="Division" />
+                <TextLabel labelFor="webcam_division" fieldName="Division" />
             </div>
         </div>
         <CommentField id="webcam_comment" labelFor="webcam_comment" fieldName="Comment: " v-model="webcam_comment"/>
@@ -103,13 +98,12 @@
 
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 
-import { option_field_class } from '@/utils/descriptions';
-import { date_field_class } from '@/utils/descriptions';
+import { getStatuses, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -118,7 +112,19 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
-const text_highlight_color = ref('text-blue-500');
+const statuses = ref([])
+const divisions = ref([])
+
+onMounted(async () => {
+  try {
+    statuses.value = await getStatuses();
+
+    divisions.value = await getDivisions();
+    console.log(divisions.value)
+  } catch (err) {
+    console.error("Failed to load statuses", err);
+  }
+});
 
 const webcamFieldNames = [
   "brand", "model", "serial_number", "inventory_number",

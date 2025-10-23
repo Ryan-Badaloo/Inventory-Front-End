@@ -39,12 +39,8 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_status" :class="[option_field_class]" class="bg-white" v-model.number="laptop_status">
                     <option selected class="text-blue-100">Choose a Status</option>
-                    <option value=1>Working</option>
-                    <option value=2>Malfunctioned/Being Repaired</option>
-                    <option value=3>Being Upgraded</option>
-                    <option value=4>Unassigned</option>
-                    <option value=5>Stolen</option>
-                    <option value=6>BOS</option>
+                    <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
+
                 </select>
                 <TextLabel labelFor="laptop_status" fieldName="System Status: "/>
             </div>
@@ -105,9 +101,9 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_cpu_type" :class="[option_field_class]" class="bg-white" v-model="laptop_cpu_type">
                     <option selected class="text-blue-100">Choose a Division</option>
-                    <option value=1>Option 1</option>
+                    <option v-for="cpu_type in cpu_types" :key="cpu_type.cpu_type_id" :value=cpu_type.cpu_type_id class="text-black">{{ cpu_type.cpu_type_description }}</option>
                 </select>
-                <TextLabel :labelFor="laptop_cpu_type" fieldName="CPU Type:" />
+                <TextLabel labelFor="laptop_cpu_type" fieldName="CPU Type:" />
             </div>
 
             <TextField id="laptop_processor_speed" labelFor="laptop_processor_speed" fieldName="Processor Speed: " v-model="laptop_processor_speed"/>
@@ -166,11 +162,9 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_division" :class="[option_field_class]" class="bg-white" v-model="laptop_division">
                     <option selected class="text-blue-100">Choose a Division</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                    <option v-for="division in divisions" :key="division.division_id" :value=division.division_id class="text-black">{{ division.division_name }}</option>
                 </select>
-                <TextLabel :labelFor="laptop_division" fieldName="Division" />
+                <TextLabel labelFor="laptop_division" fieldName="Division" />
             </div>
         </div>
 
@@ -185,13 +179,12 @@
 
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 
-import { option_field_class } from '@/utils/descriptions';
-import { date_field_class } from '@/utils/descriptions';
+import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -199,6 +192,25 @@ import TextLabel from '@/components/Fields/TextLabel.vue';
 import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
+
+const statuses = ref([])
+const cpu_types = ref([])
+const divisions = ref([])
+
+onMounted(async () => {
+  try {
+    statuses.value = await getStatuses();
+    console.log(statuses.value);
+
+    cpu_types.value = await getCPUTypes();
+    console.log(cpu_types.value)
+
+    divisions.value = await getDivisions();
+    console.log(divisions.value)
+  } catch (err) {
+    console.error("Failed to load something", err);
+  }
+});
 
 
 const fieldNames = [
@@ -211,6 +223,8 @@ const fieldNames = [
   "antivirus", "file_input", "parish", "location_type",
   "location", "division", "comment"
 ];
+
+
 
 const laptopRefs = {};
 

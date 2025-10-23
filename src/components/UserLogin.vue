@@ -61,9 +61,7 @@ const login = async () => {
     localStorage.setItem('token', response.data.access_token);
     router.push('/add-item');
   } catch (error) {
-    if (error.response.status == 401) {
-      alert("Invalid Username or Password Entered")
-    }
+    
     console.log(error)
   }
 };

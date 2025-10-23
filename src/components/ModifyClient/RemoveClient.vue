@@ -40,7 +40,7 @@ async function confirmDeleteClient() {
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log("Client Has Been Deleted")
+        alert("Client Has Been Deleted")
     } catch (error) {
         console.error('Error finding Client:', error.response?.data || error.message);
         alert("Failed to find Client. Check console.");

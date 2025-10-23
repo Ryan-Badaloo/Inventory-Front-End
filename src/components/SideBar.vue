@@ -47,6 +47,17 @@ const open = ref(false);
                                 <h2 class="transition duration-100 ease-in-out group-hover:translate-x-2 text-xl font-semibold italic">Modify Clients</h2>
                             </div>
                         </RouterLink>
+
+                        <RouterLink to="/settings" class="">
+                            <div class="p-1 rounded hover:shadow-sm group">
+                                <h2 class="transition duration-100 ease-in-out group-hover:translate-x-2 text-xl font-semibold italic">Settings</h2>
+                            </div>
+                        </RouterLink>
+                        <RouterLink to="/reports" class="">
+                            <div class="p-1 rounded hover:shadow-sm group">
+                                <h2 class="transition duration-100 ease-in-out group-hover:translate-x-2 text-xl font-semibold italic">Reports</h2>
+                            </div>
+                        </RouterLink>
                     </ul>
                 </div>
             </div>

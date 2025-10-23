@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-8 flex flex-row-reverse mb-6 group">
+    <div class="mt-8 flex flex-row-reverse mb-8 group">
         <input type="text" :id="id" :name="name" class="ml-8 block w-full rounded-md border-2 border-gray-400 focus:outline-none focus:ring-0 peer bg-white" :class="['focus:' + field_highlight_color]" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"/>
 
 

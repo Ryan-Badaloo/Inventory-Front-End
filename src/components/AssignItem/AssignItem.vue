@@ -3,7 +3,7 @@
     <div>
 <!-- THIS DISPLAYS THE SEARCH BAR AND RADIO BUTTONS ////////////////////////////////////////////////////////////-->
         <div>
-            <SearchBar :onSubmit="get_items">
+            <SearchBar :onSubmit="get_items" v-model="test_category">
                 <div class="w-2/3 flex justify-around items-center">
                     <div class="">
                         <input type="radio" id="brand_radio" name="category" value="Brand" v-model="search_category"
@@ -95,7 +95,7 @@
                                 {{ item.delivery_date }}
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
-                                    <button @click="console.log(add_to_cart(item))" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
+                                    <button @click="add_to_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
                                     add
                                     </button>
                             </td>
@@ -184,17 +184,18 @@
 
             </div>
 
-            <div class="w-1/2 flex flex-row-reverse mb-6 group">
-                <select id="assign_to" :class="[option_field_class]">
-                    <option selected class="text-blue-100">Choose a Client</option>
-                    <option value="">Person 1</option>
-                    <option value="">Person 2</option>
-                    <option value="">Person 3</option>
-                </select>
-                <TextLabel labelFor="assign_to" fieldName="Assign To Client: "/>
+            <div class="w-1/2 flex mb-6 group"> 
+                <TextLabel fieldName="Choose Your Client" />
+
+                <input list="allClients" name="allClient" id="allClient" :class="[option_field_class]" v-model="assignClientName">
+
+                <datalist id="allClients">
+                    <option v-for="client in allClients" :key="client.client_id" :value="`${client.firstname} ${client.lastname}`" class="text-black"></option>
+
+                </datalist>
             </div>
 
-            <AddItemButton button-name="Assign To Client"/>
+            <AddItemButton button-name="Assign To Client" @click="assign_items()"/>
 
         </SectionTemplate>
     </div>
@@ -202,7 +203,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import SectionTemplate from '../SectionTemplate.vue';
 import SearchBar from '../SearchBar.vue';
@@ -221,11 +222,29 @@ const paginatedItems = computed(() => {
   return items.value.slice(start, end);
 });
 
+
+onMounted(() => {
+  get_clients();
+});
+
 const cart = ref([]); //Store the items in the cart
 const search_category = ref();
+const allClients = ref()
 
-const test_brand = ref('HP');
-const test_category = ref('Laptop');
+const assignClientName = ref("")
+const assignClient = ref(null);
+
+const test_brand = ref('');
+const test_category = ref('Tablet');
+
+
+watch(assignClientName, (newName) => {
+  const match = allClients.value.find(
+    client => `${client.firstname} ${client.lastname}` === newName
+  );
+  assignClient.value = match || null;
+});
+
 
 
 async function get_items() {
@@ -242,7 +261,6 @@ async function get_items() {
             }
         });
         items.value = response.data
-        console.log(items.value)
     } catch (error) {
         console.error('Error finding item:', error.response?.data || error.message);
         alert("Failed to find item. Check console.");
@@ -266,6 +284,52 @@ function remove_from_cart(item) {
         cart.value.splice(index, 1);
     }
 }
+
+async function get_clients() {
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:8000/get-clients/', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
+        allClients.value = response.data
+    } catch (error) {
+        console.error('Error finding Client:', error.response?.data || error.message);
+        alert("Failed to find Client. Check console.");
+    }
+}
+
+async function assign_items() {
+    console.log(assignClient.value)
+    console.log(assignClient.value?.email)
+
+    console.log(cart.value)
+    const token = localStorage.getItem('token');
+
+    for (const device of cart.value) {
+        console.log(device.serial_number)
+
+        try {
+            
+            const response = await axios.put('http://localhost:8000/assign-device/', {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                params: {
+                    device_sn: device.serial_number,
+                    client_id: assignClient.value?.client_id
+                }
+            });
+            alert("Assignment was successful");
+        } catch (error) {
+            console.error(error.response?.data || error.message);
+            alert("Failed to assign Device. Check console.");
+        }
+    }
+}
+
 </script>
 
 

@@ -9,6 +9,8 @@ import UpdateItem from '@/views/UpdateItemPage.vue'
 import AssignItem from '@/views/AssignItemPage.vue'
 import ChangePassword from '@/views/ChangePasswordPage.vue'
 import UpdateRequest from '@/views/UpdateRequestPage.vue'
+import Settings from '@/views/SettingsPage.vue'
+import Report from '@/views/ReportPage.vue'
 import { tryOnBeforeUnmount } from '@vueuse/core'
 
 const router = createRouter({
@@ -61,6 +63,20 @@ const router = createRouter({
       path: '/update-request/:passedText',
       name: 'UpdateRequest',
       component: UpdateRequest,
+      props: true,
+      meta: { requiresAuth: true } // Protected
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
+      props: true,
+      meta: { requiresAuth: true } // Protected
+    },
+    {
+      path: '/reports',
+      name: 'Report',
+      component: Report,
       props: true,
       meta: { requiresAuth: true } // Protected
     },

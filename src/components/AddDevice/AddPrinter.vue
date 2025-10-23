@@ -39,12 +39,8 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="printer_status" :class="[option_field_class]" class="bg-white" v-model="printer_status">
                     <option selected class="text-blue-100">Choose a Status</option>
-                    <option value=1>Working</option>
-                    <option value=2>Malfunctioned/Being Repaired</option>
-                    <option value=3>Being Upgraded</option>
-                    <option value=4>Unassigned</option>
-                    <option value=5>Stolen</option>
-                    <option value=6>BOS</option>
+                    <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
+
                 </select>
                 <TextLabel labelFor="printer_status" fieldName="System Status: "/>
             </div>
@@ -55,10 +51,8 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="printer_features" :class="[option_field_class]" v-model="printer_features">
                     <option selected class="text-blue-100">Choose a Feature</option>
-                    <option value=1>Copy Only</option>
-                    <option value=2>Print Only</option>
-                    <option value=3>Print, Scan</option>
-                    <option value=4>Print, Scan, Copy</option>
+                    <option v-for="feature in features" :key="feature.feature_id" :value=feature.feature_id class="text-black">{{ feature.feature_description }}</option>
+
                 </select>
                 <TextLabel labelFor="printer_features" fieldName="Features: "/>
             </div>
@@ -68,8 +62,8 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="printer_connection_type" :class="[option_field_class]" v-model="printer_connection_type">
                     <option selected class="text-blue-100">Choose a Connection Type</option>
-                    <option value=1>Networked</option>
-                    <option value=2>Stand Alone</option>
+                    <option v-for="ctype in connection_types" :key="ctype.ctype_id" :value=ctype.ctype_id class="text-black">{{ ctype.ctype_description }}</option>
+
                 </select>
                 <TextLabel labelFor="printer_connection_type" fieldName="Connection Type: "/>
             </div>
@@ -111,11 +105,10 @@
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="printer_division" :class="[option_field_class]" class="bg-white" v-model="printer_division">
                     <option selected class="text-blue-100">Choose a Division</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                    <option v-for="division in divisions" :key="division.division_id" :value=division.division_id class="text-black">{{ division.division_name }}</option>
+
                 </select>
-                <TextLabel :labelFor="printer_division" fieldName="Division" />
+                <TextLabel labelFor="printer_division" fieldName="Division" />
             </div>
         </div>
 
@@ -130,13 +123,12 @@
 
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 
-import { option_field_class } from '@/utils/descriptions';
-import { date_field_class } from '@/utils/descriptions';
+import { getStatuses, getConnectionTypes, getPrinterFeatures, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -145,8 +137,22 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
-const text_highlight_color = ref('text-blue-500');
+const statuses = ref([]);
+const connection_types = ref([]);
+const features = ref([]);
+const divisions = ref([])
 
+onMounted(async () => {
+  try {
+    statuses.value = await getStatuses();
+    connection_types.value = await getConnectionTypes();
+    features.value = await getPrinterFeatures();
+    divisions.value = await getDivisions();
+    console.log(divisions.value)
+  } catch (err) {
+    console.error("Failed to load statuses", err);
+  }
+});
 const printerFieldNames = [
   "brand", "model", "serial_number", "inventory_number",
   "delivery_date", "deployment_date", "status",
