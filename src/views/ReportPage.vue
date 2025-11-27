@@ -22,8 +22,8 @@ import SideBar from '@/components/SideBar.vue';
 import LocationCount from '@/components/Reports/LocationCount.vue';
 import LocationReport from '@/components/Reports/LocationReport.vue';
 import CPUType from '@/components/Settings/CPUType.vue';
-import ConnectionType from '@/components/Settings/ConnectionType.vue';
-import PrinterFeature from '@/components/Settings/PrinterFeature.vue';
+import DeliveryDate from '@/components/Reports/DeliveryDate.vue';
+import DeploymentDate from '@/components/Reports/DeploymentDate.vue';
 
 
 import Settings from '@/components/Settings/Settings.vue';
@@ -36,10 +36,10 @@ const getComponent = (device) => {
       return LocationCount;
     case 'location_report':
       return LocationReport;
-    case 'connection_type':
-      return ConnectionType;
-    case 'printer_feature':
-      return PrinterFeature;
+    case 'delivery_date':
+      return DeliveryDate;
+    case 'deployment_date':
+      return DeploymentDate;
     default:
       return null;
   }

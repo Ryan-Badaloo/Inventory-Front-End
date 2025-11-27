@@ -4,6 +4,28 @@
 
             <!-- LOCATIONS /////////////////////////////////////////////////////////////// -->
             <div class="border border-gray-300 rounded-lg p-4 mb-6">
+                <h2 class="text-lg font-semibold text-black mb-3">Parish</h2>
+                <div class="grid grid-cols-3 gap-x-6 gap-y-2">
+                    <div v-for="parish in parishes" :key="parish.parish_id" class="flex items-center space-x-2">
+                        <input 
+                            type="checkbox" 
+                            :id="`parish${parish.parish_id}`"
+                            :value="parish.parish_name"
+                            v-model="selectedParishes"
+                            class="cursor-pointer w-4 h-4 accent-blue-600"
+                        />
+                        <label 
+                            :for="`parish_${parish.parish_id}`"
+                            class="cursor-pointer text-gray-700 dark:text-gray-200 text-sm"
+                        >
+                            {{ parish.parish_name }}
+                        </label>
+                    </div>
+                </div>
+            </div>          
+
+            <!-- LOCATIONS /////////////////////////////////////////////////////////////// -->
+            <div class="border border-gray-300 rounded-lg p-4 mb-6">
                 <h2 class="text-lg font-semibold text-black mb-3">Location</h2>
                 <div class="grid grid-cols-3 gap-x-6 gap-y-2">
                     <div v-for="loc in locations" :key="loc.location_id" class="flex items-center space-x-2">
@@ -75,6 +97,9 @@
 
             <!-- FILTER RESULTS TABLE -->
             <SectionTemplate v-if="filteredDevices.length > 0" template-name="Filtered Results">
+              <div class="p-2 bg-white border border-gray-400 w-1/5 rounded-sm">
+                <h1 class="font-bold text-center text-xl">Device Count: {{ filteredDevices.length }}</h1>
+              </div>
               <div class="relative overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -117,10 +142,12 @@ import AddItemButton from '@/components/AddItemButton.vue';
 
 // STATE VARIABLES ////////////////////////////////////////////////////////
 const locations = ref([]);
+const parishes = ref([])
 const statuses = ref([]);
 const selectedLocations = ref([]);
-const selectedComponents = ref([]);
+const selectedParishes = ref([]);
 const selectedStatuses = ref([]);
+const selectedComponents = ref([]);
 const filteredDevices = ref([]);
 
 // Static component list
@@ -134,6 +161,7 @@ const components = [
 onMounted(() => {
   getLocations();
   getStatuses();
+  getParishes();
 });
 
 async function getLocations() {
@@ -145,6 +173,21 @@ async function getLocations() {
       }
     });
     locations.value = response.data;
+  } catch (error) {
+    console.error('Error fetching locations:', error.response?.data || error.message);
+    alert('Failed to load locations. Check console.');
+  }
+}
+
+async function getParishes() {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.get('http://localhost:8000/get-parish-names/', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    parishes.value = response.data;
   } catch (error) {
     console.error('Error fetching locations:', error.response?.data || error.message);
     alert('Failed to load locations. Check console.');
@@ -172,6 +215,7 @@ async function applyFilters() {
     const token = localStorage.getItem("token");
     const payload = {
       locations: selectedLocations.value,
+      parishes: selectedParishes.value,
       statuses: selectedStatuses.value,
       components: selectedComponents.value,
     };

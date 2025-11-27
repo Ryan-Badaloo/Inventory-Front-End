@@ -4,31 +4,21 @@
 <!-- THIS DISPLAYS THE SEARCH BAR AND RADIO BUTTONS ////////////////////////////////////////////////////////////-->
         <div>
             <SearchBar :onSubmit="get_items" v-model="search_category">
-                <div class="w-2/3 flex justify-around items-center">
-                    <div class="">
-                        <input type="radio" id="brand_radio" name="category" value="Brand" v-model="search_category"
+                <div class="w-2/3 grid grid-cols-3 gap-4">
+
+                    <div class="flex justify-center">
+                        <input type="radio" id="device_type_radio" name="category" value="Device Type" v-model="search_filter"
                             class="peer hidden" />
-                        <label for="brand_radio"
+                        <label for="device_type_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
                                 transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
-                            Brand
+                            Device Type
                         </label>
                     </div>
-
-                    <div class="">
-                        <input type="radio" id="model_radio" name="category" value="Model" v-model="search_category"
-                            class="peer hidden" />
-                        <label for="model_radio"
-                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
-                                peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
-                            Model
-                        </label>
-                    </div>
-
-                    <div class="">
-                        <input type="radio" id="serial_number_radio" name="category" value="Serial_Number" v-model="search_category"
+                    
+                    <div class="flex justify-center">
+                        <input type="radio" id="serial_number_radio" name="category" value="Serial Number" v-model="search_filter"
                             class="peer hidden" />
                         <label for="serial_number_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
@@ -37,6 +27,62 @@
                             Serial Number
                         </label>
                     </div>
+
+                    <div class="flex justify-center">
+                        <input type="radio" id="client_radio" name="category" value="Client" v-model="search_filter"
+                            class="peer hidden" />
+                        <label for="client_radio"
+                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
+                                peer-checked:bg-blue-800 peer-checked:text-white
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                            Client
+                        </label>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <input type="radio" id="status_radio" name="category" value="Status" v-model="search_filter"
+                            class="peer hidden" />
+                        <label for="status_radio"
+                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
+                                peer-checked:bg-blue-800 peer-checked:text-white
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                            Status
+                        </label>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <input type="radio" id="delivery_date_radio" name="category" value="Delivery Date" v-model="search_filter"
+                            class="peer hidden" />
+                        <label for="delivery_date_radio"
+                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
+                                peer-checked:bg-blue-800 peer-checked:text-white
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                            Delivery Date
+                        </label>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <input type="radio" id="deployment_date_radio" name="category" value="Deployment Date" v-model="search_filter"
+                            class="peer hidden" />
+                        <label for="deployment_date_radio"
+                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
+                                peer-checked:bg-blue-800 peer-checked:text-white
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                            Deployment Date
+                        </label>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <input type="radio" id="division_radio" name="category" value="Division" v-model="search_filter"
+                            class="peer hidden" />
+                        <label for="division_radio"
+                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
+                                peer-checked:bg-blue-800 peer-checked:text-white
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                            Division
+                        </label>
+                    </div>
+
                 </div>
 
             </SearchBar>
@@ -1550,6 +1596,7 @@ const {
 
 const itemToUpdate = ref();
 const search_category = ref();
+const search_filter = ref();
 
 
 
@@ -1561,6 +1608,7 @@ const test_category = ref('Laptop');
 
 async function get_items() {
     console.log(search_category.value)
+    console.log(search_filter.value)
 
     try {
         const token = localStorage.getItem('token');
@@ -1569,12 +1617,14 @@ async function get_items() {
                 Authorization: `Bearer ${token}`
             },
             params: {
-                brand: test_brand.value,
-                category: search_category.value,
+                filter: search_filter.value,
+                input: search_category.value,
+                
             }
         });
         items.value = response.data
         console.log(items.value)
+        
     } catch (error) {
         console.error('Error finding item:', error.response?.data || error.message);
         alert("Failed to find item. Check console.");
