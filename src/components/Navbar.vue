@@ -14,9 +14,6 @@ function logout() {
   }
 
 }
-
-
-
 </script>
 
 <template>

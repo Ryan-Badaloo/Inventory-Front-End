@@ -38,12 +38,11 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-
+import {} from '../../composable/useUrlcomposable'
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
 import TextLabel from '@/components/Fields/TextLabel.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
-
 import { option_field_class } from '@/utils/descriptions';
 
 const first_name = ref()
@@ -66,7 +65,7 @@ async function addClient() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/create-client/', client, {
+        const response = await axios.post(`${useBaseURLComposable()}create-client/`, client, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

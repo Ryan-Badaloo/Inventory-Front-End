@@ -33,7 +33,7 @@ import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import TextLabel from '../Fields/TextLabel.vue';
 import { getStatuses, option_field_class} from '@/utils/descriptions';
-
+import {useBaseURLComposable} from '../../composable/useUrlcomposable'
 
 const statuses = ref([])
 const selectedStatus = ref();
@@ -51,7 +51,7 @@ onMounted(async () => {
 async function add_status(statusText) {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-status/', { status: statusText }, {
+        const response = await axios.post(`${useBaseURLComposable()}add-status/`, { status: statusText }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -69,7 +69,7 @@ async function remove_status(statusText) {
     try {
 
         const token = localStorage.getItem('token');
-        await axios.delete('http://localhost:8000/delete-status/', {
+        await axios.delete(`${useBaseURLComposable()}delete-status/`, {
             params: {
                 status: statusText
             },

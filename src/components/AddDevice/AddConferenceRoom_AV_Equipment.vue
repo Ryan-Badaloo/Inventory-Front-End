@@ -108,14 +108,12 @@
 import { ref, watch, onMounted } from 'vue';
 import '@vuepic/vue-datepicker/dist/main.css'
 import axios from 'axios';
-
+import {useBaseURLComposable} from '../../composable/useUrlcomposable'
 import { getStatuses, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions.js';
-
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
 import TextLabel from '@/components/Fields/TextLabel.vue';
 import AddTemplate from '../SectionTemplate.vue';
-import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
 const statuses = ref([])
@@ -200,7 +198,7 @@ async function addConferenceRoomAVEquipment() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-crav-equipment/', cr_equipment, {
+        const response = await axios.post(`${useBaseURLComposable()}add-crav-equipment/`, cr_equipment, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

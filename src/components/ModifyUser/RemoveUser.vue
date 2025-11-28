@@ -20,7 +20,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-
+import {useBaseURLComposable} from '../../composable/useUrlcomposable'
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
@@ -33,9 +33,8 @@ const username = ref();
 
 async function confirmDeleteUser() {
     try {
-
         const token = localStorage.getItem('token');
-        await axios.delete('http://localhost:8000/delete-user/', {
+        await axios.delete(`${useBaseURLComposable()}delete-user/`, {
             params: {
                 first_name: first_name.value,
                 last_name: last_name.value,
@@ -51,6 +50,4 @@ async function confirmDeleteUser() {
         alert("Failed to find User. Check console.");
     }
 }
-
-
 </script>

@@ -209,7 +209,7 @@ import SectionTemplate from '../SectionTemplate.vue';
 import SearchBar from '../SearchBar.vue';
 import AddItemButton from '../AddItemButton.vue';
 import TextLabel from '../Fields/TextLabel.vue';
-
+import {useBaseURLComposable} from '../../composable/useUrlcomposable'
 import { option_field_class } from '@/utils/descriptions';
 
 const items = ref([]); // Store the search results (list of items)
@@ -221,7 +221,6 @@ const paginatedItems = computed(() => {
   const end = start + itemsPerPage;
   return items.value.slice(start, end);
 });
-
 
 onMounted(() => {
   get_clients();
@@ -245,13 +244,11 @@ watch(assignClientName, (newName) => {
   assignClient.value = match || null;
 });
 
-
-
 async function get_items() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-items/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-items/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -286,10 +283,9 @@ function remove_from_cart(item) {
 }
 
 async function get_clients() {
-
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-clients/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-clients/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -312,8 +308,7 @@ async function assign_items() {
         console.log(device.serial_number)
 
         try {
-            
-            const response = await axios.put('http://localhost:8000/assign-device/', {}, {
+            const response = await axios.put(`${useBaseURLComposable()}assign-device/`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -329,7 +324,6 @@ async function assign_items() {
         }
     }
 }
-
 </script>
 
 
