@@ -6,13 +6,13 @@
             <SearchBar :onSubmit="get_items" v-model="search_category">
                 <div class="w-2/3 grid grid-cols-3 gap-4">
 
-                    <div class="flex justify-center">
+                    <div class="flex justify-center ">
                         <input type="radio" id="device_type_radio" name="category" value="Device Type" v-model="search_filter"
                             class="peer hidden" />
                         <label for="device_type_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
                             Device Type
                         </label>
                     </div>
@@ -23,7 +23,7 @@
                         <label for="serial_number_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
                             Serial Number
                         </label>
                     </div>
@@ -34,7 +34,7 @@
                         <label for="client_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
                             Client
                         </label>
                     </div>
@@ -45,7 +45,7 @@
                         <label for="status_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
                             Status
                         </label>
                     </div>
@@ -56,7 +56,7 @@
                         <label for="delivery_date_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
                             Delivery Date
                         </label>
                     </div>
@@ -67,7 +67,7 @@
                         <label for="deployment_date_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
                             Deployment Date
                         </label>
                     </div>
@@ -78,7 +78,7 @@
                         <label for="division_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
                             Division
                         </label>
                     </div>

@@ -89,7 +89,7 @@
         </div>
 
 <!-- THIS DISPLAYS THE SEARCH RESULTS TABLE ///////////////////////////////////////////////////////////////////-->
-        <SectionTemplate v-if="items.length > 0" template-name="Assign Devices">
+        <SectionTemplate v-if="items.length > 0" template-name="Unassign Devices">
             <div class="relative overflow-x-auto">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -113,7 +113,7 @@
                                 Status
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Delivery Date
+                                Client Name
                             </th>
                         </tr>
                     </thead>
@@ -138,11 +138,11 @@
                                 {{ item.status_description }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.delivery_date }}
+                                {{ item.client_name }}
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
-                                    <button @click="add_to_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
-                                    add
+                                    <button @click="openUnassignModal(item.serial_number, item.brand, item.category, item.model, item.client_id, item.client_name)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
+                                    person_remove
                                     </button>
                             </td>
                         </tr>
@@ -167,83 +167,38 @@
 
         </SectionTemplate>
 
-        <SectionTemplate v-if="cart.length > 0" template-name="Cart">
-            <div class="mb-6 relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Brand
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Category
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Serial Number
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Inventory Number
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Model
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Delivery Date
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in cart" :key="item.Item_ID" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
-                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ item.brand }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ item.category }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ item.serial_number }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ item.inventory_number }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ item.model }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ item.status_description }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ item.delivery_date }}
-                            </td>
-                            <td class="px-6 py-4 inline-block align-middle">
-                                <button @click="remove_from_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
-                                close
-                                </button>
-                            </td>
-                        </tr>
+        <!-- THIS IS THE MODAL TO DELETE DEVICE -->
+        <div v-show="showUnassignModal" @close="closeUnassignModal" class="fixed inset-0 z-60 bg-black/70 flex justify-center items-start">
+            <div ref="unassignRef" class="p-2 w-3/10 z-50 mt-10 bg-gray-100 border-2 border-gray-600 rounded-md shadow-lg shadow-black">
+                <!-- This is the error sign -->
+                <div class="flex justify-center">
+                    <span class="material-icons !text-7xl text-red-500"> 
+                        error
+                    </span>
+                </div>
 
-                    </tbody>
-                </table>
+                <h1 class="text-2xl text-center font-bold p-2 text-black">
+                    This is the modal name
+                </h1>
 
+                <div class="p-2 flex justify-center">
+                    <div class="flex flex-col">
+                        <div class="">
+                            <h1><span class="font-bold text-xl">Serial Number: {{ unassignSerial }}</span></h1>
+                            <h1><span class="font-bold">Brand</span>: {{ unassignBrand }}</h1>
+                            <h1><span class="font-bold">Category:</span> {{ unassignCategory }}</h1>
+                            <h1><span class="font-bold">Model:</span> {{ unassignModel }}</h1>
+                            <h1><span class="font-bold">Client ID:</span> {{ unassignClientID }}</h1>
+                            <h1><span class="font-bold">Client Name:</span> {{ unassignClientName }}</h1>
+                        </div>
+
+                        <button @click="confirmUnassignItem" class="mt-4 p-2 cursor-pointer bg-red-500 rounded-sm text-white font-bold hover:bg-blue-700">Confirm</button>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="w-1/2 flex mb-6 group"> 
-                <TextLabel fieldName="Choose Your Client" />
-
-                <input list="allClients" name="allClient" id="allClient" :class="[option_field_class]" v-model="assignClientName">
-
-                <datalist id="allClients">
-                    <option v-for="client in allClients" :key="client.client_id" :value="`${client.firstname} ${client.lastname}`" class="text-black"></option>
-
-                </datalist>
-            </div>
-
-            <AddItemButton button-name="Assign To Client" @click="assign_items()"/>
-
-        </SectionTemplate>
+        
     </div>
 
 </template>
@@ -255,6 +210,7 @@ import SectionTemplate from '../SectionTemplate.vue';
 import SearchBar from '../SearchBar.vue';
 import AddItemButton from '../AddItemButton.vue';
 import TextLabel from '../Fields/TextLabel.vue';
+import { onClickOutside } from '@vueuse/core'
 
 import { option_field_class } from '@/utils/descriptions';
 
@@ -269,30 +225,18 @@ const paginatedItems = computed(() => {
 });
 
 
-onMounted(() => {
-  get_clients();
-});
 
 const cart = ref([]); //Store the items in the cart
 const search_category = ref();
 const search_filter = ref();
-const allClients = ref()
 
-const assignClientName = ref("")
-const assignClient = ref(null);
-
-const test_brand = ref('');
-const test_category = ref('Tablet');
-
-
-watch(assignClientName, (newName) => {
-  const match = allClients.value.find(
-    client => `${client.firstname} ${client.lastname}` === newName
-  );
-  assignClient.value = match || null;
-});
-
-
+const showUnassignModal = ref(false);
+const unassignSerial = ref();
+const unassignBrand = ref();
+const unassignCategory = ref();
+const unassignModel = ref();
+const unassignClientID = ref();
+const unassignClientName = ref();
 
 async function get_items() {
     console.log(search_category.value)
@@ -300,7 +244,7 @@ async function get_items() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-items/', {
+        const response = await axios.get('http://localhost:8000/get-assigned-items/', {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -319,58 +263,65 @@ async function get_items() {
     }
 }
 
-function remove_from_cart(item) {
-    const index = cart.value.findIndex(cartItem => cartItem.devices_id === item.devices_id);
 
-    if (index !== -1) {
-        cart.value.splice(index, 1);
-    }
+
+
+
+//THIS IS THE UNASSIGN SECTION/////////////////////////////////////////////////////////////////////////////
+function closeUnassignModal() {
+    showUnassignModal.value = false;
+
+    unassignSerial.value = null;
+    unassignBrand.value = null;
+    unassignCategory.value = null;
+    unassignModel.value = null;
+    unassignClientID.value = null;
+    unassignClientName.value = null;
 }
 
-async function get_clients() {
+function openUnassignModal(serial_number, brand, category, model, client_id, client_name) {
+    showUnassignModal.value = true;
 
+    unassignSerial.value = serial_number;
+    unassignBrand.value = brand;
+    unassignCategory.value = category;
+    unassignModel.value = model;
+    unassignClientID.value = client_id;
+    unassignClientName.value = client_name;
+
+}
+
+async function confirmUnassignItem() {
     try {
+        console.log(unassignSerial)
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-clients/', {
+        await axios.post('http://localhost:8000/unassign-item/', null, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
+            params: {
+                serial_number: unassignSerial.value,
+            }
         });
-        allClients.value = response.data
+        items.value = items.value.filter(item => item.serial_number !== unassignSerial.value)
+        console.log("Item Has Been Unassigned")
+        closeUnassignModal()
     } catch (error) {
-        console.error('Error finding Client:', error.response?.data || error.message);
-        alert("Failed to find Client. Check console.");
+        console.error('Error finding item:', error.response?.data || error.message);
+        alert("Failed to find item. Check console.");
     }
 }
 
-async function assign_items() {
-    console.log(assignClient.value)
-    console.log(assignClient.value?.email)
+const unassignRef = ref(null)
 
-    console.log(cart.value)
-    const token = localStorage.getItem('token');
+onClickOutside(unassignRef, () => {
+  if (showUnassignModal.value) {
+    closeUnassignModal()
+  }
+})
 
-    for (const device of cart.value) {
-        console.log(device.serial_number)
 
-        try {
-            
-            const response = await axios.put('http://localhost:8000/assign-device/', {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                params: {
-                    device_sn: device.serial_number,
-                    client_id: assignClient.value?.client_id
-                }
-            });
-            alert("Assignment was successful");
-        } catch (error) {
-            console.error(error.response?.data || error.message);
-            alert("Failed to assign Device. Check console.");
-        }
-    }
-}
+
 
 </script>
 
