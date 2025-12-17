@@ -7,7 +7,6 @@ import ModifyUser from '@/views/ModifyUserPage.vue'
 import ModifyClient from '@/views/ModifyClientPage.vue'
 import UpdateItem from '@/views/UpdateItemPage.vue'
 import AssignItem from '@/views/AssignItemPage.vue'
-import UnassignItem from '@/views/UnassignItemPage.vue'
 import ChangePassword from '@/views/ChangePasswordPage.vue'
 import UpdateRequest from '@/views/UpdateRequestPage.vue'
 import Settings from '@/views/SettingsPage.vue'
@@ -40,12 +39,6 @@ const router = createRouter({
       path: '/assign-item-page',
       name: 'AssignItem',
       component: AssignItem,
-      meta: { requiresAuth: true } // Protected
-    },
-    {
-      path: '/unassign-item-page',
-      name: 'UnassignItem',
-      component: UnassignItem,
       meta: { requiresAuth: true } // Protected
     },
     {

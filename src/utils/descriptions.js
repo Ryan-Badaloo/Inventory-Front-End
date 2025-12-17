@@ -1,6 +1,5 @@
-import { ref } from "vue";
 import axios from 'axios';
-
+import {useBaseURLComposable} from '../composable/useUrlcomposable'
 export const option_field_class = 'basis-2/3 ml-4 block w-full rounded-md border-2 border-gray-400 focus:outline-none focus:ring-0peer';
 export const date_field_class = 'basis-2/3 ml-4 block w-full rounded-md border-2 border-gray-400'
 
@@ -8,7 +7,7 @@ export const date_field_class = 'basis-2/3 ml-4 block w-full rounded-md border-2
 export async function getStatuses() {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-statuses/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-statuses/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -23,7 +22,7 @@ export async function getStatuses() {
 export async function getCPUTypes() {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-cpu-types/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-cpu-types/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -38,7 +37,7 @@ export async function getCPUTypes() {
 export async function getConnectionTypes() {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-connection-types/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-connection-types/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -53,7 +52,7 @@ export async function getConnectionTypes() {
 export async function getPrinterFeatures() {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-printer-features/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-printer-features/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -68,7 +67,7 @@ export async function getPrinterFeatures() {
 export async function getDivisions() {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-divisions/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-divisions/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

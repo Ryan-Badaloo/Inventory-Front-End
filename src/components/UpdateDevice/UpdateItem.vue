@@ -6,13 +6,13 @@
             <SearchBar :onSubmit="get_items" v-model="search_category">
                 <div class="w-2/3 grid grid-cols-3 gap-4">
 
-                    <div class="flex justify-center ">
+                    <div class="flex justify-center">
                         <input type="radio" id="device_type_radio" name="category" value="Device Type" v-model="search_filter"
                             class="peer hidden" />
                         <label for="device_type_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
                             Device Type
                         </label>
                     </div>
@@ -23,7 +23,7 @@
                         <label for="serial_number_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
                             Serial Number
                         </label>
                     </div>
@@ -34,7 +34,7 @@
                         <label for="client_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
                             Client
                         </label>
                     </div>
@@ -45,7 +45,7 @@
                         <label for="status_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
                             Status
                         </label>
                     </div>
@@ -56,7 +56,7 @@
                         <label for="delivery_date_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
                             Delivery Date
                         </label>
                     </div>
@@ -67,7 +67,7 @@
                         <label for="deployment_date_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
                             Deployment Date
                         </label>
                     </div>
@@ -78,7 +78,7 @@
                         <label for="division_radio"
                             class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
                                 peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
+                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white">
                             Division
                         </label>
                     </div>
@@ -1392,7 +1392,7 @@ import { onClickOutside } from '@vueuse/core'
 import axios from 'axios';
 import SectionTemplate from '../SectionTemplate.vue';
 import SearchBar from '../SearchBar.vue';
-
+import {} from '../../composable/useUrlcomposable'
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -1401,11 +1401,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import CommentField from '@/components/Fields/CommentField.vue';
 import UpdateModal from './UpdateModal.vue';
 
-
 import { getStatuses, getCPUTypes, getConnectionTypes, getPrinterFeatures, option_field_class, date_field_class } from '@/utils/descriptions';
-
-
-
 
 const items = ref([]); // Store the search results (list of items)
 const currentPage = ref(1)
@@ -1417,7 +1413,6 @@ const paginatedItems = computed(() => {
   const end = start + itemsPerPage;
   return items.value.slice(start, end);
 });
-
 
 
 const showDeviceModal = ref(false);
@@ -1602,8 +1597,6 @@ const search_category = ref();
 const search_filter = ref();
 
 
-
-
 // These are tests and should be removed
 const test_brand = ref();
 const test_category = ref('Laptop');
@@ -1615,7 +1608,7 @@ async function get_items() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-items/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-items/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -1652,7 +1645,7 @@ async function openDeviceModal(serial_number, category) {
     console.log("Opening Device Modal")
 
     try {
-        const response = await axios.get('http://localhost:8000/get-item-sn/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-item-sn/`, {
             params: {
                 serial_number: serial_number,
                 category: category,
@@ -1721,7 +1714,7 @@ async function openCommentModal(devices_id, serial_number) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-comments/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-comments/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -1758,13 +1751,13 @@ async function add_comment(comment) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-comments/', { id: devices_id, comment: comment }, {
+        const response = await axios.post(`${useBaseURLComposable()}add-comments/`, { id: devices_id, comment: comment }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
-        const second_response = await axios.get('http://localhost:8000/get-comments/', {
+        const second_response = await axios.get(`${useBaseURLComposable()}get-comments/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -1791,7 +1784,7 @@ async function delete_comment(comment) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.delete('http://localhost:8000/delete-comment/', {
+        const response = await axios.delete(`${useBaseURLComposable()}delete-comment/`, {
             params: {
                 id: comment
             },
@@ -1886,7 +1879,7 @@ async function confirmDeleteItem() {
     try {
         console.log(deleteSerial)
         const token = localStorage.getItem('token');
-        await axios.delete('http://localhost:8000/delete-item/', {
+        await axios.delete(`${useBaseURLComposable()}delete-item/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

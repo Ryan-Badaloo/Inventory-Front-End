@@ -37,13 +37,17 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-
+import {} from '../../composable/useUrlcomposable'
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
 import TextLabel from '@/components/Fields/TextLabel.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
+<<<<<<< HEAD
 
 import { option_field_class, getDivisions } from '@/utils/descriptions';
+=======
+import { option_field_class } from '@/utils/descriptions';
+>>>>>>> 945a15203ce0864ca12777a4d307b1b83b355661
 
 const first_name = ref()
 const last_name = ref()
@@ -77,8 +81,12 @@ async function addClient() {
 
     try {
         const token = localStorage.getItem('token');
+<<<<<<< HEAD
         console.log(client)
         const response = await axios.post('http://localhost:8000/create-client/', client, {
+=======
+        const response = await axios.post(`${useBaseURLComposable()}create-client/`, client, {
+>>>>>>> 945a15203ce0864ca12777a4d307b1b83b355661
             headers: {
                 Authorization: `Bearer ${token}`
             }
