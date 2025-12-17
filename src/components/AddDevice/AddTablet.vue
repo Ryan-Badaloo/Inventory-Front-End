@@ -103,7 +103,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="tablet_parish" :class="[option_field_class]" class="bg-white" v-model="tablet_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -131,7 +131,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="tablet_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="tablet_division" :class="[option_field_class]" class="bg-white" v-model="tablet_division">
@@ -143,7 +143,7 @@
             </div>
         </div>
         
-        <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: "/>
+        <!-- <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: "/> -->
 
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>

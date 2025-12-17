@@ -121,15 +121,15 @@
 
 
             <!-- pdf reader -->
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="laptop_file_input" type="file" multiple>
                 <TextLabel labelFor="laptop_file_input" fieldName="Upload File: "/>
-            </div>
+            </div> -->
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_parish" :class="[option_field_class]" class="bg-white" v-model="laptop_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -157,7 +157,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="laptop_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_division" :class="[option_field_class]" class="bg-white" v-model="laptop_division">
@@ -168,7 +168,7 @@
             </div>
         </div>
 
-        <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: " v-model="laptop_comment"/>
+        <!-- <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: " v-model="laptop_comment"/> -->
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>

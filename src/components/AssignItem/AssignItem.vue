@@ -113,7 +113,7 @@
                                 Status
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Delivery Date
+                                Client ID
                             </th>
                         </tr>
                     </thead>
@@ -138,7 +138,7 @@
                                 {{ item.status_description }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.delivery_date }}
+                                {{ item.client_id }}
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
                                     <button @click="add_to_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
@@ -191,7 +191,7 @@
                                 Status
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Delivery Date
+                                Client ID
                             </th>
                         </tr>
                     </thead>
@@ -216,7 +216,7 @@
                                 {{ item.status_description }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.delivery_date }}
+                                {{ item.client_id }}
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
                                 <button @click="remove_from_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
@@ -300,7 +300,7 @@ async function get_items() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-items/', {
+        const response = await axios.get('http://localhost:8000/get-unassigned-items/', {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -326,6 +326,19 @@ function remove_from_cart(item) {
         cart.value.splice(index, 1);
     }
 }
+
+function add_to_cart(item) {
+  const alreadyInCart = cart.value.some(
+    cartItem => cartItem.devices_id === item.devices_id
+  );
+
+  if (!alreadyInCart) {
+    cart.value.push(item);
+  } else {
+    console.log("Device already in cart:", item.serial_number);
+  }
+}
+
 
 async function get_clients() {
 

@@ -72,7 +72,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="printer_parish" :class="[option_field_class]" class="bg-white" v-model="printer_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -100,7 +100,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="printer_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="printer_division" :class="[option_field_class]" class="bg-white" v-model="printer_division">
@@ -112,7 +112,7 @@
             </div>
         </div>
 
-        <CommentField id="printer_comment" labelFor="printer_comment" fieldName="Comment: " v-model="printer_comment"/>
+        <!-- <CommentField id="printer_comment" labelFor="printer_comment" fieldName="Comment: " v-model="printer_comment"/> -->
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>

@@ -17,18 +17,17 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="division_id" :class="[option_field_class]" class="bg-white" v-model="division_id">
+                <select id="scanner_division" :class="[option_field_class]" class="bg-white" v-model="client_division">
                     <option selected class="text-blue-100">Choose a Division</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                    <option v-for="division in divisions" :key="division.division_id" :value=division.division_id class="text-black">{{ division.division_name }}</option>
+
                 </select>
-                <TextLabel :labelFor="division_id" fieldName="Division" />
+                <TextLabel labelFor="client_division" fieldName="Division" />
             </div>
         </div>
         
         <div class="flex justify-center">
-            <AddItemButton buttonName="Add User"/>
+            <AddItemButton buttonName="Add Client"/>
         </div>
     </form> 
 </SectionTemplate>
@@ -36,7 +35,7 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 import AddItemButton from '@/components/AddItemButton.vue';
@@ -44,7 +43,7 @@ import TextField from '@/components/Fields/TextField.vue';
 import TextLabel from '@/components/Fields/TextLabel.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 
-import { option_field_class } from '@/utils/descriptions';
+import { option_field_class, getDivisions } from '@/utils/descriptions';
 
 const first_name = ref()
 const last_name = ref()
@@ -53,6 +52,18 @@ const phone_number = ref()
 const position = ref()
 const division_id = ref()
 
+const client_division = ref()
+const divisions = ref([])
+
+onMounted(async () => {
+  try {
+    divisions.value = await getDivisions();
+    console.log(divisions.value)
+  } catch (err) {
+    console.error("Failed to load statuses", err);
+  }
+});
+
 async function addClient() {
     const client = {
         firstname: first_name.value,
@@ -60,12 +71,13 @@ async function addClient() {
         email: username.value,
         phone_number: phone_number.value,
         position: position.value,
-        division_id: division_id.value,
+        division_id: client_division.value,
 
     }
 
     try {
         const token = localStorage.getItem('token');
+        console.log(client)
         const response = await axios.post('http://localhost:8000/create-client/', client, {
             headers: {
                 Authorization: `Bearer ${token}`

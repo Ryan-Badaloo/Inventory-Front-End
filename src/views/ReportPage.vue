@@ -24,9 +24,7 @@ import LocationReport from '@/components/Reports/LocationReport.vue';
 import CPUType from '@/components/Settings/CPUType.vue';
 import DeliveryDate from '@/components/Reports/DeliveryDate.vue';
 import DeploymentDate from '@/components/Reports/DeploymentDate.vue';
-
-
-import Settings from '@/components/Settings/Settings.vue';
+import BeingRepaired from '@/components/Reports/BeingRepaired.vue';
 
 const selectedDevice = ref('');
 
@@ -40,6 +38,8 @@ const getComponent = (device) => {
       return DeliveryDate;
     case 'deployment_date':
       return DeploymentDate;
+    case 'being_repaired':
+      return BeingRepaired;
     default:
       return null;
   }

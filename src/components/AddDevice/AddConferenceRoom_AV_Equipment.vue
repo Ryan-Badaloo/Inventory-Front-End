@@ -54,7 +54,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="conference_room_av_equipment_parish" :class="[option_field_class]" class="bg-white" v-model="conference_room_av_equipment_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -82,7 +82,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="conference_room_av_equipment_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="conference_room_av_equipment_division" :class="[option_field_class]" class="bg-white" v-model="conference_room_av_equipment_division">
@@ -94,7 +94,7 @@
             </div>
         </div>
 
-        <CommentField id="conference_room_av_equipment_comment" labelFor="conference_room_av_equipment_comment" fieldName="Comment: " v-model="conference_room_av_equipment_comment"/>
+        <!-- <CommentField id="conference_room_av_equipment_comment" labelFor="conference_room_av_equipment_comment" fieldName="Comment: " v-model="conference_room_av_equipment_comment"/> -->
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>

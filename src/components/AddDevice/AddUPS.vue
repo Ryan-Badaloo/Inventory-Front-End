@@ -48,7 +48,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="ups_parish" :class="[option_field_class]" class="bg-white" v-model="ups_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +76,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="ups_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="ups_division" :class="[option_field_class]" class="bg-white" v-model="ups_division">
@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        <CommentField id="ups_comment" labelFor="ups_comment" fieldName="Comment: " v-model="ups_comment"/>
+        <!-- <CommentField id="ups_comment" labelFor="ups_comment" fieldName="Comment: " v-model="ups_comment"/> -->
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>

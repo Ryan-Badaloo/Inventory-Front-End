@@ -608,8 +608,8 @@
     <!-- THIS IS THE MODAL TO UPDATE DEVICE -->
     <div v-show="showUpdateModal" @close="closeUpdateModal" class="fixed inset-0 z-60 bg-black/70 flex justify-center items-start">
         <div ref="updateRef" class="p-2 z-50 w-9/10 mt-5 bg-gray-100 border-2 border-gray-600 rounded-md shadow-lg shadow-black">
-            <SectionTemplate template-name="Update Item">
-                <form v-if="isLaptop" @submit.prevent="" class="max-h-[75vh] overflow-y-auto pr-2">
+            <SectionTemplate template-name="Update {{Item}}">
+                <form v-if="isLaptop" @submit.prevent="updateDevice" class="max-h-[75vh] overflow-y-auto pr-2">
                     <div class="grid grid-cols-2 gap-x-6">
                         <TextField id="laptop_brand" labelFor="laptop_brand" fieldName="Brand: " v-model="laptop_brand"/>
 
@@ -1456,6 +1456,9 @@ const cpu_types = ref([])
 const connection_types = ref([])
 const features = ref([]);
 
+const updateSerial = ref();
+const updateCategory = ref();
+
 onMounted(async () => {
   try {
     statuses.value = await getStatuses();
@@ -1813,7 +1816,7 @@ async function delete_comment(comment) {
     
 }
 //THIS IS THE UPDATE SECTION///////////////////////////////////////////////////////////////////////////////
-function closeUpdateModal() {
+async function closeUpdateModal() {
     showUpdateModal.value = false;
     isLaptop.value = false;
     isTablet.value = false;
@@ -1821,11 +1824,15 @@ function closeUpdateModal() {
     isPrinter.value = false;
     isCRAV.value = false;
     isOtherDevice.value = false;
+    updateSerial.value = null;
+    updateCategory.value = null;
     console.log(isLaptop.value)
 }
 
-function openUpdateModal(serial_number, category) {
+async function openUpdateModal(serial_number, category) {
     showUpdateModal.value = true;
+    updateSerial.value = serial_number;
+    updateCategory.value = category;
 
     if (category == "Laptop") {
         isLaptop.value = true
@@ -1841,13 +1848,20 @@ function openUpdateModal(serial_number, category) {
         isOtherDevice.value = true
     }
 
-    
+    console.log(serial_number)
+    console.log(category)
+
 }
+
+async function updateDevice() {
+    console.log(updateSerial.value)
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 //THIS IS THE DELETE SECTION/////////////////////////////////////////////////////////////////////////////
-function closeDeleteModal() {
+async function closeDeleteModal() {
     showDeleteModal.value = false;
 
     deleteSerial.value = null;
@@ -1857,7 +1871,7 @@ function closeDeleteModal() {
     deleteInventory.value = null;
 }
 
-function openDeleteModal(serial_number, brand, category, model, inventory_number) {
+async function openDeleteModal(serial_number, brand, category, model, inventory_number) {
     showDeleteModal.value = true;
 
     deleteSerial.value = serial_number;
