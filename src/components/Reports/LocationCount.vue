@@ -45,7 +45,6 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
-import {} from '../../composable/useUrlcomposable'
 
 const allLocations = ref([])
 
@@ -60,7 +59,7 @@ onMounted(async () => {
 async function getAllLocations() {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${useBaseURLComposable()}get-all-locations/`, {
+        const response = await axios.get('http://localhost:8000/get-all-locations/', {
             headers: {
                 Authorization: `Bearer ${token}`
             }

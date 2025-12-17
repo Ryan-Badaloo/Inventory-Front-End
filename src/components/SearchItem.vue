@@ -59,7 +59,6 @@ import { ref } from 'vue';
 import axios from 'axios';
 import SearchBar from '@/components/SearchBar.vue';
 import SectionTemplate from './SectionTemplate.vue';
-import {useBaseURLComposable} from '../composable/useUrlcomposable'
 
 const filter = ref(); //store the text typed into the search bar
 const items = ref([]); // Store the search results (list of items)
@@ -67,7 +66,7 @@ const items = ref([]); // Store the search results (list of items)
 
 async function get_items() {
     try {
-        const response = await axios.get(`${useBaseURLComposable()}get-items/`, {
+        const response = await axios.get('http://localhost:8000/get-items/', {
             params: {
                 serial_number: "1234",
                 brand: "HP",

@@ -61,7 +61,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
-import {useBaseURLComposable} from '../../composable/useUrlcomposable'
+
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { option_field_class, date_field_class } from '@/utils/descriptions';
@@ -82,7 +82,7 @@ async function getDevices() {
     const token = localStorage.getItem("token");
     const date = formatDate(device_deployment_date.value)
 
-    const response = await axios.get(`${useBaseURLComposable()}filter-deployment-date/`, {
+    const response = await axios.get("http://localhost:8000/filter-deployment-date/", {
       params: { date },
       headers: {
         Authorization: `Bearer ${token}`,
@@ -97,3 +97,7 @@ async function getDevices() {
   }
 }
 </script>
+
+<style scoped>
+
+</style>

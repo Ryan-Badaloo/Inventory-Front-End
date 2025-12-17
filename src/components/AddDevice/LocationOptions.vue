@@ -59,4 +59,5 @@ id_location: String,
 });
 
 defineEmits(['update:id_ministry', 'update:id_division', 'update:id_section', 'update:id_location']);
+
 </script>
