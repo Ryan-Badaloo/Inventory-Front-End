@@ -90,8 +90,12 @@
 
         <!-- <CommentField id="projector_comment" labelFor="projector_comment" fieldName="Comment: " v-model="projector_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetProjectorForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -160,6 +164,13 @@ const {
   projector_division,
   projector_comment,
 } = projectorRefs;
+
+function resetProjectorForm() {
+  Object.keys(projectorRefs).forEach(key => {
+    projectorRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
 
 
 function formatDate(value) {

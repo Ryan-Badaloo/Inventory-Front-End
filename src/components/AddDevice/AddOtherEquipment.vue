@@ -90,8 +90,12 @@
 
         <!-- <CommentField id="other_equipment_comment" labelFor="other_equipment_comment" fieldName="Comment: " v-model="other_equipment_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetOtherEquipmentForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -160,6 +164,13 @@ const {
   other_equipment_division,
   other_equipment_comment,
 } = otherEquipmentRefs;
+
+function resetOtherEquipmentForm() {
+  Object.keys(otherEquipmentRefs).forEach(key => {
+    otherEquipmentRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
 
 function formatDate(value) {
     if (!value) return null;

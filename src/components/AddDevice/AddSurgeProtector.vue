@@ -90,8 +90,12 @@
 
         <!-- <CommentField id="surge_protector_comment" labelFor="surge_protector_comment" fieldName="Comment: " v-model="surge_protector_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetSurgeProtectorForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -160,6 +164,13 @@ const {
   surge_protector_division,
   surge_protector_comment,
 } = surgeProtectorRefs;
+
+function resetSurgeProtectorForm() {
+  Object.keys(surgeProtectorRefs).forEach(key => {
+    surgeProtectorRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
 
 function formatDate(value) {
     if (!value) return null;

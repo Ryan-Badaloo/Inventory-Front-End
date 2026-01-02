@@ -98,8 +98,12 @@
 
         <!-- <CommentField id="keyboard_comment" labelFor="keyboard_comment" fieldName="Comment: " v-model="keyboard_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetKeyboardForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </SectionTemplate>
@@ -176,6 +180,14 @@ const {
     keyboard_division,
     keyboard_comment,
 } = keyboardRefs;
+
+function resetKeyboardForm() {
+  Object.keys(keyboardRefs).forEach(key => {
+    keyboardRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
+
 
 function formatDate(value) {
     if (!value) return null;

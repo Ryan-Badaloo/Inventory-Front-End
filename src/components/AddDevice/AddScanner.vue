@@ -90,8 +90,12 @@
 
         <!-- <CommentField id="scanner_comment" labelFor="scanner_comment" fieldName="Comment: " v-model="scanner_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetScannerForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -163,11 +167,19 @@ const {
   scanner_comment,
 } = scannerRefs;
 
+function resetScannerForm() {
+  Object.keys(scannerRefs).forEach(key => {
+    scannerRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
+
 function formatDate(value) {
     if (!value) return null;
     const date = new Date(value);
     return isNaN(date) ? null : date.toISOString().split('T')[0];
 }
+
 
 
 async function createScanner() {

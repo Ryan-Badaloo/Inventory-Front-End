@@ -145,8 +145,12 @@
         
         <!-- <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: "/> -->
 
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetTabletForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -227,6 +231,13 @@ tablet_location,
 tablet_location_type,
 tablet_parish,
 } = tabletRefs;
+
+function resetTabletForm() {
+  Object.keys(tabletRefs).forEach(key => {
+    tabletRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
 
 function formatDate(value) {
     if (!value) return null;

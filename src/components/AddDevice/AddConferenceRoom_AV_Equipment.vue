@@ -96,8 +96,12 @@
 
         <!-- <CommentField id="conference_room_av_equipment_comment" labelFor="conference_room_av_equipment_comment" fieldName="Comment: " v-model="conference_room_av_equipment_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetCRAVForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -168,6 +172,13 @@ const {
   conference_room_av_equipment_delivery_date,
   conference_room_av_equipment_deployment_date,
 } = conferenceRoomAvEquipmentRefs;
+
+function resetCRAVForm() {
+  Object.keys(conferenceRoomAvEquipmentRefs).forEach(key => {
+    conferenceRoomAvEquipmentRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`); 
+  });
+}
 
 function formatDate(value) {
     if (!value) return null;

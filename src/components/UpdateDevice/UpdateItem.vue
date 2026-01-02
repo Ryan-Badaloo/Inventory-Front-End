@@ -1392,7 +1392,7 @@ import { onClickOutside } from '@vueuse/core'
 import axios from 'axios';
 import SectionTemplate from '../SectionTemplate.vue';
 import SearchBar from '../SearchBar.vue';
-import {} from '../../composable/useUrlcomposable'
+import { useBaseURLComposable } from '../../composable/useUrlcomposable';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';

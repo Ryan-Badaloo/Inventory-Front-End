@@ -89,8 +89,12 @@
         </div>
         <!-- <CommentField id="webcam_comment" labelFor="webcam_comment" fieldName="Comment: " v-model="webcam_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetWebcamForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -159,6 +163,13 @@ const {
   webcam_division,
   webcam_comment,
 } = webcamRefs;
+
+function resetWebcamForm() {
+  Object.keys(webcamRefs).forEach(key => {
+    webcamRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
 
 function formatDate(value) {
     if (!value) return null;
