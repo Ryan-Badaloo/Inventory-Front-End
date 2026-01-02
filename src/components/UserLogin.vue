@@ -38,6 +38,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import {useBaseURLComposable} from '../composable/useUrlcomposable'
 import axios from 'axios';
 
 const username = ref('');
@@ -52,7 +53,7 @@ const login = async () => {
     params.append('username', username.value);
     params.append('password', password.value);
 
-    const response = await axios.post('http://localhost:8000/token', params, {
+    const response = await axios.post(`${useBaseURLComposable()}token`, params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
