@@ -115,7 +115,7 @@ import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
-import {useBaseURLComposable} from '../../composable/useUrlcomposable'
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 import {  } from '@/utils/descriptions';

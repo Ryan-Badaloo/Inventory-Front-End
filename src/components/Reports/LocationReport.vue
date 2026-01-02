@@ -139,6 +139,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import AddItemButton from '@/components/AddItemButton.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 // STATE VARIABLES ////////////////////////////////////////////////////////
 const locations = ref([]);
@@ -167,7 +168,7 @@ onMounted(() => {
 async function getLocations() {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/get-location-names/', {
+    const response = await axios.get(`${useBaseURLComposable()}get-location-names/`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -182,7 +183,7 @@ async function getLocations() {
 async function getParishes() {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/get-parish-names/', {
+    const response = await axios.get(`${useBaseURLComposable()}get-parish-names/`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -197,7 +198,7 @@ async function getParishes() {
 async function getStatuses() {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/get-statuses/', {
+    const response = await axios.get(`${useBaseURLComposable()}get-statuses/`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -221,7 +222,7 @@ async function applyFilters() {
     };
 
     const response = await axios.post(
-      "http://localhost:8000/filter-devices/",
+      `${useBaseURLComposable()}filter-devices/`,
       payload,
       {
         headers: {

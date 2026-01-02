@@ -74,6 +74,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import TextField from '@/components/Fields/TextField.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
@@ -114,7 +115,7 @@ async function get_users() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-users/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-users/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

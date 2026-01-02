@@ -106,6 +106,7 @@ import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { getStatuses, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
@@ -199,7 +200,7 @@ async function createWebcam() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-device/', webcam, {
+        const response = await axios.post(`${useBaseURLComposable()}add-device/`, webcam, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

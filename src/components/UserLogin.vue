@@ -38,7 +38,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import {useBaseURLComposable} from '../composable/useUrlcomposable'
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 import axios from 'axios';
 
 const username = ref('');

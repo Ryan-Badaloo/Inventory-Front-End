@@ -43,6 +43,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import '@vuepic/vue-datepicker/dist/main.css';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 
 const filteredDevices = ref([]);
@@ -56,7 +57,7 @@ async function getDevices() {
   try {
     const token = localStorage.getItem("token");
 
-    const response = await axios.get("http://localhost:8000/filter-being-repaired/", {
+    const response = await axios.get(`${useBaseURLComposable()}filter-being-repaired/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

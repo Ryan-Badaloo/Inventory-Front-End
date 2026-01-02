@@ -103,6 +103,7 @@ import { ref, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { getStatuses, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
@@ -163,7 +164,7 @@ async function createUPS() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-device/', ups, {
+        const response = await axios.post(`${useBaseURLComposable()}add-device/`, ups, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

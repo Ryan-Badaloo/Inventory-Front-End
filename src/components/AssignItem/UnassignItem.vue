@@ -211,6 +211,7 @@ import SearchBar from '../SearchBar.vue';
 import AddItemButton from '../AddItemButton.vue';
 import TextLabel from '../Fields/TextLabel.vue';
 import { onClickOutside } from '@vueuse/core'
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { option_field_class } from '@/utils/descriptions';
 
@@ -295,7 +296,7 @@ async function confirmUnassignItem() {
     try {
         console.log(unassignSerial)
         const token = localStorage.getItem('token');
-        await axios.post('http://localhost:8000/unassign-item/', null, {
+        await axios.post(`${useBaseURLComposable()}unassign-item/`, null, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

@@ -117,6 +117,7 @@ import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
@@ -218,7 +219,7 @@ async function addMouse() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-mouse-keyboard/', mouse, {
+        const response = await axios.post(`${useBaseURLComposable()}add-mouse-keyboard/`, mouse, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

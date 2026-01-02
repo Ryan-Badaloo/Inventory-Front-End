@@ -255,6 +255,7 @@ import SectionTemplate from '../SectionTemplate.vue';
 import SearchBar from '../SearchBar.vue';
 import AddItemButton from '../AddItemButton.vue';
 import TextLabel from '../Fields/TextLabel.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { option_field_class } from '@/utils/descriptions';
 
@@ -300,7 +301,7 @@ async function get_items() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-unassigned-items/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-unassigned-items/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

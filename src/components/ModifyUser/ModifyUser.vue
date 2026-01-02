@@ -14,6 +14,7 @@ import { ref } from 'vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import SelectItemButton from '../SelectItem/SelectItemButton.vue';
 
+
 const emit = defineEmits(['deviceSelected']);
 const deviceActive = ref('')
 

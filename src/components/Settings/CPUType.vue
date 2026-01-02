@@ -33,6 +33,7 @@ import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import TextLabel from '../Fields/TextLabel.vue';
 import { getCPUTypes, option_field_class} from '@/utils/descriptions';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 
 const cpu_types = ref([])
@@ -52,7 +53,7 @@ async function add_cpu_type(cpuTypeText) {
     try {
         const token = localStorage.getItem('token');
         console.log(cpuTypeText)
-        const response = await axios.post('http://localhost:8000/add-cpu-type/', { cpu_type: cpuTypeText }, {
+        const response = await axios.post(`${useBaseURLComposable()}add-cpu-type/`, { cpu_type: cpuTypeText }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -70,7 +71,7 @@ async function remove_cpu_type(cpuTypeText) {
     try {
 
         const token = localStorage.getItem('token');
-        await axios.delete('http://localhost:8000/delete-cpu-type/', {
+        await axios.delete(`${useBaseURLComposable()}delete-cpu-type/`, {
             params: {
                 cpu_type: cpuTypeText
             },

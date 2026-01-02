@@ -26,6 +26,7 @@ import AddItemButton from './AddItemButton.vue';
 import Password from './Fields/PasswordField.vue';
 import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 const old_password = ref()
 const new_password = ref()
@@ -41,7 +42,7 @@ async function change_password() {
 
       try {
          const token = localStorage.getItem('token');
-         const response = await axios.post('http://localhost:8000/change-password/', password_set, {
+         const response = await axios.post(`${useBaseURLComposable()}change-password/`, password_set, {
                headers: {
                   Authorization: `Bearer ${token}`
                }
