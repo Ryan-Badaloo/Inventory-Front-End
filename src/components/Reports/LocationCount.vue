@@ -3,15 +3,15 @@
         <!-- THIS DISPLAYS THE LOCATION COUNT TABLES ////////////////////////////////////////////////////////////-->
         <SectionTemplate template-name="Location Count">
             <div v-if="allLocations && allLocations.length > 0" class="space-y-10">
-                <div v-for="(location, index) in allLocations" :key="index" class="border border-gray-300 rounded-xl shadow-sm p-4 bg-white dark:bg-gray-800">
+                <div v-for="(location, index) in allLocations" :key="index" class="border border-gray-300 rounded-xl shadow-sm p-4 bg-white">
 
                     <h2 class="text-center text-xl font-bold text-black mb-4">
                         {{ location.location_name }}
                     </h2>
 
                     <div class="relative overflow-x-auto">
-                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">Category</th>
                                     <th scope="col" class="px-6 py-3">Device Count</th>
@@ -19,8 +19,8 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(cat, idx) in location.category_counts" :key="idx"
-                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
-                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    class="bg-white border-bborder-gray-200 hover:bg-gray-200">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                         {{ cat.category }}
                                     </td>
                                     <td class="px-6 py-4">
@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div v-else class="text-center py-10 text-gray-600 dark:text-gray-300">
+            <div v-else class="text-center py-10 text-gray-600">
                 No location data available.
             </div>
         </SectionTemplate>
