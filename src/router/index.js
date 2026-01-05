@@ -18,7 +18,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'Home',
       component: HomeView,
       meta: { requiresAuth: true } // Protected
@@ -88,7 +88,7 @@ const router = createRouter({
       meta: { requiresAuth: true } // Protected
     },
     {
-      path: '/login',
+      path: '/',
       name: 'UserLogin',
       component: UserLogin,
     },
@@ -106,19 +106,19 @@ router.beforeEach((to, from, next) => {
       if (isExpired) {
         console.log("Token expired, redirecting to login...");
         localStorage.removeItem('token');
-        return next('/login');
+        return next('/');
       }
       console.log(decoded.sub, decoded.firstname, decoded.lastname, decoded.role)
     } catch (error) {
       console.log("Invalid token, clearing...");
       localStorage.removeItem('token');
-      return next('/login');
+      return next('/');
     }
   }
 
   if (to.matched.some(record => record.meta.requiresAuth) && !token) {
     console.log("No Authentication Token Found")
-    next('/login');
+    next('/');
   } else if (to.matched.some(record => record.meta.requiresAdmin) && isAdmin() === false) {
     console.log("User is not an Admin")
     alert("User is not an Admin")

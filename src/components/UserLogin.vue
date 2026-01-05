@@ -60,7 +60,7 @@ const login = async () => {
     });
 
     localStorage.setItem('token', response.data.access_token);
-    router.push('/');
+    router.push('/home');
   } catch (error) {
     
     console.log(error)
