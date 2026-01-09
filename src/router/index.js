@@ -18,6 +18,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      name: 'UserLogin',
+      component: UserLogin,
+    },
+    {
       path: '/home',
       name: 'Home',
       component: HomeView,
@@ -86,11 +91,6 @@ const router = createRouter({
       component: Report,
       props: true,
       meta: { requiresAuth: true } // Protected
-    },
-    {
-      path: '/',
-      name: 'UserLogin',
-      component: UserLogin,
     },
   ],
 })
