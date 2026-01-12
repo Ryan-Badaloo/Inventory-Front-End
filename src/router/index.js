@@ -15,7 +15,7 @@ import Report from '@/views/ReportPage.vue'
 import { tryOnBeforeUnmount } from '@vueuse/core'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
