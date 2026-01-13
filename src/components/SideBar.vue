@@ -17,7 +17,7 @@ const open = ref(false);
             'lg:block': true
         }"
         >
-            <div class="shadow-md shadow-gray-500/50 bg-gray-50 border border-gray-300 rounded-sm w-3xs h-10/10 p-2 text-teal-800">
+            <div class="shadow-md shadow-gray-500/50 bg-gray-50 border border-gray-300 w-3xs h-[91%] p-2 text-teal-800 rounded-2xl">
                 <h1 class="text-2xl text-center font-bold mb-1 italic">Side Bar</h1>
                 <hr class="pb-0.5 border-t-3">
                 <hr class="pb-0.5 w-9/10 m-auto border-t-2">

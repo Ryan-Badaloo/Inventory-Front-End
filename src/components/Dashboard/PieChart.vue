@@ -1,5 +1,5 @@
 <template>  
-<div>
+<div class="p-1 w-full">
   <Pie
     id="my-chart-id"
     :options="chartOptions"
