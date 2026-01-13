@@ -1,5 +1,5 @@
 <template>
-<div class="p-2 grid grid-cols-4 gap-4 items-start">
+<div class="p-2 grid grid-cols-4 gap-4 items-start text-teal-800">
     <DashboardCard icon="laptop" title="Number Of Laptops In Stock" value="32"/>
     <DashboardCard icon="mouse" title="Number Of Mouses In Stock" value="40"/>
     <DashboardCard icon="keyboard" title="Keyboards In Stock" value="25"/>

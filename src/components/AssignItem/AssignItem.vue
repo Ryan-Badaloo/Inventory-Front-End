@@ -91,8 +91,8 @@
 <!-- THIS DISPLAYS THE SEARCH RESULTS TABLE ///////////////////////////////////////////////////////////////////-->
         <SectionTemplate v-if="items.length > 0" template-name="Assign Devices">
             <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3">
                                 Brand
@@ -113,13 +113,13 @@
                                 Status
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Delivery Date
+                                Client ID
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in paginatedItems" :key="item.devices_id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
-                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <tr v-for="item in paginatedItems" :key="item.devices_id" class="bg-white border-b border-gray-200 hover:bg-gray-200">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ item.brand }}
                             </td>
                             <td class="px-6 py-4">
@@ -138,7 +138,7 @@
                                 {{ item.status_description }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.delivery_date }}
+                                {{ item.client_id }}
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
                                     <button @click="add_to_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
@@ -169,8 +169,8 @@
 
         <SectionTemplate v-if="cart.length > 0" template-name="Cart">
             <div class="mb-6 relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3">
                                 Brand
@@ -191,13 +191,13 @@
                                 Status
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Delivery Date
+                                Client ID
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in cart" :key="item.Item_ID" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
-                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <tr v-for="item in cart" :key="item.Item_ID" class="bg-white border-b border-gray-200 hover:bg-gray-200">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ item.brand }}
                             </td>
                             <td class="px-6 py-4">
@@ -216,7 +216,7 @@
                                 {{ item.status_description }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ item.delivery_date }}
+                                {{ item.client_id }}
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
                                 <button @click="remove_from_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
@@ -255,6 +255,7 @@ import SectionTemplate from '../SectionTemplate.vue';
 import SearchBar from '../SearchBar.vue';
 import AddItemButton from '../AddItemButton.vue';
 import TextLabel from '../Fields/TextLabel.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { option_field_class } from '@/utils/descriptions';
 
@@ -300,7 +301,7 @@ async function get_items() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-items/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-unassigned-items/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -326,6 +327,19 @@ function remove_from_cart(item) {
         cart.value.splice(index, 1);
     }
 }
+
+function add_to_cart(item) {
+  const alreadyInCart = cart.value.some(
+    cartItem => cartItem.devices_id === item.devices_id
+  );
+
+  if (!alreadyInCart) {
+    cart.value.push(item);
+  } else {
+    console.log("Device already in cart:", item.serial_number);
+  }
+}
+
 
 async function get_clients() {
 

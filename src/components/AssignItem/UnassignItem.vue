@@ -91,8 +91,8 @@
 <!-- THIS DISPLAYS THE SEARCH RESULTS TABLE ///////////////////////////////////////////////////////////////////-->
         <SectionTemplate v-if="items.length > 0" template-name="Unassign Devices">
             <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3">
                                 Brand
@@ -118,8 +118,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in paginatedItems" :key="item.devices_id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
-                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <tr v-for="item in paginatedItems" :key="item.devices_id" class="bg-white border-b border-gray-200 hover:bg-gray-200">
+                            <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ item.brand }}
                             </td>
                             <td class="px-6 py-4">
@@ -211,6 +211,7 @@ import SearchBar from '../SearchBar.vue';
 import AddItemButton from '../AddItemButton.vue';
 import TextLabel from '../Fields/TextLabel.vue';
 import { onClickOutside } from '@vueuse/core'
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { option_field_class } from '@/utils/descriptions';
 
@@ -295,7 +296,7 @@ async function confirmUnassignItem() {
     try {
         console.log(unassignSerial)
         const token = localStorage.getItem('token');
-        await axios.post('http://localhost:8000/unassign-item/', null, {
+        await axios.post(`${useBaseURLComposable()}unassign-item/`, null, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

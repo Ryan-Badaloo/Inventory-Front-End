@@ -3,9 +3,9 @@
         <div class="p-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 gap-y-8 justify-items-center">
             <SelectItemButton @click="selectLocationCount()" buttonText="Location Count" icon="person" :isActive="deviceActive==='location_count'"/>
             <SelectItemButton @click="selectLocationReport()" buttonText="Location Report" icon="person" :isActive="deviceActive==='location_report'"/>
-            <SelectItemButton @click="selectDeliveryDate()" buttonText="Delivery Date" icon="person" :isActive="deviceActive==='Delivery Date'"/>
-            <SelectItemButton @click="selectDeploymentDate()" buttonText="Deployment Date" icon="person" :isActive="deviceActive==='Deloyment Date'"/>
-
+            <SelectItemButton @click="selectDeliveryDate()" buttonText="Delivery Date" icon="person" :isActive="deviceActive==='delivery_date'"/>
+            <SelectItemButton @click="selectDeploymentDate()" buttonText="Deployment Date" icon="person" :isActive="deviceActive==='deployment_date'"/>
+            <SelectItemButton @click="selectBeingRepaired()" buttonText="Being Repaired" icon="person" :isActive="deviceActive==='being_repaired'"/>
         </div>
     </SectionTemplate>
 </template>
@@ -32,6 +32,10 @@ function selectDeliveryDate() {
 }
 function selectDeploymentDate() {
     deviceActive.value = 'deployment_date';
+    emit('deviceSelected', deviceActive.value);
+}
+function selectBeingRepaired() {
+    deviceActive.value = 'being_repaired';
     emit('deviceSelected', deviceActive.value);
 }
 </script>

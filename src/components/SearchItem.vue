@@ -4,8 +4,8 @@
 
         <SectionTemplate v-if="items.length > 0" template-name="Delete Devices">
             <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3">
                                 Brand
@@ -25,8 +25,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items" :key="item.Item_ID" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-200">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <tr v-for="item in items" :key="item.Item_ID" class="bg-white border-b border-gray-200 hover:bg-gray-200">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ item.Brand }}
                             </th>
                             <td class="px-6 py-4">
@@ -59,6 +59,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import SearchBar from '@/components/SearchBar.vue';
 import SectionTemplate from './SectionTemplate.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 const filter = ref(); //store the text typed into the search bar
 const items = ref([]); // Store the search results (list of items)
@@ -66,7 +67,7 @@ const items = ref([]); // Store the search results (list of items)
 
 async function get_items() {
     try {
-        const response = await axios.get('http://localhost:8000/get-items/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-items/`, {
             params: {
                 serial_number: "1234",
                 brand: "HP",

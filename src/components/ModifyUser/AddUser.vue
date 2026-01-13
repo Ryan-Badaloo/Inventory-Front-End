@@ -38,6 +38,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -63,7 +64,7 @@ async function addUser() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/create-user/', user, {
+        const response = await axios.post(`${useBaseURLComposable()}create-user/`, user, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

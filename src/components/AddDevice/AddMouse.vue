@@ -57,7 +57,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="mouse_parish" :class="[option_field_class]" class="bg-white" v-model="mouse_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -85,7 +85,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="mouse_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="mouse_division" :class="[option_field_class]" class="bg-white" v-model="mouse_division">
@@ -98,10 +98,14 @@
         </div>
 
 
-        <CommentField id="mouse_comment" labelFor="mouse_comment" fieldName="Comment: " v-model="mouse_comment"/>
+        <!-- <CommentField id="mouse_comment" labelFor="mouse_comment" fieldName="Comment: " v-model="mouse_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetMouseForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -113,6 +117,7 @@ import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
@@ -178,6 +183,13 @@ const {
     mouse_comment,
 } = mouseRefs;
 
+function resetMouseForm() {
+  Object.keys(mouseRefs).forEach(key => {
+    mouseRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
+
 function formatDate(value) {
     if (!value) return null;
     const date = new Date(value);
@@ -207,7 +219,7 @@ async function addMouse() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-mouse-keyboard/', mouse, {
+        const response = await axios.post(`${useBaseURLComposable()}add-mouse-keyboard/`, mouse, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

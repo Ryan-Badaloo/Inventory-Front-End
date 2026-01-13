@@ -33,6 +33,7 @@ import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import TextLabel from '../Fields/TextLabel.vue';
 import { getPrinterFeatures, option_field_class} from '@/utils/descriptions';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 
 const features = ref([])
@@ -51,7 +52,7 @@ onMounted(async () => {
 async function add_printer_feature(printerFeatureText) {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-printer-feature/', { printer_feature: printerFeatureText }, {
+        const response = await axios.post(`${useBaseURLComposable()}add-printer-feature/`, { printer_feature: printerFeatureText }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -69,7 +70,7 @@ async function remove_printer_feature(printerFeatureText) {
     try {
 
         const token = localStorage.getItem('token');
-        await axios.delete('http://localhost:8000/delete-printer-feature/', {
+        await axios.delete(`${useBaseURLComposable()}delete-printer-feature/`, {
             params: {
                 printer_feature: printerFeatureText
             },

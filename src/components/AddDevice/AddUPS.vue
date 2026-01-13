@@ -48,7 +48,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="ups_parish" :class="[option_field_class]" class="bg-white" v-model="ups_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +76,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="ups_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="ups_division" :class="[option_field_class]" class="bg-white" v-model="ups_division">
@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        <CommentField id="ups_comment" labelFor="ups_comment" fieldName="Comment: " v-model="ups_comment"/>
+        <!-- <CommentField id="ups_comment" labelFor="ups_comment" fieldName="Comment: " v-model="ups_comment"/> -->
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>
@@ -103,6 +103,7 @@ import { ref, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { getStatuses, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
@@ -163,7 +164,7 @@ async function createUPS() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-device/', ups, {
+        const response = await axios.post(`${useBaseURLComposable()}add-device/`, ups, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

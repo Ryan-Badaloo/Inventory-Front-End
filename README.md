@@ -27,3 +27,13 @@ npm run dev
 ```sh
 npm run build
 ```
+### Docker setup
+Build Docker image command 
+```sh
+ docker build --build-arg VITE_DEVELOPMENT_URL=/cinv-api/ -t ictdev2025/computerinventoryforntend:image-tag-latest .
+```
+
+Push Docker Image
+```sh 
+  docker push ictdev2025/computerinventoryforntend:image-tag-latest
+```

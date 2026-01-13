@@ -16,7 +16,7 @@
                         />
                         <label 
                             :for="`parish_${parish.parish_id}`"
-                            class="cursor-pointer text-gray-700 dark:text-gray-200 text-sm"
+                            class="cursor-pointer text-gray-700"
                         >
                             {{ parish.parish_name }}
                         </label>
@@ -38,7 +38,7 @@
                         />
                         <label 
                             :for="`location_${loc.location_id}`"
-                            class="cursor-pointer text-gray-700 dark:text-gray-200 text-sm"
+                            class="cursor-pointer text-gray-700 text-sm"
                         >
                             {{ loc.location_name }}
                         </label>
@@ -60,7 +60,7 @@
                         />
                         <label 
                             :for="`component_${comp}`"
-                            class="cursor-pointer text-gray-700 dark:text-gray-200 text-sm"
+                            class="cursor-pointer text-gray-700 text-sm"
                         >
                             {{ comp }}
                         </label>
@@ -82,7 +82,7 @@
                         />
                         <label 
                             :for="`status_${stat.status_id}`"
-                            class="cursor-pointer text-gray-700 dark:text-gray-200 text-sm"
+                            class="cursor-pointer text-gray-700 text-sm"
                         >
                             {{ stat.status_description }}
                         </label>
@@ -101,8 +101,8 @@
                 <h1 class="font-bold text-center text-xl">Device Count: {{ filteredDevices.length }}</h1>
               </div>
               <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left text-gray-500">
+                  <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                       <th class="px-6 py-3">Location</th>
                       <th class="px-6 py-3">Category</th>
@@ -139,6 +139,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import AddItemButton from '@/components/AddItemButton.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 // STATE VARIABLES ////////////////////////////////////////////////////////
 const locations = ref([]);
@@ -167,7 +168,7 @@ onMounted(() => {
 async function getLocations() {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/get-location-names/', {
+    const response = await axios.get(`${useBaseURLComposable()}get-location-names/`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -182,7 +183,7 @@ async function getLocations() {
 async function getParishes() {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/get-parish-names/', {
+    const response = await axios.get(`${useBaseURLComposable()}get-parish-names/`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -197,7 +198,7 @@ async function getParishes() {
 async function getStatuses() {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/get-statuses/', {
+    const response = await axios.get(`${useBaseURLComposable()}get-statuses/`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -221,7 +222,7 @@ async function applyFilters() {
     };
 
     const response = await axios.post(
-      "http://localhost:8000/filter-devices/",
+      `${useBaseURLComposable()}filter-devices/`,
       payload,
       {
         headers: {

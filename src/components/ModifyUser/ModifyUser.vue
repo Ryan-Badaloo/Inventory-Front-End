@@ -4,6 +4,7 @@
             <SelectItemButton @click="selectViewUsers()" buttonText="View Users" icon="person" :isActive="deviceActive==='view_users'"/>
             <SelectItemButton @click="selectAddUser()" buttonText="Add User" icon="person_add" :isActive="deviceActive==='add_user'"/>
             <SelectItemButton @click="selectRemoveUser()" buttonText="Remove User" icon="person_remove" :isActive="deviceActive==='remove_user'"/>
+            <SelectItemButton @click="selectChangeUserPassword()" buttonText="Change User Password" icon="encrypted" :isActive="deviceActive==='change_user_password'"/>
         </div>
     </SectionTemplate>
 </template>
@@ -12,6 +13,7 @@
 import { ref } from 'vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import SelectItemButton from '../SelectItem/SelectItemButton.vue';
+
 
 const emit = defineEmits(['deviceSelected']);
 const deviceActive = ref('')
@@ -28,6 +30,11 @@ function selectRemoveUser() {
 
 function selectViewUsers() {
     deviceActive.value = 'view_users';
+    emit('deviceSelected', deviceActive.value);
+}
+
+function selectChangeUserPassword() {
+    deviceActive.value = 'change_user_password';
     emit('deviceSelected', deviceActive.value);
 }
 </script>

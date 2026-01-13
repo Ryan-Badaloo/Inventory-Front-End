@@ -48,7 +48,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="scanner_parish" :class="[option_field_class]" class="bg-white" v-model="scanner_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +76,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="scanner_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="scanner_division" :class="[option_field_class]" class="bg-white" v-model="scanner_division">
@@ -88,10 +88,14 @@
             </div>
         </div>
 
-        <CommentField id="scanner_comment" labelFor="scanner_comment" fieldName="Comment: " v-model="scanner_comment"/>
+        <!-- <CommentField id="scanner_comment" labelFor="scanner_comment" fieldName="Comment: " v-model="scanner_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetScannerForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -103,6 +107,7 @@ import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { getStatuses, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
@@ -163,11 +168,19 @@ const {
   scanner_comment,
 } = scannerRefs;
 
+function resetScannerForm() {
+  Object.keys(scannerRefs).forEach(key => {
+    scannerRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
+
 function formatDate(value) {
     if (!value) return null;
     const date = new Date(value);
     return isNaN(date) ? null : date.toISOString().split('T')[0];
 }
+
 
 
 async function createScanner() {
@@ -191,7 +204,7 @@ async function createScanner() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-device/', scanner, {
+        const response = await axios.post(`${useBaseURLComposable()}add-device/`, scanner, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

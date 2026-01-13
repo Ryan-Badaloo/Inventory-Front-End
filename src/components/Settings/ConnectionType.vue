@@ -33,6 +33,7 @@ import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import TextLabel from '../Fields/TextLabel.vue';
 import { getConnectionTypes, option_field_class} from '@/utils/descriptions';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 
 const connection_types = ref([])
@@ -51,7 +52,7 @@ onMounted(async () => {
 async function add_connection_type(connectionTypeText) {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-connection-type/', { ctype: connectionTypeText }, {
+        const response = await axios.post(`${useBaseURLComposable()}add-connection-type/`, { ctype: connectionTypeText }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -70,7 +71,7 @@ async function remove_connection_type(connectionTypeText) {
     try {
 
         const token = localStorage.getItem('token');
-        await axios.delete('http://localhost:8000/delete-connection-type/', {
+        await axios.delete(`${useBaseURLComposable()}delete-connection-type/`, {
             params: {
                 ctype: connectionTypeText
             },

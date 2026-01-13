@@ -21,6 +21,7 @@ import SideBar from '@/components/SideBar.vue';
 import AddUser from '@/components/ModifyUser/AddUser.vue';
 import RemoveUser from '@/components/ModifyUser/RemoveUser.vue';
 import ViewUsers from '@/components/ModifyUser/ViewUsers.vue';
+import ChangeUserPassword from '@/components/ModifyUser/ChangeUserPassword.vue';
 
 import ModifyUser from '@/components/ModifyUser/ModifyUser.vue';
 
@@ -34,6 +35,8 @@ const getComponent = (device) => {
       return RemoveUser;
     case 'view_users':
       return ViewUsers;
+    case 'change_user_password':
+      return ChangeUserPassword;
     default:
       return null;
   }

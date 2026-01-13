@@ -24,8 +24,8 @@
                 <h1 class="font-bold text-center text-xl">Device Count: {{ filteredDevices.length }}</h1>
               </div>
               <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-sm text-left text-gray-500">
+                  <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                       <th class="px-6 py-3">Location</th>
                       <th class="px-6 py-3">Category</th>
@@ -61,6 +61,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -82,7 +83,7 @@ async function getDevices() {
     const token = localStorage.getItem("token");
     const date = formatDate(device_delivery_date.value)
 
-    const response = await axios.get("http://localhost:8000/filter-delivery-date/", {
+    const response = await axios.get(`${useBaseURLComposable()}filter-delivery-date/`, {
       params: { date },
       headers: {
         Authorization: `Bearer ${token}`,

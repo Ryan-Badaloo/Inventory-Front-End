@@ -121,15 +121,15 @@
 
 
             <!-- pdf reader -->
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="laptop_file_input" type="file" multiple>
                 <TextLabel labelFor="laptop_file_input" fieldName="Upload File: "/>
-            </div>
+            </div> -->
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_parish" :class="[option_field_class]" class="bg-white" v-model="laptop_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -157,7 +157,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="laptop_location" fieldName="Location" />
-            </div>
+            </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_division" :class="[option_field_class]" class="bg-white" v-model="laptop_division">
@@ -168,10 +168,14 @@
             </div>
         </div>
 
-        <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: " v-model="laptop_comment"/>
+        <!-- <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: " v-model="laptop_comment"/> -->
         
-        <div class="flex justify-center">
+        <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
+
+            <button @click="resetLaptopForm()" type="button" class="content-center w-1/5 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+                Refresh
+            </button>
         </div>
     </form> 
 </AddTemplate>
@@ -183,6 +187,7 @@ import { ref, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
 
@@ -267,6 +272,13 @@ const {
   laptop_comment,
 } = laptopRefs;
 
+function resetLaptopForm() {
+  Object.keys(laptopRefs).forEach(key => {
+    laptopRefs[key].value = "";
+    localStorage.removeItem(`${key}_val`);
+  });
+}
+
 function formatDate(value) {
     if (!value) return null;
     const date = new Date(value);
@@ -310,7 +322,7 @@ async function addLaptop() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:8000/add-laptop/', laptop, {
+        const response = await axios.post(`${useBaseURLComposable()}add-laptop/`, laptop, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

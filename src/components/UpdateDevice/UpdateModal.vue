@@ -82,11 +82,8 @@ import AddItemButton from '../AddItemButton.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { RouterLink, useRoute } from 'vue-router';
-
 import { option_field_class } from '@/utils/descriptions';
 import { date_field_class } from '@/utils/descriptions';
-
-
 
 const brand = ref();
 const model = ref();
@@ -98,7 +95,6 @@ const comment = ref();
 defineProps({
   itemToUpdate: String,
 })
-
 
 const emit = defineEmits(['close'])
 const modalRef = ref(null)

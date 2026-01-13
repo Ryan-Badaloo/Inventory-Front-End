@@ -14,9 +14,6 @@ function logout() {
   }
 
 }
-
-
-
 </script>
 
 <template>
@@ -37,14 +34,14 @@ function logout() {
             <div class="md:ml-auto">
               <div class="flex flex-wrap justify-center space-x-2">
                 <RouterLink
-                  to="/"
-                  :class="[isActiveLink('/') ? 'bg-gray-700' : 'hover:bg-gray-900 hover:text-white', 'text-white', 'rounded-md', 'px-3', 'py-2']"
+                  to="/home"
+                  :class="[isActiveLink('/home') ? 'bg-gray-700' : 'hover:bg-gray-900 hover:text-white', 'text-white', 'rounded-md', 'px-3', 'py-2']"
                   >Home</RouterLink
                 >
                 <RouterLink
                   @click="logout()"
-                  to="/login"
-                  :class="[isActiveLink('/login') ? 'bg-gray-700' : 'hover:bg-gray-900 hover:text-white', 'text-white', 'rounded-md', 'px-3', 'py-2']"
+                  to="/"
+                  :class="[isActiveLink('/') ? 'bg-gray-700' : 'hover:bg-gray-900 hover:text-white', 'text-white', 'rounded-md', 'px-3', 'py-2']"
                   >Logout</RouterLink
                 >
                 <RouterLink
