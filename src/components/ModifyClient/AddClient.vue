@@ -1,7 +1,7 @@
 <template>
 <SectionTemplate templateName="Add Client">
     <form @submit.prevent="addClient()" class="space-y-4">
-        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        <div class="mt-8 grid grid-cols-2 gap-x-6 text-teal-800">
         
             <TextField id="first_name" labelFor="first_name" name="first_name" fieldName="Enter First Name: " v-model="first_name"/>
 
@@ -15,7 +15,7 @@
         
         </div>
 
-        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        <div class="mt-8 grid grid-cols-2 gap-x-6 text-teal-800">
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="scanner_division" :class="[option_field_class]" class="bg-white" v-model="client_division">
                     <option selected class="text-blue-100">Choose a Division</option>

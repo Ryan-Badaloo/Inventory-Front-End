@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
+  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 text-teal-800">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6 text-teal-800">
       <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Login</h2>
 
       <form @submit.prevent="login" class="space-y-4">
@@ -10,7 +10,8 @@
             type="text"
             id="username"
             v-model="username"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-teal-800 p-1.5 border-2
+            transtion-all ease-in duration-500 outline-none focus:border-2 focus:border-indigo-500"
           />
         </div>
 
@@ -20,7 +21,8 @@
             type="password"
             id="password"
             v-model="password"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-teal-800 p-1.5 border-2
+            transtion-all ease-in duration-500 outline-none focus:border-2 focus:border-indigo-500"
           />
         </div>
 

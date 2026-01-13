@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { RouterLink, useRoute } from 'vue-router';
+import { RouterLink } from 'vue-router';
 
 
 const open = ref(false);
@@ -17,11 +17,11 @@ const open = ref(false);
             'lg:block': true
         }"
         >
-            <div class="shadow-md shadow-gray-500/50 bg-gray-50 border border-gray-300 rounded-sm w-3xs h-10/10 p-2">
+            <div class="shadow-md shadow-gray-500/50 bg-gray-50 border border-gray-300 rounded-sm w-3xs h-10/10 p-2 text-teal-800">
                 <h1 class="text-2xl text-center font-bold mb-1 italic">Side Bar</h1>
                 <hr class="pb-0.5 border-t-3">
                 <hr class="pb-0.5 w-9/10 m-auto border-t-2">
-                <hr class="w-8/10 m-auto border-t-1 ">
+                <hr class="w-8/10 m-auto">
                 <div>
                     <ul class="space-y-2 mt-8">
                         <RouterLink to="/add-item" class="">
