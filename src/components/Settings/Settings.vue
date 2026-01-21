@@ -5,7 +5,7 @@
             <SelectItemButton @click="selectCPUType()" buttonText="Edit CPU Type" icon="person" :isActive="deviceActive==='cpu_type'"/>
             <SelectItemButton @click="selectConnectionType()" buttonText="Edit Connection Type" icon="person" :isActive="deviceActive==='connection_type'"/>
             <SelectItemButton @click="selectPrinterFeature()" buttonText="Edit Printer Feature" icon="person" :isActive="deviceActive==='printer_feature'"/>
-
+            <SelectItemButton @click="selectDivision()" buttonText="Edit Divisions" icon="person" :isActive="deviceActive==='division'"/>
         </div>
     </SectionTemplate>
 </template>
@@ -32,6 +32,10 @@ function selectConnectionType() {
 }
 function selectPrinterFeature() {
     deviceActive.value = 'printer_feature';
+    emit('deviceSelected', deviceActive.value);
+}
+function selectDivision() {
+    deviceActive.value = 'division';
     emit('deviceSelected', deviceActive.value);
 }
 </script>

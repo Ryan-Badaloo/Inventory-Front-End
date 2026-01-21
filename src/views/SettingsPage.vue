@@ -22,6 +22,8 @@ import SystemStatus from '@/components/Settings/SystemStatus.vue';
 import CPUType from '@/components/Settings/CPUType.vue';
 import ConnectionType from '@/components/Settings/ConnectionType.vue';
 import PrinterFeature from '@/components/Settings/PrinterFeature.vue';
+import Division from '@/components/Settings/Division.vue';
+
 
 
 import Settings from '@/components/Settings/Settings.vue';
@@ -38,6 +40,8 @@ const getComponent = (device) => {
       return ConnectionType;
     case 'printer_feature':
       return PrinterFeature;
+    case 'division':
+      return Division;
     default:
       return null;
   }
