@@ -69,6 +69,12 @@ const login = async () => {
     }
   } catch (error) {
     alert("Error in authenication process.")
+    console.error(
+      "Error creating item:",
+      error.response?.data || error.message
+    );
+    console.error("Detail:", error.response?.data?.detail);
+
   }
 };
 </script>

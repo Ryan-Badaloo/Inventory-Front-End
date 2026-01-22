@@ -68,7 +68,12 @@ async function getAllLocations() {
         allLocations.value = response.data
         console.log(allLocations.value)
     } catch (error) {
-        console.error('Error loading locations:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to load location data. Check console.");
     }
 }

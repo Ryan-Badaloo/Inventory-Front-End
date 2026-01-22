@@ -44,7 +44,12 @@ async function confirmDeleteClient() {
         });
         alert("Client Has Been Deleted")
     } catch (error) {
-        console.error('Error finding Client:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to find Client. Check console.");
     }
 }

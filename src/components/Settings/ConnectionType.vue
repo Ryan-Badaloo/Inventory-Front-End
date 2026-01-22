@@ -61,7 +61,12 @@ async function add_connection_type(connectionTypeText) {
         console.log("Connection Type Added Succefully")
         alert("Connection Type successfully added.", response.data);
     } catch (error) {
-        console.error('Error creating item:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to add item. Check console.");
     }
 }
@@ -83,7 +88,12 @@ async function remove_connection_type(connectionTypeText) {
         console.log("Connection Type Has Been Deleted")
         alert("Connection Type Has Been Deleted")
     } catch (error) {
-        console.error('Error finding Client:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to find Client. Check console.");
     }
 }

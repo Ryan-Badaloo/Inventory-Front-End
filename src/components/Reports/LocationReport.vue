@@ -175,7 +175,12 @@ async function getLocations() {
     });
     locations.value = response.data;
   } catch (error) {
-    console.error('Error fetching locations:', error.response?.data || error.message);
+    console.error(
+      "Error creating item:",
+      error.response?.data || error.message
+    );
+    console.error("Detail:", error.response?.data?.detail);
+
     alert('Failed to load locations. Check console.');
   }
 }
@@ -190,7 +195,12 @@ async function getParishes() {
     });
     parishes.value = response.data;
   } catch (error) {
-    console.error('Error fetching locations:', error.response?.data || error.message);
+    console.error(
+      "Error creating item:",
+      error.response?.data || error.message
+    );
+    console.error("Detail:", error.response?.data?.detail);
+
     alert('Failed to load locations. Check console.');
   }
 }
@@ -205,7 +215,12 @@ async function getStatuses() {
     });
     statuses.value = response.data;
   } catch (error) {
-    console.error('Error fetching statuses:', error.response?.data || error.message);
+    console.error(
+      "Error creating item:",
+      error.response?.data || error.message
+    );
+    console.error("Detail:", error.response?.data?.detail);
+
     alert('Failed to load statuses. Check console.');
   }
 }
@@ -234,7 +249,12 @@ async function applyFilters() {
     filteredDevices.value = response.data;
     console.log("Filtered Devices:", filteredDevices.value);
   } catch (error) {
-    console.error("Error fetching filtered devices:", error.response?.data || error.message);
+    console.error(
+      "Error creating item:",
+      error.response?.data || error.message
+    );
+    console.error("Detail:", error.response?.data?.detail);
+
     alert("Failed to filter devices. Check console.");
   }
 }

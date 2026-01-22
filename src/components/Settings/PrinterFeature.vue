@@ -61,7 +61,12 @@ async function add_printer_feature(printerFeatureText) {
         console.log("Printer Feature Added Succefully")
         alert("Printer Feature successfully added.", response.data);
     } catch (error) {
-        console.error('Error creating item:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to add item. Check console.");
     }
 }
@@ -82,7 +87,12 @@ async function remove_printer_feature(printerFeatureText) {
         console.log("Printer Feature Has Been Deleted")
         alert("Printer Feature Has Been Deleted")
     } catch (error) {
-        console.error('Error finding Client:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to find Client. Check console.");
     }
 }

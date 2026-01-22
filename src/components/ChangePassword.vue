@@ -50,7 +50,12 @@ async function change_password() {
          console.log("Password Succesfully Changed")
          alert("Password Changed Succefully", response.data);
       } catch (error) {
-         console.error('Error Changing Password:', error.response?.data || error.message);
+         console.error(
+         "Error creating item:",
+         error.response?.data || error.message
+         );
+         console.error("Detail:", error.response?.data?.detail);
+
          alert("Failed to change password. Check console.");
       }
    } else {

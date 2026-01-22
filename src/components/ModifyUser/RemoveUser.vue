@@ -48,7 +48,12 @@ async function confirmDeleteUser() {
         });
         console.log("User Has Been Deleted")
     } catch (error) {
-        console.error('Error finding User:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to find User. Check console.");
     }
 }

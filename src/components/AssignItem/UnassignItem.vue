@@ -259,7 +259,12 @@ async function get_items() {
         console.log(items.value)
         
     } catch (error) {
-        console.error('Error finding item:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to find item. Check console.");
     }
 }
@@ -308,7 +313,12 @@ async function confirmUnassignItem() {
         console.log("Item Has Been Unassigned")
         closeUnassignModal()
     } catch (error) {
-        console.error('Error finding item:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to find item. Check console.");
     }
 }

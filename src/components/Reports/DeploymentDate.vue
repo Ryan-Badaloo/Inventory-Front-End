@@ -93,7 +93,12 @@ async function getDevices() {
     filteredDevices.value = response.data;
     console.log("Filtered Devices:", filteredDevices.value);
   } catch (error) {
-    console.error("Error fetching filtered devices:", error.response?.data || error.message);
+    console.error(
+      "Error creating item:",
+      error.response?.data || error.message
+    );
+    console.error("Detail:", error.response?.data?.detail);
+
     alert("Failed to filter devices. Check console.");
   }
 }

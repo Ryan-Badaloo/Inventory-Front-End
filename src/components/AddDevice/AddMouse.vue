@@ -227,7 +227,12 @@ async function addMouse() {
         console.log("Item Added Succefully")
         alert("Item successfully added.", response.data);
     } catch (error) {
-        console.error('Error creating item:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to add item. Check console.");
     }
 }

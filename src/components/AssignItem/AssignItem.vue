@@ -315,7 +315,12 @@ async function get_items() {
         console.log(items.value)
         
     } catch (error) {
-        console.error('Error finding item:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to find item. Check console.");
     }
 }
@@ -352,7 +357,12 @@ async function get_clients() {
         });
         allClients.value = response.data
     } catch (error) {
-        console.error('Error finding Client:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to find Client. Check console.");
     }
 }
@@ -380,7 +390,12 @@ async function assign_items() {
             });
             alert("Assignment was successful");
         } catch (error) {
-            console.error(error.response?.data || error.message);
+            console.error(
+            "Error creating item:",
+            error.response?.data || error.message
+            );
+            console.error("Detail:", error.response?.data?.detail);
+
             alert("Failed to assign Device. Check console.");
         }
     }

@@ -88,7 +88,12 @@ async function addClient() {
         console.log("Client Added Succefully")
         alert("Client successfully added.", response.data);
     } catch (error) {
-        console.error('Error creating client:', error.response?.data || error.message);
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
         alert("Failed to add client. Check console.");
     }
 }
