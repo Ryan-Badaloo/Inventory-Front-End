@@ -61,11 +61,14 @@ const login = async () => {
       }
     });
 
-    localStorage.setItem('token', response.data.access_token);
-    router.push('/home');
+    if(response.status === 200){
+      localStorage.setItem('token', response.data.access_token);
+     router.push('/home');
+    }else{
+      alert("Error in authenication process.")
+    }
   } catch (error) {
-    
-    console.log(error)
+    alert("Error in authenication process.")
   }
 };
 </script>
