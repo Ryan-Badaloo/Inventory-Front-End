@@ -245,7 +245,7 @@ async function get_items() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-assigned-items/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-assigned-items/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

@@ -212,7 +212,7 @@ async function addConferenceRoomAVEquipment() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.post(`${useBaseURLComposable()}http://localhost:8000/add-crav-equipment/`, cr_equipment, {
+        const response = await axios.post(`${useBaseURLComposable()}add-crav-equipment/`, cr_equipment, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

@@ -97,6 +97,8 @@ import axios from 'axios';
 import TextField from '@/components/Fields/TextField.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import SearchBar from '../SearchBar.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
+
 
 
 const name = ref('')
@@ -133,7 +135,7 @@ async function get_clients() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-clients/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-clients/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

@@ -42,6 +42,8 @@ import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
 import TextLabel from '@/components/Fields/TextLabel.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
+
 
 import { option_field_class, getDivisions } from '@/utils/descriptions';
 
@@ -78,7 +80,7 @@ async function addClient() {
     try {
         const token = localStorage.getItem('token');
         console.log(client)
-        const response = await axios.post('http://localhost:8000/create-client/', client, {
+        const response = await axios.post(`${useBaseURLComposable()}create-client/`, client, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

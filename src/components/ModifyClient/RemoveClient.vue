@@ -22,6 +22,8 @@ import axios from 'axios';
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
+import {useBaseURLComposable} from '@/composable/useUrlcomposable'
+
 
 
 const first_name = ref();
@@ -31,7 +33,7 @@ async function confirmDeleteClient() {
     try {
 
         const token = localStorage.getItem('token');
-        await axios.delete('http://localhost:8000/delete-client/', {
+        await axios.delete(`${useBaseURLComposable()}delete-client/`, {
             params: {
                 first_name: first_name.value,
                 last_name: last_name.value,

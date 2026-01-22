@@ -345,7 +345,7 @@ async function get_clients() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/get-clients/', {
+        const response = await axios.get(`${useBaseURLComposable()}get-clients/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -369,7 +369,7 @@ async function assign_items() {
 
         try {
             
-            const response = await axios.put('http://localhost:8000/assign-device/', {}, {
+            const response = await axios.put(`${useBaseURLComposable()}assign-device/`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
