@@ -20,6 +20,8 @@
 import { ref } from 'vue';
 import SideBar from '@/components/SideBar.vue';
 import AddLaptop from '@/components/AddDevice/AddLaptop.vue';
+import AddDesktop from '@/components/AddDevice/AddDesktop.vue';  
+import AddServer from '@/components/AddDevice/AddServer.vue';  
 import AddTablet from '@/components/AddDevice/AddTablet.vue';  
 import AddMouse from '@/components/AddDevice/AddMouse.vue';
 import AddKeyboard from '@/components/AddDevice/AddKeyboard.vue';
@@ -41,6 +43,10 @@ const getComponent = (device) => {
   switch (device) {
     case 'laptop':
       return AddLaptop;
+    case 'desktop':
+      return AddDesktop;
+    case 'server':
+      return AddServer;
     case 'tablet':
       return AddTablet;
     case 'mouse':

@@ -36,6 +36,35 @@
                 <TextLabel labelFor="speaker_deployment_date" fieldName="Deployment Date: "/>
             </div>
 
+            <!-- BOS Date date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="speaker_bos_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="speaker_bos_date" fieldName="BOS Date: "/>
+            </div>
+
+            <TextField id="speaker_supplier_name" labelFor="speaker_supplier_name" fieldName="Supplier Name: " v-model="speaker_supplier_name"/>
+
+            <TextField id="speaker_device_cost" labelFor="speaker_device_cost" fieldName="Device Cost: " v-model="speaker_device_cost"/>
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="speaker_file_input" type="file" multiple>
+                <TextLabel labelFor="speaker_file_input" fieldName="Upload File: "/>
+            </div> -->
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="speaker_file_input" type="file" multiple>
+                <TextLabel labelFor="speaker_file_input" fieldName="Upload File: "/>
+            </div> -->
+
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="speaker_status" :class="[option_field_class]" class="bg-white" v-model="speaker_status">
                     <option selected class="text-blue-100">Choose a Status</option>
@@ -47,8 +76,34 @@
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <!-- returned date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="ups_returned_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="ups_returned_date" fieldName="Returned Date: "/>
+            </div>
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="speaker_type" :class="[option_field_class]" class="bg-white" v-model="speaker_type">
+                    <option selected class="text-blue-100">Choose a Speaker Type</option>
+                    <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
+
+                </select>
+                <TextLabel labelFor="speaker_type" fieldName="Speaker Type: "/>
+            </div>
+
+            <TextField id="speaker_number_speakers" labelFor="speaker_number_speakers" fieldName="Number Of Speakers: " v-model="speaker_number_speakers"/>
+        </div>
+
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+
+            <div class="flex flex-row-reverse mb-6 group">
                 <select id="speaker_parish" :class="[option_field_class]" class="bg-white" v-model="speaker_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +131,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="speaker_location" fieldName="Location" />
-            </div> -->
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="speaker_division" :class="[option_field_class]" class="bg-white" v-model="speaker_division">
@@ -88,7 +143,7 @@
             </div>
         </div>
 
-        <!-- <CommentField id="speaker_comment" labelFor="speaker_comment" fieldName="Comment: " v-model="speaker_comment"/> -->
+        <CommentField id="speaker_comment" labelFor="speaker_comment" fieldName="Comment: " v-model="speaker_comment"/>
         
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

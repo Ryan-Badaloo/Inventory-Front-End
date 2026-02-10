@@ -36,6 +36,35 @@
                 <TextLabel labelFor="projector_deployment_date" fieldName="Deployment Date: "/>
             </div>
 
+            <!-- BOS Date date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="projector_bos_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="projector_bos_date" fieldName="BOS Date: "/>
+            </div>
+
+            <TextField id="projector_supplier_name" labelFor="projector_supplier_name" fieldName="Supplier Name: " v-model="projector_supplier_name"/>
+
+            <TextField id="projector_device_cost" labelFor="projector_device_cost" fieldName="Device Cost: " v-model="projector_device_cost"/>
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="projector_file_input" type="file" multiple>
+                <TextLabel labelFor="projector_file_input" fieldName="Upload File: "/>
+            </div> -->
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="projector_file_input" type="file" multiple>
+                <TextLabel labelFor="projector_file_input" fieldName="Upload File: "/>
+            </div> -->
+
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="projector_status" :class="[option_field_class]" class="bg-white" v-model="projector_status">
                     <option selected class="text-blue-100">Choose a Status</option>
@@ -48,7 +77,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
+            <div class="flex flex-row-reverse mb-6 group">
                 <select id="projector_parish" :class="[option_field_class]" class="bg-white" v-model="projector_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +105,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="projector_location" fieldName="Location" />
-            </div> -->
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="projector_division" :class="[option_field_class]" class="bg-white" v-model="projector_division">
@@ -88,7 +117,7 @@
             </div>
         </div>
 
-        <!-- <CommentField id="projector_comment" labelFor="projector_comment" fieldName="Comment: " v-model="projector_comment"/> -->
+        <CommentField id="projector_comment" labelFor="projector_comment" fieldName="Comment: " v-model="projector_comment"/>
         
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

@@ -36,6 +36,35 @@
                 <TextLabel labelFor="webcam_deployment_date" fieldName="Deployment Date: "/>
             </div>
 
+            <!-- BOS Date date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="webcam_bos_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="webcam_bos_date" fieldName="BOS Date: "/>
+            </div>
+
+            <TextField id="webcam_supplier_name" labelFor="webcam_supplier_name" fieldName="Supplier Name: " v-model="webcam_supplier_name"/>
+
+            <TextField id="webcam_device_cost" labelFor="webcam_device_cost" fieldName="Device Cost: " v-model="webcam_device_cost"/>
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="webcam_file_input" type="file" multiple>
+                <TextLabel labelFor="webcam_file_input" fieldName="Upload File: "/>
+            </div> -->
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="webcam_file_input" type="file" multiple>
+                <TextLabel labelFor="webcam_file_input" fieldName="Upload File: "/>
+            </div> -->
+
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="webcam_status" :class="[option_field_class]" class="bg-white" v-model="webcam_status">
                     <option selected class="text-blue-100">Choose a Status</option>
@@ -48,7 +77,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
+            <div class="flex flex-row-reverse mb-6 group">
                 <select id="webcam_parish" :class="[option_field_class]" class="bg-white" v-model="webcam_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +105,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="webcam_location" fieldName="Location" />
-            </div> -->
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="webcam_division" :class="[option_field_class]" class="bg-white" v-model="webcam_division">
@@ -87,7 +116,8 @@
                 <TextLabel labelFor="webcam_division" fieldName="Division" />
             </div>
         </div>
-        <!-- <CommentField id="webcam_comment" labelFor="webcam_comment" fieldName="Comment: " v-model="webcam_comment"/> -->
+        
+        <CommentField id="webcam_comment" labelFor="webcam_comment" fieldName="Comment: " v-model="webcam_comment"/>
         
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

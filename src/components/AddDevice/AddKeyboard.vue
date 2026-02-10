@@ -35,6 +35,19 @@
                 <TextLabel labelFor="keyboard_deployment_date" fieldName="Deployment Date: "/>
             </div>
 
+            <!-- BOS Date date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="keyboard_bos_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="keyboard_bos_date" fieldName="BOS Date: "/>
+            </div>
+
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="keyboard_status" :class="[option_field_class]" class="bg-white" v-model="keyboard_status">
                     <option selected class="text-blue-100">Choose a Status</option>
@@ -56,7 +69,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
+            <div class="flex flex-row-reverse mb-6 group">
                 <select id="keyboard_parish" :class="[option_field_class]" class="bg-white" v-model="keyboard_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -84,7 +97,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="keyboard_location" fieldName="Location" />
-            </div> -->
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="keyboard_division" :class="[option_field_class]" class="bg-white" v-model="keyboard_division">
@@ -96,7 +109,7 @@
             </div>
         </div>
 
-        <!-- <CommentField id="keyboard_comment" labelFor="keyboard_comment" fieldName="Comment: " v-model="keyboard_comment"/> -->
+        <CommentField id="keyboard_comment" labelFor="keyboard_comment" fieldName="Comment: " v-model="keyboard_comment"/>
         
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

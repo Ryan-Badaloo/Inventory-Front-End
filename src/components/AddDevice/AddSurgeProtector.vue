@@ -36,6 +36,35 @@
                 <TextLabel labelFor="surge_protector_deployment_date" fieldName="Deployment Date: "/>
             </div>
 
+            <!-- BOS Date date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="surge_protector_bos_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="surge_protector_bos_date" fieldName="BOS Date: "/>
+            </div>
+
+            <TextField id="surge_protector_supplier_name" labelFor="surge_protector_supplier_name" fieldName="Supplier Name: " v-model="surge_protector_supplier_name"/>
+
+            <TextField id="surge_protector_device_cost" labelFor="surge_protector_device_cost" fieldName="Device Cost: " v-model="surge_protector_device_cost"/>
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="surge_protector_file_input" type="file" multiple>
+                <TextLabel labelFor="surge_protector_file_input" fieldName="Upload File: "/>
+            </div> -->
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="surge_protector_file_input" type="file" multiple>
+                <TextLabel labelFor="surge_protector_file_input" fieldName="Upload File: "/>
+            </div> -->
+
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="surge_protector_status" :class="[option_field_class]" class="bg-white" v-model="surge_protector_status">
                     <option selected class="text-blue-100">Choose a Status</option>
@@ -47,8 +76,12 @@
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <TextField id="server_number_outlets" labelFor="server_number_outlets" fieldName="Number Of Outlets: " v-model="server_number_outlets"/>
+        </div>
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+
+            <div class="flex flex-row-reverse mb-6 group">
                 <select id="surge_protector_parish" :class="[option_field_class]" class="bg-white" v-model="surge_protector_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +109,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="surge_protector_location" fieldName="Location" />
-            </div> -->
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="surge_protector_division" :class="[option_field_class]" class="bg-white" v-model="surge_protector_division">
@@ -88,7 +121,7 @@
             </div>
         </div>
 
-        <!-- <CommentField id="surge_protector_comment" labelFor="surge_protector_comment" fieldName="Comment: " v-model="surge_protector_comment"/> -->
+        <CommentField id="surge_protector_comment" labelFor="surge_protector_comment" fieldName="Comment: " v-model="surge_protector_comment"/>
         
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

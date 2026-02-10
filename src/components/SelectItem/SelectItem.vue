@@ -2,6 +2,8 @@
 <AddTemplate templateName="Select A Device To Add">
     <div class="p-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 gap-y-8 justify-items-center">
         <SelectDeviceButton @click="selectLaptop()" buttonText="Laptop" icon="laptop" :isActive="deviceActive==='laptop'"/>
+        <SelectDeviceButton @click="selectDesktop()" buttonText="Desktop" icon="desktop" :isActive="deviceActive==='desktop'"/>
+        <SelectDeviceButton @click="selectServer()" buttonText="Server" icon="server" :isActive="deviceActive==='server'"/>
         <SelectDeviceButton @click="selectTablet()" buttonText="Tablet" icon="tablet" :isActive="deviceActive==='tablet'"/>
         <SelectDeviceButton @click="selectMouse()" buttonText="Mouse" icon="mouse" :isActive="deviceActive==='mouse'"/>
         <SelectDeviceButton @click="selectKeyboard()" buttonText="Keyboard" icon="keyboard" :isActive="deviceActive==='keyboard'"/>
@@ -29,6 +31,16 @@ const deviceActive = ref('')
 
 function selectLaptop() {
     deviceActive.value = 'laptop';
+    emit('deviceSelected', deviceActive.value);
+}
+
+function selectDesktop() {
+    deviceActive.value = 'desktop';
+    emit('deviceSelected', deviceActive.value);
+}
+
+function selectServer() {
+    deviceActive.value = 'server';
     emit('deviceSelected', deviceActive.value);
 }
 

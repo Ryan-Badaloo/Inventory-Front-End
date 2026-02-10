@@ -36,6 +36,24 @@
                 <TextLabel labelFor="scanner_deployment_date" fieldName="Deployment Date: "/>
             </div>
 
+            <!-- BOS Date date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="scanner_bos_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="scanner_bos_date" fieldName="BOS Date: "/>
+            </div>
+
+            <TextField id="scanner_supplier_name" labelFor="scanner_supplier_name" fieldName="Supplier Name: " v-model="scanner_supplier_name"/>
+
+            <TextField id="scanner_device_cost" labelFor="scanner_device_cost" fieldName="Device Cost: " v-model="scanner_device_cost"/>
+
+
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="scanner_status" :class="[option_field_class]" class="bg-white" v-model="scanner_status">
                     <option selected class="text-blue-100">Choose a Status</option>
@@ -46,9 +64,25 @@
             </div>
         </div>
 
+        <div class="grid grid-cols-2 gap-x-6">
+            <TextField id="scanner_mac_address" labelFor="scanner_mac_address" fieldName="Mac Address: " v-model="scanner_mac_address"/>
+
+            <TextField id="scanner_ip_address" labelFor="scanner_ip_address" fieldName="IP Address: " v-model="scanner_ip_address"/>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="scanner_connection_type" :class="[option_field_class]" v-model="scanner_connection_type">
+                    <option selected class="text-blue-100">Choose a Connection Type</option>
+                    <option v-for="ctype in connection_types" :key="ctype.ctype_id" :value=ctype.ctype_id class="text-black">{{ ctype.ctype_description }}</option>
+
+                </select>
+                <TextLabel labelFor="scanner_connection_type" fieldName="Connection Type: "/>
+            </div>
+
+        </div>
+
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
+            <div class="flex flex-row-reverse mb-6 group">
                 <select id="scanner_parish" :class="[option_field_class]" class="bg-white" v-model="scanner_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +110,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="scanner_location" fieldName="Location" />
-            </div> -->
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="scanner_division" :class="[option_field_class]" class="bg-white" v-model="scanner_division">
@@ -88,7 +122,7 @@
             </div>
         </div>
 
-        <!-- <CommentField id="scanner_comment" labelFor="scanner_comment" fieldName="Comment: " v-model="scanner_comment"/> -->
+        <CommentField id="scanner_comment" labelFor="scanner_comment" fieldName="Comment: " v-model="scanner_comment"/>
         
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

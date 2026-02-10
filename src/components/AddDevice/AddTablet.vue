@@ -36,6 +36,35 @@
                 <TextLabel labelFor="tablet_deployment_date" fieldName="Deployment Date: "/>
             </div>
 
+            <!-- BOS Date date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="tablet_bos_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="tablet_bos_date" fieldName="BOS Date: "/>
+            </div>
+
+            <TextField id="tablet_supplier_name" labelFor="tablet_supplier_name" fieldName="Supplier Name: " v-model="tablet_supplier_name"/>
+
+            <TextField id="tablet_device_cost" labelFor="tablet_device_cost" fieldName="Device Cost: " v-model="tablet_device_cost"/>
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="tablet_file_input" type="file" multiple>
+                <TextLabel labelFor="tablet_file_input" fieldName="Upload File: "/>
+            </div> -->
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="tablet_file_input" type="file" multiple>
+                <TextLabel labelFor="tablet_file_input" fieldName="Upload File: "/>
+            </div> -->
+
             <!-- system status -->
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="tablet_status" :class="[option_field_class]" class="bg-white" v-model="tablet_status">
@@ -93,6 +122,8 @@
 
 
         <div class="grid grid-cols-2 gap-x-6">
+            <TextField id="tablet_device_size" labelFor="tablet_device_size" fieldName="Device Size: " v-model="tablet_device_size"/>
+
             <TextField id="tablet_operating_system" labelFor="tablet_operating_system" fieldName="Operating System: " v-model="tablet_operating_system"/>
 
             <TextField id="tablet_imei_number" labelFor="tablet_imei_number" fieldName="IMEI Number: " v-model="tablet_imei_number"/>
@@ -103,7 +134,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
+            <div class="flex flex-row-reverse mb-6 group">
                 <select id="tablet_parish" :class="[option_field_class]" class="bg-white" v-model="tablet_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -131,7 +162,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="tablet_location" fieldName="Location" />
-            </div> -->
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="tablet_division" :class="[option_field_class]" class="bg-white" v-model="tablet_division">
@@ -143,7 +174,7 @@
             </div>
         </div>
         
-        <!-- <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: "/> -->
+        <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: "/>
 
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

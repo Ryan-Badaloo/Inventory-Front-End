@@ -36,6 +36,35 @@
                 <TextLabel labelFor="ups_deployment_date" fieldName="Deployment Date: "/>
             </div>
 
+            <!-- BOS Date date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="ups_bos_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="ups_bos_date" fieldName="BOS Date: "/>
+            </div>
+
+            <TextField id="ups_supplier_name" labelFor="ups_supplier_name" fieldName="Supplier Name: " v-model="ups_supplier_name"/>
+
+            <TextField id="ups_device_cost" labelFor="ups_device_cost" fieldName="Device Cost: " v-model="ups_device_cost"/>
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="ups_file_input" type="file" multiple>
+                <TextLabel labelFor="ups_file_input" fieldName="Upload File: "/>
+            </div> -->
+
+            <!-- pdf reader -->
+            <!-- <div class="flex flex-row-reverse mb-6 group">
+                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="ups_file_input" type="file" multiple>
+                <TextLabel labelFor="ups_file_input" fieldName="Upload File: "/>
+            </div> -->
+
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="ups_status" :class="[option_field_class]" class="bg-white" v-model="ups_status">
                     <option selected class="text-blue-100">Choose a Status</option>
@@ -47,8 +76,25 @@
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <TextField id="server_number_outlets" labelFor="server_number_outlets" fieldName="Number Of Outlets: " v-model="server_number_outlets"/>
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
+            <!-- returned date -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <VueDatePicker 
+                    v-model="ups_returned_date" 
+                    :enable-time-picker="false" 
+                    :input-class-name="'p-0 bg-green-500'"
+                    placeholder="Enter in the format MM/DD/YYY"
+                    text-input 
+                    :class="[date_field_class]">
+                </VueDatePicker>
+                <TextLabel labelFor="ups_returned_date" fieldName="Returned Date: "/>
+            </div>
+        </div>
+
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+
+            <div class="flex flex-row-reverse mb-6 group">
                 <select id="ups_parish" :class="[option_field_class]" class="bg-white" v-model="ups_parish">
                     <option selected class="text-blue-100">Choose a Parish</option>
                     <option value=1>Option 1</option>
@@ -76,7 +122,7 @@
                     <option value=3>Option 3</option>
                 </select>
                 <TextLabel :labelFor="ups_location" fieldName="Location" />
-            </div> -->
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="ups_division" :class="[option_field_class]" class="bg-white" v-model="ups_division">
@@ -88,7 +134,7 @@
             </div>
         </div>
 
-        <!-- <CommentField id="ups_comment" labelFor="ups_comment" fieldName="Comment: " v-model="ups_comment"/> -->
+        <CommentField id="ups_comment" labelFor="ups_comment" fieldName="Comment: " v-model="ups_comment"/>
         
         <div class="flex justify-center">
             <AddItemButton buttonName="Add Item"/>
