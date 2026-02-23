@@ -224,7 +224,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
+import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class, getDivisionsLocationsParishes } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -253,14 +253,16 @@ onMounted(async () => {
 });
 
 
+
+
 const fieldNames = [
   "brand", "model", "serial_number", "inventory_number",
-  "delivery_date", "deployment_date", "status",
+  "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
   "hard_disk_capacity", "memory_capacity", "warranty_start_date",
-  "warranty_end_date", "returned_date", "mac_address",
+  "warranty_end_date", "returned_date", "mac_address", "manufactured_date", "memory_type",
   "operating_system", "cpu_type", "processor_speed",
   "processor_type", "computer_name", "ms_office_version",
-  "antivirus", "file_input", "parish", "location_type",
+  "antivirus", "parish", "location_type",
   "location", "division", "comment"
 ];
 
@@ -285,6 +287,9 @@ const {
   laptop_inventory_number,
   laptop_delivery_date,
   laptop_deployment_date,
+  laptop_bos_date,
+  laptop_supplier_name,
+  laptop_device_cost,
   laptop_status,
   laptop_hard_disk_capacity,
   laptop_memory_capacity,
@@ -292,6 +297,8 @@ const {
   laptop_warranty_end_date,
   laptop_returned_date,
   laptop_mac_address,
+  laptop_manufactured_date,
+  laptop_memory_type,
   laptop_operating_system,
   laptop_cpu_type,
   laptop_processor_speed,
@@ -306,6 +313,23 @@ const {
   laptop_division,
   laptop_comment,
 } = laptopRefs;
+
+watch(
+  [laptop_location, laptop_parish],
+  async ([newLocation, newParish], [oldLocation, oldParish]) => {
+    // Ignore initial empty state if you want
+    if (!newLocation && !newParish) return;
+
+    console.log("Location changed:", newLocation);
+    console.log("Parish changed:", newParish);
+
+    // Call your API or function here
+    divisions.value = await getDivisionsLocationsParishes(
+      newLocation,
+      newParish
+    );
+  }
+);
 
 function resetLaptopForm() {
   Object.keys(laptopRefs).forEach(key => {
@@ -326,26 +350,35 @@ async function addLaptop() {
         category: "Laptop",
         brand: laptop_brand.value,
         model: laptop_model.value,
-        cpu_type_id: laptop_cpu_type.value,
         serial_number: laptop_serial_number.value,
         inventory_number: laptop_inventory_number.value,
+        delivery_date: formatDate(laptop_delivery_date.value),
+        deployment_date: formatDate(laptop_deployment_date.value),
+        bos_date: formatDate(laptop_bos_date.value),
+        supplier_name: laptop_supplier_name.value,
+        device_cost: laptop_device_cost.value,
+        status_id: laptop_status.value,
         hard_disk_capacity: laptop_hard_disk_capacity.value,
         memory_capacity: laptop_memory_capacity.value,
+        warranty_start_date: formatDate(laptop_warranty_start_date.value),
+        warranty_end_date: formatDate(laptop_warranty_end_date.value),
+        return_date: formatDate(laptop_returned_date.value),
+        mac_address: laptop_mac_address.value,
+        manufactured_date: laptop_manufactured_date.value,
+        memory_type: laptop_memory_type.value,
+        operating_system: laptop_operating_system.value,
+        cpu_type_id: laptop_cpu_type.value,
         processor_speed: laptop_processor_speed.value,
         processor_type: laptop_processor_type.value,
         computer_name: laptop_computer_name.value,
-        mac_address: laptop_mac_address.value,
-        operating_system: laptop_operating_system.value,
         microsoft_office_version: laptop_ms_office_version.value,
         antivirus: laptop_antivirus.value,
         pdf_reader: laptop_file_input.value,
-        warranty_start_date: formatDate(laptop_warranty_start_date.value),
-        warranty_end_date: formatDate(laptop_warranty_end_date.value),
-        delivery_date: formatDate(laptop_delivery_date.value),
-        deployment_date: formatDate(laptop_deployment_date.value),
-        return_date: formatDate(laptop_returned_date.value),
+        parish_id: laptop_parish.value,
+        location_type_id: laptop_location_type.value,
+        location_id: laptop_location.value,
         division_id: laptop_division.value,
-        status_id: laptop_status.value,
+        comment: laptop_comment.value,
     }
 
 

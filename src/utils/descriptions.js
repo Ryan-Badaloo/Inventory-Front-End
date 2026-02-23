@@ -79,3 +79,24 @@ export async function getDivisions() {
     }
 }
 
+export async function getDivisionsLocationsParishes(location_name, parish_name) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-divisions-location-parish/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                location_name,
+                parish_name,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
+
+

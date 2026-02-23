@@ -16,6 +16,9 @@
         <SelectDeviceButton @click="selectPrinter()" buttonText="Printer" icon="print" :isActive="deviceActive==='printer'"/>
         <SelectDeviceButton @click="selectProjector()" buttonText="Projector" icon="present_to_all" :isActive="deviceActive==='projector'"/>
         <SelectDeviceButton @click="selectConferenceRoom_AV_Equipment()" buttonText="Conference Room AV Equipment" icon="construction" :isActive="deviceActive==='conference_room_av_equipment'"/>
+        <SelectDeviceButton @click="selectNetworkSwitch()" buttonText="Network Switch" icon="construction" :isActive="deviceActive==='network_switch'"/>
+        <SelectDeviceButton @click="selectMonitor()" buttonText="Monitor" icon="construction" :isActive="deviceActive==='monitor'"/>
+
 
     </div>
 </AddTemplate>
@@ -103,5 +106,16 @@ function selectConferenceRoom_AV_Equipment() {
     deviceActive.value = 'conference_room_av_equipment';
     emit('deviceSelected', deviceActive.value);
 }
+
+function selectNetworkSwitch() {
+    deviceActive.value = 'network_switch';
+    emit('deviceSelected', deviceActive.value);
+}
+
+function selectMonitor() {
+    deviceActive.value = 'monitor';
+    emit('deviceSelected', deviceActive.value);
+}
+
 
 </script>

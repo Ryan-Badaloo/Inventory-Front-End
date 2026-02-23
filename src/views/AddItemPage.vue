@@ -34,6 +34,9 @@ import AddOtherEquipment from '@/components/AddDevice/AddOtherEquipment.vue';
 import AddPrinter from '@/components/AddDevice/AddPrinter.vue';
 import AddProjector from '@/components/AddDevice/AddProjector.vue';
 import AddConferenceRoom_AV_Equipment from '@/components/AddDevice/AddConferenceRoom_AV_Equipment.vue';
+import AddNetworkSwitch from '@/components/AddDevice/AddNetworkSwitch.vue';
+import AddMonitor from '@/components/AddDevice/AddMonitor.vue';
+
 
 import SelectDevice from '@/components/SelectItem/SelectItem.vue';
 
@@ -71,6 +74,10 @@ const getComponent = (device) => {
       return AddProjector;
     case 'conference_room_av_equipment':
       return AddConferenceRoom_AV_Equipment;
+    case 'network_switch':
+      return AddNetworkSwitch;
+    case 'monitor':
+      return AddMonitor;
     default:
       return null;
   }
