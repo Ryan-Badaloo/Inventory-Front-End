@@ -67,7 +67,7 @@
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_status" :class="[option_field_class]" class="bg-white" v-model.number="laptop_status">
-                    <option selected class="text-blue-100">Choose a Status</option>
+                    <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
 
                 </select>
@@ -144,7 +144,7 @@
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_cpu_type" :class="[option_field_class]" class="bg-white" v-model="laptop_cpu_type">
-                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option :value=null selected class="text-blue-100"></option>
                     <option v-for="cpu_type in cpu_types" :key="cpu_type.cpu_type_id" :value=cpu_type.cpu_type_id class="text-black">{{ cpu_type.cpu_type_description }}</option>
                 </select>
                 <TextLabel labelFor="laptop_cpu_type" fieldName="CPU Type:" />
@@ -165,38 +165,32 @@
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="laptop_parish" :class="[option_field_class]" class="bg-white" v-model="laptop_parish">
-                    <option selected class="text-blue-100">Choose a Parish</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                <select id="laptop_parish" :class="[option_field_class]" class="bg-white" v-model.number="laptop_parish">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="parish in parishes" :key="parish.parish_id" :value=parish.parish_id class="text-black">{{ parish.parish_name }}</option>
                 </select>
-                <TextLabel :labelFor="laptop_parish" fieldName="Parish" />
+                <TextLabel labelFor="laptop_parish" fieldName="Parish" />
             </div>
             
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="laptop_location_type" :class="[option_field_class]" class="bg-white" v-model="laptop_location_type">
-                    <option selected class="text-blue-100">Choose a Location Type</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                <select id="laptop_location_type" :class="[option_field_class]" class="bg-white" v-model.number="laptop_location_type">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="location_type in locationTypes" :key="location_type.ltype_id" :value=location_type.ltype_id class="text-black">{{ location_type.ltype_name }}</option>
                 </select>
-                <TextLabel :labelFor="laptop_location_type" fieldName="Location Type" />
+                <TextLabel labelFor="laptop_location_type" fieldName="Location Type" />
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="laptop_location" :class="[option_field_class]" class="bg-white" v-model="laptop_location">
-                    <option selected class="text-blue-100">Choose a location</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                <select id="laptop_location" :class="[option_field_class]" class="bg-white" v-model.number="laptop_location">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="location in locations" :key="location.location_id" :value=location.location_id class="text-black">{{ location.location_name }}</option>
                 </select>
-                <TextLabel :labelFor="laptop_location" fieldName="Location" />
+                <TextLabel labelFor="laptop_location" fieldName="Location" />
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="laptop_division" :class="[option_field_class]" class="bg-white" v-model="laptop_division">
-                    <option selected class="text-blue-100">Choose a Division</option>
+                <select id="laptop_division" :class="[option_field_class]" class="bg-white" v-model.number="laptop_division">
+                    <option :value=null selected class="text-blue-100"></option>
                     <option v-for="division in divisions" :key="division.division_id" :value=division.division_id class="text-black">{{ division.division_name }}</option>
                 </select>
                 <TextLabel labelFor="laptop_division" fieldName="Division" />
@@ -224,7 +218,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class, getDivisionsLocationsParishes } from '@/utils/descriptions';
+import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -236,17 +230,31 @@ import CommentField from '../Fields/CommentField.vue';
 const statuses = ref([])
 const cpu_types = ref([])
 const divisions = ref([])
+const locations = ref([])
+const parishes = ref([])
+const locationTypes = ref([])
 
 onMounted(async () => {
   try {
     statuses.value = await getStatuses();
-    console.log(statuses.value);
 
     cpu_types.value = await getCPUTypes();
-    console.log(cpu_types.value)
 
     divisions.value = await getDivisions();
-    console.log(divisions.value)
+
+    locations.value = await getLocations();
+
+    parishes.value = await getParishes();
+    
+    locationTypes.value = await getLocationTypes();
+
+    if (laptop_location.value) {
+        locationChange(laptop_location.value)
+    } else if (laptop_parish.value) {
+        parishChange(laptop_parish.value)
+    }
+
+
   } catch (err) {
     console.error("Failed to load something", err);
   }
@@ -271,13 +279,14 @@ const fieldNames = [
 const laptopRefs = {};
 
 fieldNames.forEach(name => {
-  const key = `laptop_${name}`;
-  const saved = localStorage.getItem(`${key}_val`);
-  laptopRefs[key] = ref(saved || "");
+    const key = `laptop_${name}`;
+    const saved = localStorage.getItem(`${key}_val`);
+    /* laptopRefs[key] = ref(saved || null); */
+    laptopRefs[key] = ref(saved === null || saved === "" || saved === "null" ? null : saved);
 
-  watch(laptopRefs[key], val => {
-    localStorage.setItem(`${key}_val`, val);
-  });
+    watch(laptopRefs[key], val => {
+        localStorage.setItem(`${key}_val`, val == null ? "" : String(val));
+    });
 });
 
 const {
@@ -306,7 +315,7 @@ const {
   laptop_computer_name,
   laptop_ms_office_version,
   laptop_antivirus,
-  laptop_file_input,
+  
   laptop_parish,
   laptop_location_type,
   laptop_location,
@@ -314,28 +323,80 @@ const {
   laptop_comment,
 } = laptopRefs;
 
-watch(
-  [laptop_location, laptop_parish],
-  async ([newLocation, newParish], [oldLocation, oldParish]) => {
-    // Ignore initial empty state if you want
-    if (!newLocation && !newParish) return;
+async function parishChange(parishValue) {
+    if (laptop_location.value == null || !laptop_location.value) {
 
-    console.log("Location changed:", newLocation);
-    console.log("Parish changed:", newParish);
+        try {
+        locations.value = await getParishLocations(parishValue);
+        console.log(locations.value);
 
-    // Call your API or function here
-    divisions.value = await getDivisionsLocationsParishes(
-      newLocation,
-      newParish
-    );
-  }
-);
+        divisions.value = await getParishDivisions(parishValue);
+        console.log(divisions.value);
+
+        } catch (err) {
+        console.error(err);
+        }
+    } else {
+        console.log("Did not enter if");
+        locations.value = await getParishLocations(parishValue);
+        console.log(locations.value);
+    }
+}
+
+async function locationChange(locationValue) {
+    if (laptop_location.value != null) {
+
+        try {
+        parishes.value = await getLocationParishes(locationValue);
+        console.log(parishes.value);
+
+        divisions.value = await getLocationDivisions(locationValue);
+        console.log(divisions.value);
+
+        } catch (err) {
+        console.error(err);
+        }
+    } else {
+        console.log("Did not enter if");
+        parishes.value = await getLocationParishes(locationValue);
+        console.log(parishes.value);
+
+        console.log(laptop_parish.value)
+        divisions.value = await getParishDivisions(laptop_parish.value);
+        console.log(divisions.value);
+    }
+}
+
+watch (
+    laptop_parish, async (newParish, oldParish) => {
+
+        console.log("Parish changed:", newParish);
+        console.log("Parish value:", laptop_parish.value, "type:", typeof laptop_parish.value);
+        console.log("location value:", laptop_location.value, "type:", typeof laptop_location.value);
+
+        parishChange(newParish)
+    }
+)
+
+watch (
+    laptop_location, async (newLocation, oldLocation) => {
+
+        console.log("Location changed:", newLocation);
+        console.log("Parishes:", laptop_parish.value)
+        console.log("Divisions:", laptop_division.value)
+
+        console.log("location value:", laptop_location.value);
+        locationChange(newLocation)
+        
+    }
+)
+
 
 function resetLaptopForm() {
-  Object.keys(laptopRefs).forEach(key => {
-    laptopRefs[key].value = "";
-    localStorage.removeItem(`${key}_val`);
-  });
+    Object.keys(laptopRefs).forEach(key => {
+        laptopRefs[key].value = null;
+        localStorage.removeItem(`${key}_val`);
+    });
 }
 
 function formatDate(value) {
@@ -346,6 +407,7 @@ function formatDate(value) {
 
 
 async function addLaptop() {
+    console.log("Started the function")
     const laptop = {
         category: "Laptop",
         brand: laptop_brand.value,
@@ -364,7 +426,7 @@ async function addLaptop() {
         warranty_end_date: formatDate(laptop_warranty_end_date.value),
         return_date: formatDate(laptop_returned_date.value),
         mac_address: laptop_mac_address.value,
-        manufactured_date: laptop_manufactured_date.value,
+        manufactured_date: formatDate(laptop_manufactured_date.value),
         memory_type: laptop_memory_type.value,
         operating_system: laptop_operating_system.value,
         cpu_type_id: laptop_cpu_type.value,
@@ -373,14 +435,14 @@ async function addLaptop() {
         computer_name: laptop_computer_name.value,
         microsoft_office_version: laptop_ms_office_version.value,
         antivirus: laptop_antivirus.value,
-        pdf_reader: laptop_file_input.value,
+        
         parish_id: laptop_parish.value,
         location_type_id: laptop_location_type.value,
         location_id: laptop_location.value,
         division_id: laptop_division.value,
         comment: laptop_comment.value,
     }
-
+    console.log("read values into laptop")
 
     for (const key in laptop) {
         if (laptop[key] === undefined || laptop[key] === "") {
@@ -388,24 +450,49 @@ async function addLaptop() {
         }
     }
 
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${useBaseURLComposable()}add-laptop/`, laptop, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        console.log("Item Added Succefully")
-        alert("Item successfully added.", response.data);
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
+    
 
-        alert("Failed to add item. Check console.");
+    if (laptop.delivery_date > laptop.deployment_date) {
+        alert("Deployment Date must be larger than Delivery Date")
+    } else if (laptop.return_date < laptop.deployment_date) {
+        alert("Return Date must be larger than Deployment Date")
+    } else if (laptop.delivery_date < laptop.manufactured_date || laptop.deployment_date < laptop.manufactured_date || laptop.bos_date < laptop.manufactured_date) {
+        alert("Device cannot be Delivered, Deployed, or BOS before Manufactured Date")
+    } else if (!laptop.serial_number || !laptop.inventory_number) {
+        alert("Serial Number and Inventory Number are required.")
+    } else {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${useBaseURLComposable()}add-laptop/`, laptop, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.data == "Serial Found") {
+                alert("Serial Number Already Exists", response.data)
+                console.log(response.data)
+            } else if (response.data == "Inventory Found") {
+                alert("Inventory Number Already Exists", response.data)
+                console.log(response.data)
+            } else {
+                alert("Item has been added successfully")
+                console.log("Item has been added successfully")
+            }
+        } catch (error) {
+            console.error(
+            "Error creating item:",
+            error.response?.data || error.message
+            );
+            console.error("Detail:", error.response?.data?.detail);
+            console.error("Error:", error);
+
+            alert("Failed to add item. Check console.");
+        }
     }
+
+
+
+    
 }
 
 </script>

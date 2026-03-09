@@ -51,7 +51,7 @@
 
             <TextField id="tablet_supplier_name" labelFor="tablet_supplier_name" fieldName="Supplier Name: " v-model="tablet_supplier_name"/>
 
-            <TextField id="tablet_device_cost" labelFor="tablet_device_cost" fieldName="Device Cost: " v-model="tablet_device_cost"/>
+            <TextField id="tablet_device_cost" labelFor="tablet_device_cost" fieldName="Device Cost: " v-model.number="tablet_device_cost"/>
 
             <!-- pdf reader -->
             <!-- <div class="flex flex-row-reverse mb-6 group">
@@ -67,8 +67,8 @@
 
             <!-- system status -->
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="tablet_status" :class="[option_field_class]" class="bg-white" v-model="tablet_status">
-                    <option selected class="text-blue-100">Choose a Status</option>
+                <select id="tablet_status" :class="[option_field_class]" class="bg-white" v-model.number="tablet_status">
+                    <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
                 </select>
                 <TextLabel labelFor="tablet_status" fieldName="System Status: "/>
@@ -135,40 +135,33 @@
         <div class="mt-8 grid grid-cols-2 gap-x-6">
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="tablet_parish" :class="[option_field_class]" class="bg-white" v-model="tablet_parish">
-                    <option selected class="text-blue-100">Choose a Parish</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                <select id="tablet_parish" :class="[option_field_class]" class="bg-white" v-model.number="tablet_parish">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="parish in parishes" :key="parish.parish_id" :value=parish.parish_id class="text-black">{{ parish.parish_name }}</option>
                 </select>
-                <TextLabel :labelFor="tablet_parish" fieldName="Parish" />
+                <TextLabel labelFor="tablet_parish" fieldName="Parish" />
             </div>
             
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="tablet_location_type" :class="[option_field_class]" class="bg-white" v-model="tablet_location_type">
-                    <option selected class="text-blue-100">Choose a Location Type</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                <select id="tablet_location_type" :class="[option_field_class]" class="bg-white" v-model.number="tablet_location_type">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="location_type in locationTypes" :key="location_type.ltype_id" :value=location_type.ltype_id class="text-black">{{ location_type.ltype_name }}</option>
                 </select>
-                <TextLabel :labelFor="tablet_location_type" fieldName="Location Type" />
+                <TextLabel labelFor="tablet_location_type" fieldName="Location Type" />
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="tablet_location" :class="[option_field_class]" class="bg-white" v-model="tablet_location">
-                    <option selected class="text-blue-100">Choose a Location</option>
-                    <option value=1>Option 1</option>
-                    <option value=2>Option 2</option>
-                    <option value=3>Option 3</option>
+                <select id="tablet_location" :class="[option_field_class]" class="bg-white" v-model.number="tablet_location">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="location in locations" :key="location.location_id" :value=location.location_id class="text-black">{{ location.location_name }}</option>
                 </select>
-                <TextLabel :labelFor="tablet_location" fieldName="Location" />
+                <TextLabel labelFor="tablet_location" fieldName="Location" />
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="tablet_division" :class="[option_field_class]" class="bg-white" v-model="tablet_division">
-                    <option selected class="text-blue-100">Choose a Division</option>
+                <select id="tablet_division" :class="[option_field_class]" class="bg-white" v-model.number="tablet_division">
+                    <option :value=null selected class="text-blue-100"></option>
                     <option v-for="division in divisions" :key="division.division_id" :value=division.division_id class="text-black">{{ division.division_name }}</option>
-
                 </select>
                 <TextLabel labelFor="tablet_division" fieldName="Division" />
             </div>
@@ -196,7 +189,7 @@ import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 
-import { getStatuses, getDivisions, option_field_class, date_field_class } from '@/utils/descriptions';
+import { getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -207,13 +200,27 @@ import CommentField from '../Fields/CommentField.vue';
 
 const statuses = ref([])
 const divisions = ref([])
+const locations = ref([])
+const parishes = ref([])
+const locationTypes = ref([])
 
 onMounted(async () => {
   try {
     statuses.value = await getStatuses();
 
     divisions.value = await getDivisions();
-    console.log(divisions.value)
+
+    locations.value = await getLocations();
+
+    parishes.value = await getParishes();
+    
+    locationTypes.value = await getLocationTypes();
+
+    if (tablet_location.value) {
+        locationChange(tablet_location.value)
+    } else if (tablet_parish.value) {
+        parishChange(tablet_parish.value)
+    }
     
   } catch (err) {
     console.error("Failed to load statuses", err);
@@ -222,9 +229,9 @@ onMounted(async () => {
 
 const fieldNames = [
   "brand", "model", "serial_number", "inventory_number",
-  "delivery_date", "deployment_date", "status",
+  "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
   "hard_disk_capacity", "memory_capacity", "warranty_start_date",
-  "warranty_end_date", "returned_date",
+  "warranty_end_date", "returned_date", "device_size",
   "operating_system", "imei_number", "version", "parish", "location_type",
   "location", "division", "comment"
 ];
@@ -232,13 +239,14 @@ const fieldNames = [
 const tabletRefs = {};
 
 fieldNames.forEach(name => {
-  const key = `tablet_${name}`;
-  const saved = localStorage.getItem(`${key}_val`);
-  tabletRefs[key] = ref(saved || "");
+    const key = `tablet_${name}`;
+    const saved = localStorage.getItem(`${key}_val`);
+    /* tabletRefs[key] = ref(saved || null); */
+    tabletRefs[key] = ref(saved === null || saved === "" || saved === "null" ? null : saved);
 
-watch(tabletRefs[key], val => {
-    localStorage.setItem(`${key}_val`, val);
-  });
+    watch(tabletRefs[key], val => {
+        localStorage.setItem(`${key}_val`, val == null ? "" : String(val));
+    });
 });
 
 const {
@@ -248,25 +256,97 @@ tablet_serial_number,
 tablet_inventory_number,
 tablet_delivery_date,
 tablet_deployment_date,
+tablet_bos_date, 
+tablet_supplier_name,
+tablet_device_cost, 
 tablet_status,
+tablet_hard_disk_capacity,
+tablet_memory_capacity,
 tablet_warranty_start_date,
 tablet_warranty_end_date,
 tablet_returned_date,
+tablet_device_size,
 tablet_operating_system,
 tablet_imei_number,
 tablet_version,
-tablet_division,
-tablet_hard_disk_capacity,
-tablet_memory_capacity,
 
+tablet_division,
 tablet_location,
 tablet_location_type,
 tablet_parish,
 } = tabletRefs;
 
+async function parishChange(parishValue) {
+    if (tablet_location.value == null || !tablet_location.value) {
+
+        try {
+        locations.value = await getParishLocations(parishValue);
+        console.log(locations.value);
+
+        divisions.value = await getParishDivisions(parishValue);
+        console.log(divisions.value);
+
+        } catch (err) {
+        console.error(err);
+        }
+    } else {
+        console.log("Did not enter if");
+        locations.value = await getParishLocations(parishValue);
+        console.log(locations.value);
+    }
+}
+
+async function locationChange(locationValue) {
+    if (tablet_location.value != null) {
+
+        try {
+        parishes.value = await getLocationParishes(locationValue);
+        console.log(parishes.value);
+
+        divisions.value = await getLocationDivisions(locationValue);
+        console.log(divisions.value);
+
+        } catch (err) {
+        console.error(err);
+        }
+    } else {
+        console.log("Did not enter if");
+        parishes.value = await getLocationParishes(locationValue);
+        console.log(parishes.value);
+
+        console.log(tablet_parish.value)
+        divisions.value = await getParishDivisions(tablet_parish.value);
+        console.log(divisions.value);
+    }
+}
+
+watch (
+    tablet_parish, async (newParish, oldParish) => {
+
+        console.log("Parish changed:", newParish);
+        console.log("Parish value:", tablet_parish.value, "type:", typeof tablet_parish.value);
+        console.log("location value:", tablet_location.value, "type:", typeof tablet_location.value);
+
+        parishChange(newParish)
+    }
+)
+
+watch (
+    tablet_location, async (newLocation, oldLocation) => {
+
+        console.log("Location changed:", newLocation);
+        console.log("Parishes:", tablet_parish.value)
+        console.log("Divisions:", tablet_division.value)
+
+        console.log("location value:", tablet_location.value);
+        locationChange(newLocation)
+        
+    }
+)
+
 function resetTabletForm() {
   Object.keys(tabletRefs).forEach(key => {
-    tabletRefs[key].value = "";
+    tabletRefs[key].value = null;
     localStorage.removeItem(`${key}_val`);
   });
 }
@@ -284,19 +364,24 @@ async function addTablet() {
         brand: tablet_brand.value,
         model: tablet_model.value,
         serial_number: tablet_serial_number.value,
-        imei_number: tablet_imei_number.value,
-        operating_system: tablet_operating_system.value,
-        version: tablet_version.value,
         inventory_number: tablet_inventory_number.value,
+        delivery_date: formatDate(tablet_delivery_date.value),
+        deployment_date: formatDate(tablet_deployment_date.value),
+        bos_date: formatDate(tablet_bos_date.value),
+        supplier_name: tablet_supplier_name.value,
+        device_cost: Number(tablet_device_cost.value),
+        status_id: tablet_status.value,
         hard_disk_capacity: tablet_hard_disk_capacity.value,
         memory_capacity: tablet_memory_capacity.value,
         warranty_start_date: formatDate(tablet_warranty_start_date.value),
         warranty_end_date: formatDate(tablet_warranty_end_date.value),
-        delivery_date: formatDate(tablet_delivery_date.value),
-        deployment_date: formatDate(tablet_deployment_date.value),
         return_date: formatDate(tablet_returned_date.value),
-        status_id: tablet_status.value,
+        device_size: tablet_device_size.value,
+        operating_system: tablet_operating_system.value,
+        imei_number: tablet_imei_number.value,
+        version: tablet_version.value,
     }
+    console.log("read values into tablet")
 
     for (const key in tablet) {
         if (tablet[key] === undefined || tablet[key] === "") {
@@ -304,29 +389,47 @@ async function addTablet() {
         }
     }
 
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${useBaseURLComposable()}add-tablet/`, tablet, {
-            headers: {
-                Authorization: `Bearer ${token}`
+    if (tablet.delivery_date > tablet.deployment_date) {
+        alert("Deployment Date must be larger than Delivery Date")
+    } else if (tablet.return_date < tablet.deployment_date) {
+        alert("Return Date must be larger than Deployment Date")
+    } else if (tablet.delivery_date < tablet.manufactured_date || tablet.deployment_date < tablet.manufactured_date || tablet.bos_date < tablet.manufactured_date) {
+        alert("Device cannot be Delivered, Deployed, or BOS before Manufactured Date")
+    } else if (!tablet.serial_number || !tablet.inventory_number) {
+        alert("Serial Number and Inventory Number are required.")
+    } else if (!Number.isInteger(tablet.device_cost)){
+        console.log("Device Cost:", tablet_device_cost.value, "type:", typeof tablet_device_cost.value)
+        alert("Device cost must be an integer")
+    } else {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${useBaseURLComposable()}add-tablet/`, tablet, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.data == "Serial Found") {
+                alert("Serial Number Already Exists", response.data)
+                console.log(response.data)
+            } else if (response.data == "Inventory Found") {
+                alert("Inventory Number Already Exists", response.data)
+                console.log(response.data)
+            } else {
+                alert("Item has been added successfully")
+                console.log("Item has been added successfully")
             }
-        });
-        console.log("Item Added Succefully")
-        alert("Item successfully added.", response.data);
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
+        } catch (error) {
+            console.error(
+            "Error creating item:",
+            error.response?.data || error.message
+            );
+            console.error("Detail:", error.response?.data?.detail);
+            console.error("Error:", error);
 
-        alert("Failed to add item. Check console.");
+            alert("Failed to add item. Check console.");
+        }
     }
 }
-
-
-
-
 
 
 

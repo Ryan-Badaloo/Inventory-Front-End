@@ -34,6 +34,36 @@ export async function getCPUTypes() {
     }
 }
 
+export async function getFormFactors() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-form-factors/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
+export async function getRaidTypes() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-raid-types/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
 export async function getConnectionTypes() {
     try {
         const token = localStorage.getItem('token');
@@ -64,6 +94,21 @@ export async function getPrinterFeatures() {
     }
 }
 
+export async function getSpeakerTypes() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-speaker-types/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
 export async function getDivisions() {
     try {
         const token = localStorage.getItem('token');
@@ -79,16 +124,114 @@ export async function getDivisions() {
     }
 }
 
-export async function getDivisionsLocationsParishes(location_name, parish_name) {
+export async function getLocations() {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${useBaseURLComposable()}get-divisions-location-parish/`, {
+        const response = await axios.get(`${useBaseURLComposable()}get-locations/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
+export async function getParishes() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-parishes/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
+export async function getLocationTypes() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-location-types/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
+export async function getParishLocations(parish_id) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-parish-locations/`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
             params: {
-                location_name,
-                parish_name,
+                parish_id,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
+export async function getParishDivisions(parish_id) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-parish-divisions/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                parish_id,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
+export async function getLocationParishes(location_id) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-location-parish/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                location_id,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
+export async function getLocationDivisions(location_id) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-location-division/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                location_id,
             },
         });
         return response.data;
