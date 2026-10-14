@@ -18,7 +18,7 @@
         <div class="mt-8 grid grid-cols-2 gap-x-6 text-teal-800">
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="scanner_division" :class="[option_field_class]" class="bg-white" v-model="client_division">
-                    <option selected class="text-blue-100">Choose a Division</option>
+                    <option :value=null selected class="text-blue-100"></option>
                     <option v-for="division in divisions" :key="division.division_id" :value=division.division_id class="text-black">{{ division.division_name }}</option>
 
                 </select>
@@ -35,7 +35,7 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
 import AddItemButton from '@/components/AddItemButton.vue';
@@ -47,14 +47,8 @@ import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import { option_field_class, getDivisions } from '@/utils/descriptions';
 
-const first_name = ref()
-const last_name = ref()
-const username = ref()
-const phone_number = ref()
-const position = ref()
-const division_id = ref()
 
-const client_division = ref()
+const division_id = ref()
 const divisions = ref([])
 
 onMounted(async () => {
@@ -65,6 +59,32 @@ onMounted(async () => {
     console.error("Failed to load statuses", err);
   }
 });
+
+const fieldNames = [
+  "first_name", "last_name", "username", "phone_number", "position", "client_division"
+];
+
+const clientRefs = {};
+
+fieldNames.forEach(name => {
+    const key = name;
+    const saved = localStorage.getItem(`${key}_val`);
+    /* clientRefs[key] = ref(saved || null); */
+    clientRefs[key] = ref(saved === null || saved === "" || saved === "null" ? null : saved);
+
+    watch(clientRefs[key], val => {
+        localStorage.setItem(`${key}_val`, val == null ? "" : String(val));
+    });
+}); 
+
+const {
+    first_name,
+    last_name,
+    username,
+    phone_number,
+    position,
+    client_division,
+} = clientRefs;
 
 async function addClient() {
     const client = {
@@ -77,24 +97,36 @@ async function addClient() {
 
     }
 
-    try {
-        const token = localStorage.getItem('token');
-        console.log(client)
-        const response = await axios.post(`${useBaseURLComposable()}create-client/`, client, {
-            headers: {
-                Authorization: `Bearer ${token}`
+    if (!first_name.value || !last_name.value) {
+        alert("First and Last Names are required")
+    } else if (!username.value) {
+        alert("Email is required")
+    } else {
+        try {
+            const token = localStorage.getItem('token');
+            console.log(client)
+            const response = await axios.post(`${useBaseURLComposable()}add-client/`, client, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.data == "User Found") {
+                alert("User Already Exists", response.data)
+                console.log(response.data)
             }
-        });
-        console.log("Client Added Succefully")
-        alert("Client successfully added.", response.data);
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
+            else {
+                console.log(response.data)
+                alert("Client successfully added.", response.data);
+            }
+        } catch (error) {
+            console.error(
+            "Error creating item:",
+            error.response?.data || error.message
+            );
+            console.error("Detail:", error.response?.data?.detail);
 
-        alert("Failed to add client. Check console.");
+            alert("Failed to add client. Check console.");
+        }
     }
 }
 

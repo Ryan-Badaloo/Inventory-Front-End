@@ -2,11 +2,11 @@
 <AddTemplate templateName="UPS">
     <form @submit.prevent="addUPS()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="ups_brand" labelFor="ups_brand" fieldName="Brand: " v-model="ups_brand"/>
+            <TextField id="ups_brand" labelFor="ups_brand" fieldName="Brand: " v-model="ups_brand" :required="true"/>
 
-            <TextField id="ups_model" labelFor="ups_model" fieldName="Model: " v-model="ups_model"/>
+            <TextField id="ups_model" labelFor="ups_model" fieldName="Model: " v-model="ups_model" :required="true"/>
 
-            <TextField id="ups_serial_number" labelFor="ups_serial_number" fieldName="Serial Number: " v-model="ups_serial_number"/>
+            <TextField id="ups_serial_number" labelFor="ups_serial_number" fieldName="Serial Number: " v-model="ups_serial_number" :required="true"/>
 
             <TextField id="ups_inventory_number" labelFor="ups_inventory_number" fieldName="Inventory Number: " v-model="ups_inventory_number"/>
 
@@ -66,16 +66,16 @@
             </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="ups_status" :class="[option_field_class]" class="bg-white" v-model.number="ups_status">
+                <select id="ups_status" :class="[option_field_class]" class="bg-white" v-model.number="ups_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
                 </select>
-                <TextLabel labelFor="ups_status" fieldName="System Status: "/>
+                <TextLabel labelFor="ups_status" fieldName="System Status: " :required="true"/>
             </div>
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
-            <TextField id="ups_number_outlets" labelFor="ups_number_outlets" fieldName="Number Of Outlets: " v-model="ups_number_outlets"/>
+            <TextField id="ups_number_outlets" labelFor="ups_number_outlets" fieldName="Number Of Outlets: " v-model="ups_number_outlets" :required="true"/>
 
             <!-- returned date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -124,6 +124,14 @@
                 </select>
                 <TextLabel labelFor="ups_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="ups_branch" :class="[option_field_class]" class="bg-white" v-model.number="ups_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="ups_branch" fieldName="Branch" />
+            </div>
         </div>
 
         <CommentField id="ups_comment" labelFor="ups_comment" fieldName="Comment: " v-model="ups_comment"/>
@@ -147,7 +155,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -156,6 +164,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const divisions = ref([])
 const locations = ref([])
@@ -168,16 +177,20 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
     
     locationTypes.value = await getLocationTypes();
 
-    if (ups_location.value) {
-        locationChange(ups_location.value)
-    } else if (ups_parish.value) {
+    if (ups_parish.value) {
         parishChange(ups_parish.value)
+    }
+
+    if (ups_division.value) {
+        divisionChange(ups_division.value)
     }
 
 
@@ -191,7 +204,7 @@ const fieldNames = [
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
   "number_outlets", "returned_date",
   "parish", "location_type", "location",
-  "division", "comment"
+  "division", "branch", "comment"
 ];
 
 const upsRefs = {};
@@ -224,6 +237,7 @@ const {
     ups_location_type,
     ups_location,
     ups_division,
+    ups_branch,
     ups_comment,
 } = upsRefs;
 
@@ -234,42 +248,33 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (ups_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (ups_branch.value == null || !ups_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(ups_parish.value)
-        divisions.value = await getParishDivisions(ups_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
+
 
 watch (
     ups_parish, async (newParish, oldParish) => {
@@ -283,15 +288,13 @@ watch (
 )
 
 watch (
-    ups_location, async (newLocation, oldLocation) => {
+    ups_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", ups_parish.value)
-        console.log("Divisions:", ups_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", ups_division.value, "type:", typeof ups_division.value);
+        console.log("Branch value:", ups_branch.value, "type:", typeof ups_branch.value);
 
-        console.log("location value:", ups_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -311,7 +314,6 @@ function formatDate(value) {
 async function addUPS() {
     const ups = {
         category: "UPS",
-        division_id: ups_division.value,
         brand: ups_brand.value,
         model: ups_model.value,
         serial_number: ups_serial_number.value,
@@ -327,9 +329,10 @@ async function addUPS() {
         return_date: formatDate(ups_returned_date.value),
 
         parish_id: ups_parish.value,
-        location_type_id: ups_location_type.value,
+        ltype_id: ups_location_type.value,
         location_id: ups_location.value,
         division_id: ups_division.value,
+        branch_id: ups_branch.value,
         comment: ups_comment.value,
     }
 
@@ -340,9 +343,11 @@ async function addUPS() {
     }
 
     if (ups.delivery_date > ups.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (!ups.serial_number || !ups.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Deployment Date must be earlier than Delivery Date")
+    } else if (ups.return_date > ups.bos_date) {
+        alert("Return Date must be earlier than BOS Date")
+    } else if (ups.delivery_date > ups.return_date) {
+        alert("Delivery Date must be earlier than Return Date")
     } else {
         try {
             const token = localStorage.getItem('token');

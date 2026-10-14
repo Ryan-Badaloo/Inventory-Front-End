@@ -64,11 +64,14 @@ const login = async () => {
     if(response.status === 200){
       localStorage.setItem('token', response.data.access_token);
      router.push('/home');
-    }else{
-      alert("Error in authenication process.")
     }
   } catch (error) {
-    alert("Error in authenication process.")
+    if(error.response?.status === 401) {
+      alert("Invalid Username or Password.")
+    } else {
+      alert("Error in authenication process.")
+    }
+    
     console.error(
       "Error creating item:",
       error.response?.data || error.message

@@ -3,11 +3,11 @@
     <form @submit.prevent="addKeyboard()" class="space-y-4">
  
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="keyboard_brand" labelFor="keyboard_brand" fieldName="Brand: " v-model="keyboard_brand"/>
+            <TextField id="keyboard_brand" labelFor="keyboard_brand" fieldName="Brand: " v-model="keyboard_brand" :required="true"/>
 
-            <TextField id="keyboard_model" labelFor="keyboard_model" fieldName="Model: " v-model="keyboard_model"/>
+            <TextField id="keyboard_model" labelFor="keyboard_model" fieldName="Model: " v-model="keyboard_model" :required="true"/>
 
-            <TextField id="keyboard_serial_number" labelFor="keyboard_serial_number" fieldName="Serial Number: " v-model="keyboard_serial_number"/>
+            <TextField id="keyboard_serial_number" labelFor="keyboard_serial_number" fieldName="Serial Number: " v-model="keyboard_serial_number" :required="true"/>
 
             <TextField id="keyboard_inventory_number" labelFor="keyboard_inventory_number" fieldName="Inventory Number: " v-model="keyboard_inventory_number"/>
 
@@ -51,20 +51,20 @@
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="keyboard_status" :class="[option_field_class]" class="bg-white" v-model.number="keyboard_status">
+                <select id="keyboard_status" :class="[option_field_class]" class="bg-white" v-model.number="keyboard_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
 
                 </select>
-                <TextLabel labelFor="keyboard_status" fieldName="System Status: "/>
+                <TextLabel labelFor="keyboard_status" fieldName="System Status: " :required="true"/>
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="keyboard_connection_type" :class="[option_field_class]" class="bg-white" v-model.number="keyboard_connection_type">
+                <select id="keyboard_connection_type" :class="[option_field_class]" class="bg-white" v-model.number="keyboard_connection_type" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="ctype in connection_types" :key="ctype.ctype_id" :value=ctype.ctype_id class="text-black">{{ ctype.ctype_description }}</option>
                 </select>
-                <TextLabel labelFor="keyboard_connection_type" fieldName="Connection Type: "/>
+                <TextLabel labelFor="keyboard_connection_type" fieldName="Connection Type: " :required="true"/>
             </div>
         </div>
 
@@ -101,6 +101,14 @@
                 </select>
                 <TextLabel labelFor="keyboard_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="keyboard_branch" :class="[option_field_class]" class="bg-white" v-model.number="keyboard_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="keyboard_branch" fieldName="Branch" />
+            </div>
         </div>
 
 
@@ -125,7 +133,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -134,6 +142,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const connection_types = ref([])
 const divisions = ref([])
@@ -144,12 +153,12 @@ const locationTypes = ref([])
 onMounted(async () => {
   try {
     statuses.value = await getStatuses();
-    console.log(statuses.value);
 
     connection_types.value = await getConnectionTypes();
-    console.log(connection_types.value)
 
     divisions.value = await getDivisions();
+
+    branches.value = await getBranches();
 
     locations.value = await getLocations();
 
@@ -157,14 +166,16 @@ onMounted(async () => {
     
     locationTypes.value = await getLocationTypes();
 
-    if (keyboard_location.value) {
-        locationChange(keyboard_location.value)
-    } else if (keyboard_parish.value) {
+    if (keyboard_parish.value) {
         parishChange(keyboard_parish.value)
     }
 
+    if (keyboard_division.value) {
+        divisionChange(keyboard_division.value)
+    }
+
   } catch (err) {
-    console.error("Failed to load statuses", err);
+    console.error(err);
   }
 });
 
@@ -172,7 +183,7 @@ onMounted(async () => {
 const fieldNames = [
   "brand", "model", "serial_number", "inventory_number",
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status", "connection_type", "parish", "location_type",
-  "location", "division", "comment"
+  "location", "division", "branch", "comment"
 ];
 
 const keyboardRefs = {};
@@ -206,6 +217,7 @@ const {
     keyboard_location_type,
     keyboard_location,
     keyboard_division,
+    keyboard_branch,
     keyboard_comment,
 } = keyboardRefs;
 
@@ -216,40 +228,30 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (keyboard_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (keyboard_branch.value == null || !keyboard_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(keyboard_parish.value)
-        divisions.value = await getParishDivisions(keyboard_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
 
@@ -265,15 +267,13 @@ watch (
 )
 
 watch (
-    keyboard_location, async (newLocation, oldLocation) => {
+    keyboard_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", keyboard_parish.value)
-        console.log("Divisions:", keyboard_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", keyboard_division.value, "type:", typeof keyboard_division.value);
+        console.log("Branch value:", keyboard_branch.value, "type:", typeof keyboard_branch.value);
 
-        console.log("location value:", keyboard_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -308,9 +308,10 @@ async function addKeyboard() {
         connection_type_id: keyboard_connection_type.value, 
 
         parish_id: keyboard_parish.value,
-        location_type_id: keyboard_location_type.value,
+        ltype_id: keyboard_location_type.value,
         location_id: keyboard_location.value,
         division_id: keyboard_division.value,
+        branch_id: keyboard_branch.value,
         comment: keyboard_comment.value,
     }
     console.log("read values into keyboard")
@@ -323,9 +324,7 @@ async function addKeyboard() {
 
 
     if (keyboard.delivery_date > keyboard.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (!keyboard.serial_number || !keyboard.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Delivery Date must be earlier than Deployment Date")
     } else {
         try {
             const token = localStorage.getItem('token');

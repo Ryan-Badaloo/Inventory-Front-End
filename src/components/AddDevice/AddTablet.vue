@@ -2,11 +2,11 @@
 <AddTemplate templateName="Tablet">
     <form @submit.prevent="addTablet()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="tablet_brand" labelFor="tablet_brand" fieldName="Brand: " v-model="tablet_brand"/>
+            <TextField id="tablet_brand" labelFor="tablet_brand" fieldName="Brand: " v-model="tablet_brand" :required="true"/>
 
-            <TextField id="tablet_model" labelFor="tablet_model" fieldName="Model: " v-model="tablet_model"/>
+            <TextField id="tablet_model" labelFor="tablet_model" fieldName="Model: " v-model="tablet_model" :required="true"/>
 
-            <TextField id="tablet_serial_number" labelFor="tablet_serial_number" fieldName="Serial Number: " v-model="tablet_serial_number"/>
+            <TextField id="tablet_serial_number" labelFor="tablet_serial_number" fieldName="Serial Number: " v-model="tablet_serial_number" :required="true"/>
 
             <TextField id="tablet_inventory_number" labelFor="tablet_inventory_number" fieldName="Inventory Number: " v-model="tablet_inventory_number"/>
 
@@ -67,18 +67,18 @@
 
             <!-- system status -->
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="tablet_status" :class="[option_field_class]" class="bg-white" v-model.number="tablet_status">
+                <select id="tablet_status" :class="[option_field_class]" class="bg-white" v-model.number="tablet_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
                 </select>
-                <TextLabel labelFor="tablet_status" fieldName="System Status: "/>
+                <TextLabel labelFor="tablet_status" fieldName="System Status: " :required="true"/>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="tablet_hard_disk_capacity" labelFor="tablet_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="tablet_hard_disk_capacity"/>
+            <TextField id="tablet_hard_disk_capacity" labelFor="tablet_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="tablet_hard_disk_capacity" :required="true"/>
 
-            <TextField id="tablet_memory_capacity" labelFor="tablet_memory_capacity" fieldName="Memory Capacity: " v-model="tablet_memory_capacity"/>
+            <TextField id="tablet_memory_capacity" labelFor="tablet_memory_capacity" fieldName="Memory Capacity: " v-model="tablet_memory_capacity" :required="true"/>
 
             <!-- warranty start date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -122,13 +122,13 @@
 
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="tablet_device_size" labelFor="tablet_device_size" fieldName="Device Size: " v-model="tablet_device_size"/>
+            <TextField id="tablet_device_size" labelFor="tablet_device_size" fieldName="Device Size: " v-model="tablet_device_size" :required="true"/>
 
-            <TextField id="tablet_operating_system" labelFor="tablet_operating_system" fieldName="Operating System: " v-model="tablet_operating_system"/>
+            <TextField id="tablet_operating_system" labelFor="tablet_operating_system" fieldName="Operating System: " v-model="tablet_operating_system" :required="true"/>
 
-            <TextField id="tablet_imei_number" labelFor="tablet_imei_number" fieldName="IMEI Number: " v-model="tablet_imei_number"/>
+            <TextField id="tablet_imei_number" labelFor="tablet_imei_number" fieldName="IMEI Number: " v-model="tablet_imei_number" :required="true"/>
 
-            <TextField id="tablet_version" labelFor="tablet_version" fieldName="Version: " v-model="tablet_version"/>
+            <TextField id="tablet_version" labelFor="tablet_version" fieldName="Version: " v-model="tablet_version" :required="true"/>
 
         </div>
 
@@ -165,9 +165,158 @@
                 </select>
                 <TextLabel labelFor="tablet_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="tablet_branch" :class="[option_field_class]" class="bg-white" v-model.number="tablet_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="tablet_branch" fieldName="Branch" />
+            </div>
         </div>
         
-        <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: "/>
+        <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: " v-model="tablet_comment"/>
+
+        <button @click="illuminateBag()" type="button" class="content-center w-1/8 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+            Add Case/Bag
+        </button>
+
+        <!-- Add Case/Bag -->
+        <div v-if="showBag">
+            <div class="grid grid-cols-2 gap-x-6">
+                <div class="flex flex-row-reverse mb-6 group">
+                    <select id="tablet_bag_type" :class="[option_field_class]" class="bg-white" v-model.number="tablet_bag_type">
+                        <option :value=null selected class="text-blue-100"></option>
+                        <option v-for="type in bag_types" :key="type.bag_type_id" :value=type.bag_type_id class="text-black">{{ type.bag_type_description }}</option>
+                    </select>
+                    <TextLabel labelFor="tablet_bag_type" fieldName="Type:" />
+                </div>
+
+                <TextField id="tablet_bag_brand" labelFor="tablet_bag_brand" fieldName="Brand: " v-model="tablet_bag_brand"/>
+
+                <TextField id="tablet_bag_model" labelFor="tablet_bag_model" fieldName="Model: " v-model="tablet_bag_model"/>
+
+                <TextField id="tablet_bag_ministry_number" labelFor="tablet_bag_ministry_number" fieldName="Ministry Number: " v-model="tablet_bag_ministry_number"/>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <VueDatePicker 
+                        v-model="tablet_bag_delivery_date" 
+                        :enable-time-picker="false" 
+                        :input-class-name="'p-0 bg-green-500'"
+                        placeholder="Enter in the format MM/DD/YYY"
+                        text-input 
+                        :class="[date_field_class]">
+                    </VueDatePicker>
+                    <TextLabel labelFor="tablet_bag_delivery_date" fieldName="Delivery Date: "/>
+                </div>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <VueDatePicker 
+                        v-model="tablet_bag_assignment_date" 
+                        :enable-time-picker="false" 
+                        :input-class-name="'p-0 bg-green-500'"
+                        placeholder="Enter in the format MM/DD/YYY"
+                        text-input 
+                        :class="[date_field_class]">
+                    </VueDatePicker>
+                    <TextLabel labelFor="tablet_bag_assignment_date" fieldName="Assignment Date: "/>
+                </div>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <select id="tablet_bag_status" :class="[option_field_class]" class="bg-white" v-model.number="tablet_bag_status">
+                        <option :value=null selected class="text-blue-100"></option>
+                        <option v-for="bag_status in statuses" :key="bag_status.status_id" :value=bag_status.status_id class="text-black">{{ bag_status.status_description }}</option>
+                    </select>
+                    <TextLabel labelFor="tablet_bag_status" fieldName="Status" />
+                </div>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <VueDatePicker 
+                        v-model="tablet_bag_bos_date" 
+                        :enable-time-picker="false" 
+                        :input-class-name="'p-0 bg-green-500'"
+                        placeholder="Enter in the format MM/DD/YYY"
+                        text-input 
+                        :class="[date_field_class]">
+                    </VueDatePicker>
+                    <TextLabel labelFor="tablet_bag_bos_date" fieldName="BOS Date: "/>
+                </div>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <select id="tablet_bag_fabric_type" :class="[option_field_class]" class="bg-white" v-model.number="tablet_bag_fabric_type">
+                        <option :value=null selected class="text-blue-100"></option>
+                        <option v-for="fabric_type in fabric_types" :key="fabric_type.bag_fabric_type_id" :value=fabric_type.bag_fabric_type_id class="text-black">{{ fabric_type.bag_fabric_type_description }}</option>
+                    </select>
+                    <TextLabel labelFor="tablet_bag_fabric_type" fieldName="Fabric Type:" />
+                </div>
+
+            </div>
+        </div>
+        
+        <br>
+
+        <button @click="illuminateAdapter()" type="button" class="content-center w-1/8 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
+            Add Adapter
+        </button>
+
+        <!-- Add Case/Bag -->
+        <div v-if="showAdapter">
+            <div class="grid grid-cols-2 gap-x-6">
+
+                <TextField id="tablet_adapter_serial_number" labelFor="tablet_adapter_serial_number" fieldName="Serial Number: " v-model="tablet_adapter_serial_number"/>
+
+                <TextField id="tablet_adapter_brand" labelFor="tablet_adapter_brand" fieldName="Brand: " v-model="tablet_adapter_brand"/>
+
+                <TextField id="tablet_adapter_model" labelFor="tablet_adapter_model" fieldName="Model: " v-model="tablet_adapter_model"/>
+
+                <TextField id="tablet_adapter_ministry_number" labelFor="tablet_adapter_ministry_number" fieldName="Ministry Number: " v-model="tablet_adapter_ministry_number"/>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <VueDatePicker 
+                        v-model="tablet_adapter_delivery_date" 
+                        :enable-time-picker="false" 
+                        :input-class-name="'p-0 bg-green-500'"
+                        placeholder="Enter in the format MM/DD/YYY"
+                        text-input 
+                        :class="[date_field_class]">
+                    </VueDatePicker>
+                    <TextLabel labelFor="tablet_adapter_delivery_date" fieldName="Delivery Date: "/>
+                </div>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <VueDatePicker 
+                        v-model="tablet_adapter_assignment_date" 
+                        :enable-time-picker="false" 
+                        :input-class-name="'p-0 bg-green-500'"
+                        placeholder="Enter in the format MM/DD/YYY"
+                        text-input 
+                        :class="[date_field_class]">
+                    </VueDatePicker>
+                    <TextLabel labelFor="tablet_adapter_assignment_date" fieldName="Assignment Date: "/>
+                </div>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <select id="tablet_adapter_status" :class="[option_field_class]" class="bg-white" v-model.number="tablet_adapter_status">
+                        <option :value=null selected class="text-blue-100"></option>
+                        <option v-for="adapter_status in statuses" :key="adapter_status.status_id" :value=adapter_status.status_id class="text-black">{{ adapter_status.status_description }}</option>
+                    </select>
+                    <TextLabel labelFor="tablet_adapter_status" fieldName="Status" />
+                </div>
+
+                <div class="flex flex-row-reverse mb-6 group">
+                    <VueDatePicker 
+                        v-model="tablet_adapter_bos_date" 
+                        :enable-time-picker="false" 
+                        :input-class-name="'p-0 bg-green-500'"
+                        placeholder="Enter in the format MM/DD/YYY"
+                        text-input 
+                        :class="[date_field_class]">
+                    </VueDatePicker>
+                    <TextLabel labelFor="tablet_adapter_bos_date" fieldName="BOS Date: "/>
+                </div>
+
+            </div>
+        </div>
 
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
@@ -189,7 +338,7 @@ import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 
-import { getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getBagTypes, getBagFabricTypes, getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -198,11 +347,16 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const divisions = ref([])
 const locations = ref([])
 const parishes = ref([])
 const locationTypes = ref([])
+const bag_types = ref([])
+const fabric_types = ref([])
+const showBag = ref(false)
+const showAdapter = ref(false)
 
 onMounted(async () => {
   try {
@@ -210,16 +364,24 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
     
     locationTypes.value = await getLocationTypes();
 
-    if (tablet_location.value) {
-        locationChange(tablet_location.value)
-    } else if (tablet_parish.value) {
+    bag_types.value = await getBagTypes();
+
+    fabric_types.value = await getBagFabricTypes();
+
+    if (tablet_parish.value) {
         parishChange(tablet_parish.value)
+    }
+
+    if (tablet_division.value) {
+        divisionChange(tablet_division.value)
     }
     
   } catch (err) {
@@ -227,13 +389,20 @@ onMounted(async () => {
   }
 });
 
+console.log("Bag Types: ",bag_types.value)
+
 const fieldNames = [
   "brand", "model", "serial_number", "inventory_number",
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
   "hard_disk_capacity", "memory_capacity", "warranty_start_date",
   "warranty_end_date", "returned_date", "device_size",
   "operating_system", "imei_number", "version", "parish", "location_type",
-  "location", "division", "comment"
+  "location", "division", "branch", "comment", 
+  "bag_type", "bag_brand", "bag_model", "bag_ministry_number", "bag_fabric_type", "bag_delivery_date", 
+  "bag_assignment_date", "bag_status", "bag_bos_date",
+  "adapter_serial_number", "adapter_brand", "adapter_model", "adapter_ministry_number", "adapter_delivery_date",
+  "adapter_assignment_date", "adapter_status", "adapter_bos_date", 
+
 ];
 
 const tabletRefs = {};
@@ -270,10 +439,34 @@ tablet_operating_system,
 tablet_imei_number,
 tablet_version,
 
-tablet_division,
-tablet_location,
-tablet_location_type,
+
 tablet_parish,
+tablet_location_type,
+tablet_location,
+tablet_division,
+tablet_branch,
+tablet_comment,
+
+tablet_bag_type,
+tablet_bag_brand,
+tablet_bag_model,
+tablet_bag_ministry_number,
+tablet_bag_fabric_type,
+tablet_bag_delivery_date,
+tablet_bag_assignment_date,
+tablet_bag_status,
+tablet_bag_bos_date,
+
+tablet_adapter_serial_number,
+tablet_adapter_brand,
+tablet_adapter_model,
+tablet_adapter_ministry_number,
+tablet_adapter_delivery_date,
+tablet_adapter_assignment_date,
+tablet_adapter_status,
+tablet_adapter_bos_date,
+
+
 } = tabletRefs;
 
 async function parishChange(parishValue) {
@@ -283,40 +476,30 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (tablet_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (tablet_branch.value == null || !tablet_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(tablet_parish.value)
-        divisions.value = await getParishDivisions(tablet_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
 
@@ -332,15 +515,13 @@ watch (
 )
 
 watch (
-    tablet_location, async (newLocation, oldLocation) => {
+    tablet_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", tablet_parish.value)
-        console.log("Divisions:", tablet_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", tablet_division.value, "type:", typeof tablet_division.value);
+        console.log("Branch value:", tablet_branch.value, "type:", typeof tablet_branch.value);
 
-        console.log("location value:", tablet_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -380,8 +561,39 @@ async function addTablet() {
         operating_system: tablet_operating_system.value,
         imei_number: tablet_imei_number.value,
         version: tablet_version.value,
+
+        parish_id: tablet_parish.value,
+        ltype_id: tablet_location_type.value,
+        location_id: tablet_location.value,
+        division_id: tablet_division.value,
+        branch_id: tablet_branch.value,
+        comment: tablet_comment.value,
+        
     }
-    console.log("read values into tablet")
+
+    const bag = showBag.value ? {
+        bag_type_id: tablet_bag_type.value,
+        bag_brand: tablet_bag_brand.value,
+        bag_model: tablet_bag_model.value,
+        bag_ministry_number: tablet_bag_ministry_number.value,
+        bag_fabric_type_id: tablet_bag_fabric_type.value,
+        bag_delivery_date: formatDate(tablet_bag_delivery_date.value),
+        bag_assignment_date: formatDate(tablet_bag_assignment_date.value),
+        bag_status_id: tablet_bag_status.value,
+        bag_bos_date: formatDate(tablet_bag_bos_date.value),
+    } : null;
+
+    const adapter = showAdapter.value ? {
+        adapter_serial_number: tablet_adapter_serial_number.value,
+        adapter_brand: tablet_adapter_brand.value,
+        adapter_model: tablet_adapter_model.value,
+        adapter_ministry_number: tablet_adapter_ministry_number.value,
+        adapter_delivery_date: formatDate(tablet_adapter_delivery_date.value),
+        adapter_assignment_date: formatDate(tablet_adapter_assignment_date.value),
+        adapter_status_id: tablet_adapter_status.value,
+        adapter_bos_date: formatDate(tablet_adapter_bos_date.value),
+    } : null;
+
 
     for (const key in tablet) {
         if (tablet[key] === undefined || tablet[key] === "") {
@@ -389,21 +601,40 @@ async function addTablet() {
         }
     }
 
+    if (bag) {
+        for (const key in bag) {
+            if (bag[key] === undefined || bag[key] === "") {
+                bag[key] = null;
+            }
+        }
+    }
+
+    if (adapter) {
+        for (const key in adapter) {
+            if (adapter[key] === undefined || adapter[key] === "") {
+                adapter[key] = null;
+            }
+        }
+    }
+
     if (tablet.delivery_date > tablet.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (tablet.return_date < tablet.deployment_date) {
-        alert("Return Date must be larger than Deployment Date")
-    } else if (tablet.delivery_date < tablet.manufactured_date || tablet.deployment_date < tablet.manufactured_date || tablet.bos_date < tablet.manufactured_date) {
-        alert("Device cannot be Delivered, Deployed, or BOS before Manufactured Date")
-    } else if (!tablet.serial_number || !tablet.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
-    } else if (!Number.isInteger(tablet.device_cost)){
-        console.log("Device Cost:", tablet_device_cost.value, "type:", typeof tablet_device_cost.value)
-        alert("Device cost must be an integer")
+        alert("Deployment Date must be earlier than Delivery Date")
+    } else if (tablet.return_date > tablet.bos_date) {
+        alert("Return Date must be earlier than BOS Date")
+    } else if (tablet.delivery_date > tablet.return_date) {
+        alert("Delivery Date must be earlier than Return Date")
+    } else if (tablet.warranty_start_date > tablet.warranty_end_date) {
+        alert("Warranty Start Date must be earlier than Warranty End Date")
     } else {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`${useBaseURLComposable()}add-tablet/`, tablet, {
+            const response = await axios.post(`${useBaseURLComposable()}add-tablet/`, 
+            {
+                tablet: tablet,
+                bag: bag,
+                adapter: adapter,
+            },
+            {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -431,6 +662,22 @@ async function addTablet() {
     }
 }
 
+async function illuminateBag() {
+    console.log(showBag.value)
+    if (showBag.value == false) {
+        showBag.value = true
+    } else if (showBag.value == true) {
+        showBag.value = false
+    }
+}
 
+async function illuminateAdapter() {
+    console.log(showAdapter.value)
+    if (showAdapter.value == false) {
+        showAdapter.value = true
+    } else if (showAdapter.value == true) {
+        showAdapter.value = false
+    }
+}
 
 </script>

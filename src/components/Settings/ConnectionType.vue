@@ -38,6 +38,7 @@ import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 const connection_types = ref([])
 const selectedConnectionType = ref();
+const isConnectionType = ref();
 
 onMounted(async () => {
   try {
@@ -50,51 +51,98 @@ onMounted(async () => {
 });
 
 async function add_connection_type(connectionTypeText) {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${useBaseURLComposable()}add-connection-type/`, { ctype: connectionTypeText }, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        connection_types.value = await getConnectionTypes();
-        console.log("Connection Type Added Succefully")
-        alert("Connection Type successfully added.", response.data);
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
+    console.log(connectionTypeText)
 
-        alert("Failed to add item. Check console.");
-    }
-}
-
-
-async function remove_connection_type(connectionTypeText) {
-    try {
-
-        const token = localStorage.getItem('token');
-        await axios.delete(`${useBaseURLComposable()}delete-connection-type/`, {
+    const token = localStorage.getItem('token');
+    if (!selectedConnectionType.value) {
+        alert("Please Enter a Connection Type")
+    } else {
+        const response = await axios.get(`${useBaseURLComposable()}get-connection-type/`, {
             params: {
-                ctype: connectionTypeText
+                connection_type: connectionTypeText
             },
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-        connection_types.value = await getConnectionTypes();
-        console.log("Connection Type Has Been Deleted")
-        alert("Connection Type Has Been Deleted")
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
 
-        alert("Failed to find Client. Check console.");
+        isConnectionType.value = response.data;
+
+        console.log(isConnectionType.value)
+
+        if (isConnectionType.value == true) {
+            alert("This Connection Type Is Already In The System")
+        } else {
+            try {
+                const response = await axios.post(`${useBaseURLComposable()}add-connection-type/`, { ctype: connectionTypeText }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                connection_types.value = await getConnectionTypes();
+                console.log("Connection Type Added Succefully")
+                alert("Connection Type successfully added.", response.data);
+            } catch (error) {
+                console.error(
+                "Error creating item:",
+                error.response?.data || error.message
+                );
+                console.error("Detail:", error.response?.data?.detail);
+
+                alert("Failed to add item. Check console.");
+            }
+        }
+    }
+}
+
+
+async function remove_connection_type(connectionTypeText) {
+    console.log(connectionTypeText)
+
+    const token = localStorage.getItem('token');
+    if (!selectedConnectionType.value) {
+        alert("Please Enter a Connection Type")
+    } else {
+        const response = await axios.get(`${useBaseURLComposable()}get-connection-type/`, {
+            params: {
+                connection_type: connectionTypeText
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        isConnectionType.value = response.data;
+
+        console.log(isConnectionType.value)
+
+        if (isConnectionType.value == false) {
+            alert("This Connection Type Is Not In The System")
+        } else {
+            try {
+
+                const token = localStorage.getItem('token');
+                await axios.delete(`${useBaseURLComposable()}delete-connection-type/`, {
+                    params: {
+                        ctype: connectionTypeText
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                connection_types.value = await getConnectionTypes();
+                console.log("Connection Type Has Been Deleted")
+                alert("Connection Type Has Been Deleted")
+            } catch (error) {
+                console.error(
+                "Error creating item:",
+                error.response?.data || error.message
+                );
+                console.error("Detail:", error.response?.data?.detail);
+
+                alert("Failed to find Client. Check console.");
+            }
+        }
     }
 }
 </script>

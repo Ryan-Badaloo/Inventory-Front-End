@@ -38,6 +38,7 @@ import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 const cpu_types = ref([])
 const selectedCPUType = ref();
+const isCpuType = ref();
 
 onMounted(async () => {
   try {
@@ -50,33 +51,13 @@ onMounted(async () => {
 });
 
 async function add_cpu_type(cpuTypeText) {
-    try {
-        const token = localStorage.getItem('token');
-        console.log(cpuTypeText)
-        const response = await axios.post(`${useBaseURLComposable()}add-cpu-type/`, { cpu_type: cpuTypeText }, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        cpu_types.value = await getCPUTypes();
-        console.log("CPU Type Added Succefully")
-        alert("CPU Type successfully added.", response.data);
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
+    console.log(cpuTypeText)
 
-        alert("Failed to add item. Check console.");
-    }
-}
-
-async function remove_cpu_type(cpuTypeText) {
-    try {
-
-        const token = localStorage.getItem('token');
-        await axios.delete(`${useBaseURLComposable()}delete-cpu-type/`, {
+    const token = localStorage.getItem('token');
+    if (!selectedCPUType.value) {
+        alert("Please Enter a CPU Type")
+    } else {
+        const response = await axios.get(`${useBaseURLComposable()}get-cpu-type/`, {
             params: {
                 cpu_type: cpuTypeText
             },
@@ -84,17 +65,83 @@ async function remove_cpu_type(cpuTypeText) {
                 Authorization: `Bearer ${token}`
             }
         });
-        cpu_types.value = await getCPUTypes();
-        console.log("CPU Type Has Been Deleted")
-        alert("CPU Type Has Been Deleted")
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
 
-        alert("Failed to find Client. Check console.");
+        isCpuType.value = response.data;
+
+        console.log(isCpuType.value)
+
+
+        if (isCpuType.value == true) {
+            alert("This CPU Type Is Already In The System")
+        } else {
+            try {
+                console.log(cpuTypeText)
+                const response = await axios.post(`${useBaseURLComposable()}add-cpu-type/`, { cpu_type: cpuTypeText }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                cpu_types.value = await getCPUTypes();
+                console.log("CPU Type Added Succefully")
+                alert("CPU Type successfully added.", response.data);
+            } catch (error) {
+                console.error(
+                "Error creating item:",
+                error.response?.data || error.message
+                );
+                console.error("Detail:", error.response?.data?.detail);
+
+                alert("Failed to add item. Check console.");
+            }
+        }
+    }
+}
+
+async function remove_cpu_type(cpuTypeText) {
+    console.log(cpuTypeText)
+
+    const token = localStorage.getItem('token');
+    if (!selectedCPUType.value) {
+        alert("Please Enter a CPU Type")
+    } else { 
+        const response = await axios.get(`${useBaseURLComposable()}get-cpu-type/`, {
+            params: {
+                cpu_type: cpuTypeText
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        isCpuType.value = response.data;
+
+        console.log(isCpuType.value)
+
+        if (isCpuType.value == false) {
+            alert("This CPU Type Is Not In The System")
+        } else {
+            try {
+                await axios.delete(`${useBaseURLComposable()}delete-cpu-type/`, {
+                    params: {
+                        cpu_type: cpuTypeText
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                cpu_types.value = await getCPUTypes();
+                console.log("CPU Type Has Been Deleted")
+                alert("CPU Type Has Been Deleted")
+            } catch (error) {
+                console.error(
+                "Error creating item:",
+                error.response?.data || error.message
+                );
+                console.error("Detail:", error.response?.data?.detail);
+
+                alert("Failed to find Client. Check console.");
+            }
+        }
     }
 }
 

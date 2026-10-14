@@ -2,11 +2,11 @@
 <AddTemplate templateName="Server">
     <form @submit.prevent="addServer()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="server_brand" labelFor="server_brand" fieldName="Brand: " v-model="server_brand"/>
+            <TextField id="server_brand" labelFor="server_brand" fieldName="Brand: " v-model="server_brand" :required="true"/>
 
-            <TextField id="server_model" labelFor="server_model" fieldName="Model: " v-model="server_model"/>
+            <TextField id="server_model" labelFor="server_model" fieldName="Model: " v-model="server_model" :required="true"/>
 
-            <TextField id="server_serial_number" labelFor="server_serial_number" fieldName="Serial Number: " v-model="server_serial_number"/>
+            <TextField id="server_serial_number" labelFor="server_serial_number" fieldName="Serial Number: " v-model="server_serial_number" :required="true"/>
 
             <TextField id="server_inventory_number" labelFor="server_inventory_number" fieldName="Inventory Number: " v-model="server_inventory_number"/>
 
@@ -66,19 +66,19 @@
             </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="server_status" :class="[option_field_class]" class="bg-white" v-model.number="server_status">
+                <select id="server_status" :class="[option_field_class]" class="bg-white" v-model.number="server_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
 
                 </select>
-                <TextLabel labelFor="server_status" fieldName="System Status: "/>
+                <TextLabel labelFor="server_status" fieldName="System Status: " :required="true"/>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="server_hard_disk_capacity" labelFor="server_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="server_hard_disk_capacity"/>
+            <TextField id="server_hard_disk_capacity" labelFor="server_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="server_hard_disk_capacity" :required="true"/>
 
-            <TextField id="server_memory_capacity" labelFor="server_memory_capacity" fieldName="Memory Capacity: " v-model="server_memory_capacity"/>
+            <TextField id="server_memory_capacity" labelFor="server_memory_capacity" fieldName="Memory Capacity: " v-model="server_memory_capacity" :required="true"/>
 
             <!-- warranty start date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -140,19 +140,19 @@
             <TextField id="server_memory_type" labelFor="server_memory_type" fieldName="Memory Type: " v-model="server_memory_type"/>
 
 
-            <TextField id="server_operating_system" labelFor="server_operating_system" fieldName="Operating System: " v-model="server_operating_system"/>
+            <TextField id="server_operating_system" labelFor="server_operating_system" fieldName="Operating System: " v-model="server_operating_system" :required="true"/>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="server_cpu_type" :class="[option_field_class]" class="bg-white" v-model="server_cpu_type">
+                <select id="server_cpu_type" :class="[option_field_class]" class="bg-white" v-model="server_cpu_type" :required="true">
                     <option selected class="text-blue-100">Choose a Division</option>
                     <option v-for="cpu_type in cpu_types" :key="cpu_type.cpu_type_id" :value=cpu_type.cpu_type_id class="text-black">{{ cpu_type.cpu_type_description }}</option>
                 </select>
-                <TextLabel labelFor="server_cpu_type" fieldName="CPU Type:" />
+                <TextLabel labelFor="server_cpu_type" fieldName="CPU Type:" :required="true"/>
             </div>
 
             <TextField id="server_processor_speed" labelFor="server_processor_speed" fieldName="Processor Speed: " v-model="server_processor_speed"/>
 
-            <TextField id="server_processor_type" labelFor="server_processor_type" fieldName="Processor Type: " v-model="server_processor_type"/>
+            <TextField id="server_processor_type" labelFor="server_processor_type" fieldName="Processor Type: " v-model="server_processor_type" :required="true"/>
 
             <TextField id="server_computer_name" labelFor="server_computer_name" fieldName="Computer Name: " v-model="server_computer_name"/>
 
@@ -220,6 +220,14 @@
                 </select>
                 <TextLabel labelFor="server_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="server_branch" :class="[option_field_class]" class="bg-white" v-model.number="server_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="server_branch" fieldName="Branch" />
+            </div>
         </div>
 
         <CommentField id="server_comment" labelFor="server_comment" fieldName="Comment: " v-model="server_comment"/>
@@ -243,7 +251,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getCPUTypes, getFormFactors, getRaidTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getCPUTypes, getFormFactors, getRaidTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -252,6 +260,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const cpu_types = ref([])
 const form_factors = ref([])
@@ -272,6 +281,7 @@ onMounted(async () => {
     raid_types.value = await getRaidTypes();
 
     divisions.value = await getDivisions();
+    branches.value = await getBranches();
 
     locations.value = await getLocations();
 
@@ -279,10 +289,12 @@ onMounted(async () => {
     
     locationTypes.value = await getLocationTypes();
 
-    if (server_location.value) {
-        locationChange(server_location.value)
-    } else if (server_parish.value) {
+    if (server_parish.value) {
         parishChange(server_parish.value)
+    }
+
+    if (server_division.value) {
+        divisionChange(server_division.value)
     }
 
 
@@ -299,7 +311,7 @@ const fieldNames = [
   "operating_system", "cpu_type", "processor_speed",
   "processor_type", "computer_name", "ms_office_version",
   "antivirus", "form_factor", "raid_type", "number_hard_drive", "number_power_supply", "parish", "location_type",
-  "location", "division", "comment"
+  "location", "division", "branch", "comment"
 ];
 
 const serverRefs = {};
@@ -350,6 +362,7 @@ const {
     server_location_type,
     server_location,
     server_division,
+    server_branch,
     server_comment,
 } = serverRefs;
 
@@ -360,40 +373,30 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (server_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (server_branch.value == null || !server_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(server_parish.value)
-        divisions.value = await getParishDivisions(server_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
 
@@ -409,15 +412,13 @@ watch (
 )
 
 watch (
-    server_location, async (newLocation, oldLocation) => {
+    server_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", server_parish.value)
-        console.log("Divisions:", server_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", server_division.value, "type:", typeof server_division.value);
+        console.log("Branch value:", server_branch.value, "type:", typeof server_branch.value);
 
-        console.log("location value:", server_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -469,9 +470,10 @@ async function addServer() {
         number_of_power_supplies: Number(server_number_power_supply.value),
         
         parish_id: server_parish.value,
-        location_type_id: server_location_type.value,
+        ltype_id: server_location_type.value,
         location_id: server_location.value,
         division_id: server_division.value,
+        branch_id: server_branch.value,
         comment: server_comment.value,
     }
     console.log("read values into server")
@@ -485,13 +487,13 @@ async function addServer() {
     
 
     if (server.delivery_date > server.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (server.return_date < server.deployment_date) {
-        alert("Return Date must be larger than Deployment Date")
-    } else if (server.delivery_date < server.manufactured_date || server.deployment_date < server.manufactured_date || server.bos_date < server.manufactured_date) {
-        alert("Device cannot be Delivered, Deployed, or BOS before Manufactured Date")
-    } else if (!server.serial_number || !server.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Deployment Date must be earlier than Delivery Date")
+    } else if (server.return_date > server.bos_date) {
+        alert("Return Date must be earlier than BOS Date")
+    } else if (server.delivery_date > server.return_date) {
+        alert("Delivery Date must be earlier than Return Date")
+    } else if (server.warranty_start_date > server.warranty_end_date) {
+        alert("Warranty Start Date must be earlier than Warranty End Date")
     } else {
         try {
             const token = localStorage.getItem('token');

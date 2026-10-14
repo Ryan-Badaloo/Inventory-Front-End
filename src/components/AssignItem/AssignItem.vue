@@ -3,89 +3,234 @@
     <div>
 <!-- THIS DISPLAYS THE SEARCH BAR AND RADIO BUTTONS ////////////////////////////////////////////////////////////-->
         <div>
-            <SearchBar :onSubmit="get_items" v-model="search_category">
-                <div class="w-2/3 grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-4 gap-4 p-2">
+                <!-- Device Type Search Bar -->
+                <div>
+                    <label
+                        for="device_type"
+                        class="block mb-2 text-sm font-medium text-gray-900 sr-only"
+                    >
+                        Device Type
+                    </label>
 
-                    <div class="flex justify-center ">
-                        <input type="radio" id="device_type_radio" name="category" value="Device Type" v-model="search_filter"
-                            class="peer hidden" />
-                        <label for="device_type_radio"
-                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
-                                peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
-                            Device Type
-                        </label>
-                    </div>
-                    
-                    <div class="flex justify-center">
-                        <input type="radio" id="serial_number_radio" name="category" value="Serial Number" v-model="search_filter"
-                            class="peer hidden" />
-                        <label for="serial_number_radio"
-                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
-                                peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
-                            Serial Number
-                        </label>
-                    </div>
+                    <div class="relative">
 
-                    <div class="flex justify-center">
-                        <input type="radio" id="client_radio" name="category" value="Client" v-model="search_filter"
-                            class="peer hidden" />
-                        <label for="client_radio"
-                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
-                                peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
-                            Client
-                        </label>
-                    </div>
+                        <!-- Search Icon -->
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg
+                                class="w-4 h-4 text-gray-500"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="2"
+                                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                                />
+                            </svg>
+                        </div>
 
-                    <div class="flex justify-center">
-                        <input type="radio" id="status_radio" name="category" value="Status" v-model="search_filter"
-                            class="peer hidden" />
-                        <label for="status_radio"
-                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
-                                peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
-                            Status
-                        </label>
-                    </div>
+                        <!-- Search Input -->
+                        <input
+                            type="search"
+                            v-model="device_type_search"
+                            id="device_type"
+                            class="block w-full p-3 ps-9 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm placeholder:text-gray-500 outline-none"
+                            placeholder="Device Type"
+                        />
 
-                    <div class="flex justify-center">
-                        <input type="radio" id="delivery_date_radio" name="category" value="Delivery Date" v-model="search_filter"
-                            class="peer hidden" />
-                        <label for="delivery_date_radio"
-                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
-                                peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
-                            Delivery Date
-                        </label>
                     </div>
-
-                    <div class="flex justify-center">
-                        <input type="radio" id="deployment_date_radio" name="category" value="Deployment Date" v-model="search_filter"
-                            class="peer hidden" />
-                        <label for="deployment_date_radio"
-                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
-                                peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
-                            Deployment Date
-                        </label>
-                    </div>
-
-                    <div class="flex justify-center">
-                        <input type="radio" id="division_radio" name="category" value="Division" v-model="search_filter"
-                            class="peer hidden" />
-                        <label for="division_radio"
-                            class="cursor-pointer px-4 py-2 rounded-md bg-white text-blue-500 font-semibold
-                                peer-checked:bg-blue-800 peer-checked:text-white
-                                transition duration-200 ease-in-out hover:bg-blue-800 hover:text-white w-40 text-center">
-                            Division
-                        </label>
-                    </div>
-
                 </div>
 
-            </SearchBar>
+                <!-- Serial Number Search Bar -->
+                <div>
+                    <label
+                        for="serial_number"
+                        class="block mb-2 text-sm font-medium text-gray-900 sr-only"
+                    >
+                        Serial Number
+                    </label>
+
+                    <div class="relative">
+
+                        <!-- Search Icon -->
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg
+                                class="w-4 h-4 text-gray-500"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="2"
+                                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                                />
+                            </svg>
+                        </div>
+
+                        <!-- Search Input -->
+                        <input
+                            type="search"
+                            v-model="serial_number_search"
+                            id="serial_number"
+                            class="block w-full p-3 ps-9 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm placeholder:text-gray-500 outline-none"
+                            placeholder="Serial Number"
+                        />
+
+                    </div>
+                </div>
+
+                <!-- Client Search Bar -->
+                <div>
+                    <label
+                        for="client"
+                        class="block mb-2 text-sm font-medium text-gray-900 sr-only"
+                    >
+                        Client
+                    </label>
+
+                    <div class="relative">
+
+                        <!-- Search Icon -->
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg
+                                class="w-4 h-4 text-gray-500"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="2"
+                                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                                />
+                            </svg>
+                        </div>
+
+                        <!-- Search Input -->
+                        <input
+                            type="search"
+                            v-model="client_search"
+                            id="client"
+                            class="block w-full p-3 ps-9 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm placeholder:text-gray-500 outline-none"
+                            placeholder="Client"
+                        />
+
+                    </div>
+                </div>
+
+                <!-- Status Search Bar -->
+                <div>
+                    <label
+                        for="status"
+                        class="block mb-2 text-sm font-medium text-gray-900 sr-only"
+                    >
+                        Status
+                    </label>
+
+                    <div class="relative">
+
+                        <!-- Search Icon -->
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg
+                                class="w-4 h-4 text-gray-500"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="2"
+                                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                                />
+                            </svg>
+                        </div>
+
+                        <!-- Search Input -->
+                        <input
+                            type="search"
+                            v-model="status_search"
+                            id="status"
+                            class="block w-full p-3 ps-9 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm placeholder:text-gray-500 outline-none"
+                            placeholder="Status"
+                        />
+
+                    </div>
+                </div>
+
+                <!-- Division Search Bar -->
+                <div>
+                    <label
+                        for="division"
+                        class="block mb-2 text-sm font-medium text-gray-900 sr-only"
+                    >
+                        Division
+                    </label>
+
+                    <div class="relative">
+
+                        <!-- Search Icon -->
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg
+                                class="w-4 h-4 text-gray-500"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="2"
+                                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                                />
+                            </svg>
+                        </div>
+
+                        <!-- Search Input -->
+                        <input
+                            type="search"
+                            v-model="division_search"
+                            id="division"
+                            class="block w-full p-3 ps-9 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm placeholder:text-gray-500 outline-none"
+                            placeholder="Division"
+                        />
+
+                    </div>
+                </div>
+
+                
+            </div>
+
+            <div class="p-2">
+                <button
+                    type="submit"
+                    @click="get_items"
+                    class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2"
+                    >
+                    Search
+                </button>
+            </div>
         </div>
 
 <!-- THIS DISPLAYS THE SEARCH RESULTS TABLE ///////////////////////////////////////////////////////////////////-->
@@ -142,7 +287,7 @@
                             </td>
                             <td class="px-6 py-4 inline-block align-middle">
                                     <button @click="add_to_cart(item)" class="material-icons !text-4xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
-                                    add
+                                        add
                                     </button>
                             </td>
                         </tr>
@@ -272,11 +417,10 @@ const paginatedItems = computed(() => {
 
 onMounted(() => {
   get_clients();
+  console.log(allClients.value)
 });
 
 const cart = ref([]); //Store the items in the cart
-const search_category = ref();
-const search_filter = ref();
 const allClients = ref()
 
 const assignClientName = ref("")
@@ -294,10 +438,13 @@ watch(assignClientName, (newName) => {
 });
 
 
+const device_type_search = ref();
+const serial_number_search = ref();
+const status_search = ref();
+const division_search = ref();
 
 async function get_items() {
-    console.log(search_category.value)
-    console.log(search_filter.value)
+
 
     try {
         const token = localStorage.getItem('token');
@@ -306,9 +453,10 @@ async function get_items() {
                 Authorization: `Bearer ${token}`
             },
             params: {
-                filter: search_filter.value,
-                input: search_category.value,
-                
+                device_type: device_type_search.value,
+                serial_number: serial_number_search.value,
+                status: status_search.value,
+                division: division_search.value,
             }
         });
         items.value = response.data
@@ -355,6 +503,7 @@ async function get_clients() {
                 Authorization: `Bearer ${token}`
             },
         });
+        console.log(response.data)
         allClients.value = response.data
     } catch (error) {
         console.error(
@@ -378,17 +527,24 @@ async function assign_items() {
         console.log(device.serial_number)
 
         try {
+            if (!assignClient.value?.client_id) {
+                alert("Please select a client")
+                return
+            } else {
+                const response = await axios.put(`${useBaseURLComposable()}assign-device/`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    params: {
+                        device_sn: device.serial_number,
+                        client_id: assignClient.value?.client_id
+                    }
+                });
+                console.log(response.data)
+                
+            }
             
-            const response = await axios.put(`${useBaseURLComposable()}assign-device/`, {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                params: {
-                    device_sn: device.serial_number,
-                    client_id: assignClient.value?.client_id
-                }
-            });
-            alert("Assignment was successful");
+            
         } catch (error) {
             console.error(
             "Error creating item:",
@@ -399,6 +555,7 @@ async function assign_items() {
             alert("Failed to assign Device. Check console.");
         }
     }
+    alert("Assignment was successful");
 }
 
 </script>

@@ -2,13 +2,13 @@
 <AddTemplate templateName="Desktop">
     <form @submit.prevent="addDesktop()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="desktop_brand" labelFor="desktop_brand" fieldName="Brand: " v-model="desktop_brand"/>
+            <TextField id="desktop_brand" labelFor="desktop_brand" fieldName="Brand: " v-model="desktop_brand" :required="true"/>
 
-            <TextField id="desktop_model" labelFor="desktop_model" fieldName="Model: " v-model="desktop_model"/>
+            <TextField id="desktop_model" labelFor="desktop_model" fieldName="Model: " v-model="desktop_model" :required="true"/>
 
-            <TextField id="desktop_serial_number" labelFor="desktop_serial_number" fieldName="Serial Number: " v-model="desktop_serial_number"/>
+            <TextField id="desktop_serial_number" labelFor="desktop_serial_number" fieldName="Serial Number: " v-model="desktop_serial_number" :required="true"/>
 
-            <TextField id="desktop_inventory_number" labelFor="desktop_inventory_number" fieldName="Inventory Number: " v-model="desktop_inventory_number"/>
+            <TextField id="desktop_inventory_number" labelFor="desktop_inventory_number" fieldName="Inventory Number: " v-model="desktop_inventory_number" />
 
             <!-- delivery date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -54,31 +54,37 @@
             <TextField id="desktop_device_cost" labelFor="desktop_device_cost" fieldName="Device Cost: " v-model="desktop_device_cost"/>
 
             <!-- pdf reader -->
-            <!-- <div class="flex flex-row-reverse mb-6 group">
-                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="desktop_file_input" type="file" multiple>
-                <TextLabel labelFor="desktop_file_input" fieldName="Upload File: "/>
-            </div> -->
+            <div class="flex flex-row-reverse mb-6 group">
+                <input
+                    class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer"
+                    id="desktop_file_input"
+                    type="file"
+                    multiple
+                    accept=".pdf"
+                    @change="handleFiles"
+                >
 
-            <!-- pdf reader -->
-            <!-- <div class="flex flex-row-reverse mb-6 group">
-                <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="desktop_file_input" type="file" multiple>
-                <TextLabel labelFor="desktop_file_input" fieldName="Upload File: "/>
-            </div> -->
+                <TextLabel
+                    labelFor="desktop_file_input"
+                    fieldName="Upload File: "
+                />
+            </div>
+
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="desktop_status" :class="[option_field_class]" class="bg-white" v-model.number="desktop_status">
+                <select id="desktop_status" :class="[option_field_class]" class="bg-white" v-model.number="desktop_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
 
                 </select>
-                <TextLabel labelFor="desktop_status" fieldName="System Status: "/>
+                <TextLabel labelFor="desktop_status" fieldName="System Status: " :required="true"/>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="desktop_hard_disk_capacity" labelFor="desktop_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="desktop_hard_disk_capacity"/>
+            <TextField id="desktop_hard_disk_capacity" labelFor="desktop_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="desktop_hard_disk_capacity" :required="true"/>
 
-            <TextField id="desktop_memory_capacity" labelFor="desktop_memory_capacity" fieldName="Memory Capacity: " v-model="desktop_memory_capacity"/>
+            <TextField id="desktop_memory_capacity" labelFor="desktop_memory_capacity" fieldName="Memory Capacity: " v-model="desktop_memory_capacity" :required="true"/>
 
             <!-- warranty start date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -140,19 +146,19 @@
             <TextField id="desktop_memory_type" labelFor="desktop_memory_type" fieldName="Memory Type: " v-model="desktop_memory_type"/>
 
 
-            <TextField id="desktop_operating_system" labelFor="desktop_operating_system" fieldName="Operating System: " v-model="desktop_operating_system"/>
+            <TextField id="desktop_operating_system" labelFor="desktop_operating_system" fieldName="Operating System: " v-model="desktop_operating_system" :required="true"/>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="desktop_cpu_type" :class="[option_field_class]" class="bg-white" v-model="desktop_cpu_type">
+                <select id="desktop_cpu_type" :class="[option_field_class]" class="bg-white" v-model="desktop_cpu_type" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="cpu_type in cpu_types" :key="cpu_type.cpu_type_id" :value=cpu_type.cpu_type_id class="text-black">{{ cpu_type.cpu_type_description }}</option>
                 </select>
-                <TextLabel labelFor="desktop_cpu_type" fieldName="CPU Type:" />
+                <TextLabel labelFor="desktop_cpu_type" fieldName="CPU Type:" :required="true"/>
             </div>
 
             <TextField id="desktop_processor_speed" labelFor="desktop_processor_speed" fieldName="Processor Speed: " v-model="desktop_processor_speed"/>
 
-            <TextField id="desktop_processor_type" labelFor="desktop_processor_type" fieldName="Processor Type: " v-model="desktop_processor_type"/>
+            <TextField id="desktop_processor_type" labelFor="desktop_processor_type" fieldName="Processor Type: " v-model="desktop_processor_type" :required="true"/>
 
             <TextField id="desktop_computer_name" labelFor="desktop_computer_name" fieldName="Computer Name: " v-model="desktop_computer_name"/>
 
@@ -207,6 +213,14 @@
                 </select>
                 <TextLabel labelFor="desktop_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="desktop_branch" :class="[option_field_class]" class="bg-white" v-model.number="desktop_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="desktop_branch" fieldName="Branch" />
+            </div>
         </div>
 
         <CommentField id="desktop_comment" labelFor="desktop_comment" fieldName="Comment: " v-model="desktop_comment"/>
@@ -230,7 +244,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getCPUTypes, getFormFactors, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getCPUTypes, getFormFactors, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getDivisionBranches, getBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -239,6 +253,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const cpu_types = ref([])
 const form_factors = ref([])
@@ -246,6 +261,7 @@ const divisions = ref([])
 const locations = ref([])
 const parishes = ref([])
 const locationTypes = ref([])
+const selectedFiles = ref([]);
 
 onMounted(async () => {
   try {
@@ -257,16 +273,20 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
     
     locationTypes.value = await getLocationTypes();
 
-    if (desktop_location.value) {
-        locationChange(desktop_location.value)
-    } else if (desktop_parish.value) {
+    if (desktop_parish.value) {
         parishChange(desktop_parish.value)
+    }
+
+    if (desktop_division.value) {
+        divisionChange(desktop_division.value)
     }
 
 
@@ -283,7 +303,7 @@ const fieldNames = [
   "operating_system", "cpu_type", "processor_speed",
   "processor_type", "computer_name", "ms_office_version",
   "antivirus", "form_factor", "parish", "location_type",
-  "location", "division", "comment"
+  "location", "division", "branch", "comment"
 ];
 
 const desktopRefs = {};
@@ -331,6 +351,7 @@ const {
   desktop_location_type,
   desktop_location,
   desktop_division,
+  desktop_branch,
   desktop_comment,
 } = desktopRefs;
 
@@ -341,42 +362,34 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (desktop_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (desktop_branch.value == null || !desktop_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(desktop_parish.value)
-        divisions.value = await getParishDivisions(desktop_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
+
+
 
 watch (
     desktop_parish, async (newParish, oldParish) => {
@@ -390,15 +403,13 @@ watch (
 )
 
 watch (
-    desktop_location, async (newLocation, oldLocation) => {
+    desktop_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", desktop_parish.value)
-        console.log("Divisions:", desktop_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", desktop_division.value, "type:", typeof desktop_division.value);
+        console.log("Branch value:", desktop_branch.value, "type:", typeof desktop_branch.value);
 
-        console.log("location value:", desktop_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -447,12 +458,19 @@ async function addDesktop() {
         form_factor_id: desktop_form_factor.value,
         
         parish_id: desktop_parish.value,
-        location_type_id: desktop_location_type.value,
+        ltype_id: desktop_location_type.value,
         location_id: desktop_location.value,
         division_id: desktop_division.value,
+        branch_id: desktop_branch.value,
         comment: desktop_comment.value,
     }
     console.log("read values into desktop")
+    console.log(desktop.parish_id)
+    console.log(desktop.location_type_id)
+    console.log(desktop.location_id)
+    console.log(desktop.division_id)
+    console.log(desktop.branch_id)
+    
 
     for (const key in desktop) {
         if (desktop[key] === undefined || desktop[key] === "") {
@@ -463,13 +481,13 @@ async function addDesktop() {
     
 
     if (desktop.delivery_date > desktop.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (desktop.return_date < desktop.deployment_date) {
-        alert("Return Date must be larger than Deployment Date")
-    } else if (desktop.delivery_date < desktop.manufactured_date || desktop.deployment_date < desktop.manufactured_date || desktop.bos_date < desktop.manufactured_date) {
-        alert("Device cannot be Delivered, Deployed, or BOS before Manufactured Date")
-    } else if (!desktop.serial_number || !desktop.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Delivery Date must be earlier than Deployment Date")
+    } else if (desktop.return_date > desktop.bos_date) {
+        alert("Return Date must be earlier than BOS Date")
+    } else if (desktop.delivery_date > desktop.return_date) {
+        alert("Delivery Date must be earlier than Return Date")
+    } else if (desktop.warranty_start_date > desktop.warranty_end_date) {
+        alert("Warranty Start Date must be earlier than Warranty End Date")
     } else {
         try {
             const token = localStorage.getItem('token');
@@ -478,6 +496,9 @@ async function addDesktop() {
                     Authorization: `Bearer ${token}`
                 }
             });
+
+            console.log(response.data);
+
             if (response.data == "Serial Found") {
                 alert("Serial Number Already Exists", response.data)
                 console.log(response.data)
@@ -488,6 +509,7 @@ async function addDesktop() {
                 alert("Item has been added successfully")
                 console.log("Item has been added successfully")
             }
+            
         } catch (error) {
             console.error(
             "Error creating item:",

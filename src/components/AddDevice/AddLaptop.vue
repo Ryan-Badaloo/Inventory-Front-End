@@ -2,11 +2,11 @@
 <AddTemplate templateName="Laptop">
     <form @submit.prevent="addLaptop()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="laptop_brand" labelFor="laptop_brand" fieldName="Brand: " v-model="laptop_brand"/>
+            <TextField id="laptop_brand" labelFor="laptop_brand" fieldName="Brand: " v-model="laptop_brand" :required="true"/>
 
-            <TextField id="laptop_model" labelFor="laptop_model" fieldName="Model: " v-model="laptop_model"/>
+            <TextField id="laptop_model" labelFor="laptop_model" fieldName="Model: " v-model="laptop_model" :required="true"/>
 
-            <TextField id="laptop_serial_number" labelFor="laptop_serial_number" fieldName="Serial Number: " v-model="laptop_serial_number"/>
+            <TextField id="laptop_serial_number" labelFor="laptop_serial_number" fieldName="Serial Number: " v-model="laptop_serial_number" :required="true"/>
 
             <TextField id="laptop_inventory_number" labelFor="laptop_inventory_number" fieldName="Inventory Number: " v-model="laptop_inventory_number"/>
 
@@ -66,19 +66,19 @@
             </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="laptop_status" :class="[option_field_class]" class="bg-white" v-model.number="laptop_status">
+                <select id="laptop_status" :class="[option_field_class]" class="bg-white" v-model.number="laptop_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
 
                 </select>
-                <TextLabel labelFor="laptop_status" fieldName="System Status: "/>
+                <TextLabel labelFor="laptop_status" fieldName="System Status: " :required="true"/>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="laptop_hard_disk_capacity" labelFor="laptop_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="laptop_hard_disk_capacity"/>
+            <TextField id="laptop_hard_disk_capacity" labelFor="laptop_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="laptop_hard_disk_capacity" :required="true"/>
 
-            <TextField id="laptop_memory_capacity" labelFor="laptop_memory_capacity" fieldName="Memory Capacity: " v-model="laptop_memory_capacity"/>
+            <TextField id="laptop_memory_capacity" labelFor="laptop_memory_capacity" fieldName="Memory Capacity: " v-model="laptop_memory_capacity" :required="true"/>
 
             <!-- warranty start date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -140,19 +140,19 @@
             <TextField id="laptop_memory_type" labelFor="laptop_memory_type" fieldName="Memory Type: " v-model="laptop_memory_type"/>
 
 
-            <TextField id="laptop_operating_system" labelFor="laptop_operating_system" fieldName="Operating System: " v-model="laptop_operating_system"/>
+            <TextField id="laptop_operating_system" labelFor="laptop_operating_system" fieldName="Operating System: " v-model="laptop_operating_system" :required="true"/>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="laptop_cpu_type" :class="[option_field_class]" class="bg-white" v-model="laptop_cpu_type">
+                <select id="laptop_cpu_type" :class="[option_field_class]" class="bg-white" v-model="laptop_cpu_type" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="cpu_type in cpu_types" :key="cpu_type.cpu_type_id" :value=cpu_type.cpu_type_id class="text-black">{{ cpu_type.cpu_type_description }}</option>
                 </select>
-                <TextLabel labelFor="laptop_cpu_type" fieldName="CPU Type:" />
+                <TextLabel labelFor="laptop_cpu_type" fieldName="CPU Type:" :required="true"/>
             </div>
 
             <TextField id="laptop_processor_speed" labelFor="laptop_processor_speed" fieldName="Processor Speed: " v-model="laptop_processor_speed"/>
 
-            <TextField id="laptop_processor_type" labelFor="laptop_processor_type" fieldName="Processor Type: " v-model="laptop_processor_type"/>
+            <TextField id="laptop_processor_type" labelFor="laptop_processor_type" fieldName="Processor Type: " v-model="laptop_processor_type" :required="true"/>
 
             <TextField id="laptop_computer_name" labelFor="laptop_computer_name" fieldName="Computer Name: " v-model="laptop_computer_name"/>
 
@@ -195,6 +195,14 @@
                 </select>
                 <TextLabel labelFor="laptop_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="laptop_branch" :class="[option_field_class]" class="bg-white" v-model.number="laptop_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="laptop_branch" fieldName="Branch" />
+            </div>
         </div>
 
         <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: " v-model="laptop_comment"/>
@@ -218,7 +226,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -227,12 +235,14 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const cpu_types = ref([])
-const divisions = ref([])
-const locations = ref([])
 const parishes = ref([])
+const locations = ref([])
 const locationTypes = ref([])
+const divisions = ref([])
+
 
 onMounted(async () => {
   try {
@@ -242,16 +252,20 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
     
     locationTypes.value = await getLocationTypes();
 
-    if (laptop_location.value) {
-        locationChange(laptop_location.value)
-    } else if (laptop_parish.value) {
+    if (laptop_parish.value) {
         parishChange(laptop_parish.value)
+    }
+
+    if (laptop_division.value) {
+        divisionChange(laptop_division.value)
     }
 
 
@@ -271,7 +285,7 @@ const fieldNames = [
   "operating_system", "cpu_type", "processor_speed",
   "processor_type", "computer_name", "ms_office_version",
   "antivirus", "parish", "location_type",
-  "location", "division", "comment"
+  "location", "division", "branch", "comment"
 ];
 
 
@@ -320,6 +334,7 @@ const {
   laptop_location_type,
   laptop_location,
   laptop_division,
+  laptop_branch,
   laptop_comment,
 } = laptopRefs;
 
@@ -330,42 +345,33 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (laptop_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (laptop_branch.value == null || !laptop_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(laptop_parish.value)
-        divisions.value = await getParishDivisions(laptop_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
+
 
 watch (
     laptop_parish, async (newParish, oldParish) => {
@@ -379,17 +385,17 @@ watch (
 )
 
 watch (
-    laptop_location, async (newLocation, oldLocation) => {
+    laptop_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", laptop_parish.value)
-        console.log("Divisions:", laptop_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", laptop_division.value, "type:", typeof laptop_division.value);
+        console.log("Branch value:", laptop_branch.value, "type:", typeof laptop_branch.value);
 
-        console.log("location value:", laptop_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
+
+
 
 
 function resetLaptopForm() {
@@ -437,12 +443,14 @@ async function addLaptop() {
         antivirus: laptop_antivirus.value,
         
         parish_id: laptop_parish.value,
-        location_type_id: laptop_location_type.value,
+        ltype_id: laptop_location_type.value,
         location_id: laptop_location.value,
         division_id: laptop_division.value,
+        branch_id: laptop_branch.value,
         comment: laptop_comment.value,
     }
     console.log("read values into laptop")
+
 
     for (const key in laptop) {
         if (laptop[key] === undefined || laptop[key] === "") {
@@ -453,13 +461,13 @@ async function addLaptop() {
     
 
     if (laptop.delivery_date > laptop.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (laptop.return_date < laptop.deployment_date) {
-        alert("Return Date must be larger than Deployment Date")
-    } else if (laptop.delivery_date < laptop.manufactured_date || laptop.deployment_date < laptop.manufactured_date || laptop.bos_date < laptop.manufactured_date) {
-        alert("Device cannot be Delivered, Deployed, or BOS before Manufactured Date")
-    } else if (!laptop.serial_number || !laptop.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Delivery Date must be earlier than Deployment Date")
+    } else if (laptop.return_date > laptop.bos_date) {
+        alert("Return Date must be earlier than BOS Date")
+    } else if (laptop.delivery_date > laptop.return_date) {
+        alert("Delivery Date must be earlier than Return Date")
+    } else if (laptop.warranty_start_date > laptop.warranty_end_date) {
+        alert("Warranty Start Date must be earlier than Warranty End Date")
     } else {
         try {
             const token = localStorage.getItem('token');
@@ -479,10 +487,7 @@ async function addLaptop() {
                 console.log("Item has been added successfully")
             }
         } catch (error) {
-            console.error(
-            "Error creating item:",
-            error.response?.data || error.message
-            );
+            console.error("Error creating item:", error.response?.data || error.message);
             console.error("Detail:", error.response?.data?.detail);
             console.error("Error:", error);
 

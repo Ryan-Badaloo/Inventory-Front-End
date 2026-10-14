@@ -8,11 +8,11 @@
 
             <TextField id="username" labelFor="username" name="username" fieldName="Enter Email: " v-model="username"/>
 
-            <TextField id="password" labelFor="password" name="password" fieldName="Enter Password: " v-model="password"/>
+            <PasswordField id="password" labelFor="password" name="password" fieldName="Enter Password: " v-model="password"/>
 
             <TextField id="office" labelFor="office" name="office" fieldName="Enter Office: "/>
 
-            <div class="flex flex-row-reverse mb-6 group">
+            <!-- <div class="flex flex-row-reverse mb-6 group">
                 <select id="role_id" :class="[option_field_class]" class="bg-white" v-model="role_id">
                     <option selected class="text-blue-100">Choose a Role</option>
                     <option value=1>Administrator</option>
@@ -21,6 +21,15 @@
                     <option value=4>View Only</option>
                 </select>
                 <TextLabel :labelFor="role_id" fieldName="User Role" />
+            </div> -->
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="role_id" :class="[option_field_class]" class="bg-white" v-model.number="role_id">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="role in roles" :key="role.role_id" :value=role.role_id class="text-black">{{ role.role_name }}</option>
+
+                </select>
+                <TextLabel labelFor="role_id" fieldName="Role Name: "/>
             </div>
         </div>
 
@@ -36,16 +45,27 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
+import PasswordField from '../Fields/PasswordField.vue';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 
-import { option_field_class } from '@/utils/descriptions';
+import { option_field_class, getRoles } from '@/utils/descriptions';
 import TextLabel from '@/components/Fields/TextLabel.vue';
+
+const roles = ref([]);
+
+onMounted(async () => {
+    try{
+        roles.value = await getRoles();
+    } catch (err) {
+        console.error("Failed to load something", err);
+    }
+});
 
 const first_name = ref();
 const last_name = ref();

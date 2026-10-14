@@ -25,96 +25,157 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import SelectDeviceButton from '@/components/SelectItem/SelectItemButton.vue';
 import AddTemplate from '@/components/SectionTemplate.vue';
 
 const emit = defineEmits(['deviceSelected']);
 const deviceActive = ref('')
 
-function selectLaptop() {
+function scrollToSecondForm() {
+    const sections = document.querySelectorAll(".device-form-section")
+
+    if (sections.length > 1) {
+        sections[1].scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        })
+    }
+}
+
+async function selectLaptop() {
     deviceActive.value = 'laptop';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectDesktop() {
+async function selectDesktop() {
     deviceActive.value = 'desktop';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectServer() {
+async function selectServer() {
     deviceActive.value = 'server';
     emit('deviceSelected', deviceActive.value);
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectTablet() {
+async function selectTablet() {
     deviceActive.value = 'tablet';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectMouse() {
+async function selectMouse() {
     deviceActive.value = 'mouse';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectKeyboard() {
+async function selectKeyboard() {
     deviceActive.value = 'keyboard';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectScanner() {
+async function selectScanner() {
     deviceActive.value = 'scanner';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectSurgeProtector() {
+async function selectSurgeProtector() {
     deviceActive.value = 'surge_protector';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectUPS() {
+async function selectUPS() {
     deviceActive.value = 'ups';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectSpeaker() {
+async function selectSpeaker() {
     deviceActive.value = 'speaker';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectWebcam() {
+async function selectWebcam() {
     deviceActive.value = 'webcam';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectOtherEquipment() {
+async function selectOtherEquipment() {
     deviceActive.value = 'other_equipment';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectPrinter() {
+async function selectPrinter() {
     deviceActive.value = 'printer';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectProjector() {
+async function selectProjector() {
     deviceActive.value = 'projector';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectConferenceRoom_AV_Equipment() {
+async function selectConferenceRoom_AV_Equipment() {
     deviceActive.value = 'conference_room_av_equipment';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectNetworkSwitch() {
+async function selectNetworkSwitch() {
     deviceActive.value = 'network_switch';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
-function selectMonitor() {
+async function selectMonitor() {
     deviceActive.value = 'monitor';
     emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
 }
 
 

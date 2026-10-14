@@ -49,15 +49,22 @@ async function change_password() {
          });
          console.log("Password Succesfully Changed")
          alert("Password Changed Succefully", response.data);
+
       } catch (error) {
-         console.error(
-         "Error creating item:",
-         error.response?.data || error.message
-         );
+         console.error("Error changing password:", error.response?.data || error.message);
          console.error("Detail:", error.response?.data?.detail);
 
-         alert("Failed to change password. Check console.");
+         if (error.response) {
+            if (error.response.status === 400) {
+               alert(error.response.data.detail);
+            } else if (error.response.status === 404) {
+               alert(error.response.data.detail);
+            } else {
+               
+            }
+         }
       }
+
    } else {
       alert("Passwords are not the same")
    }

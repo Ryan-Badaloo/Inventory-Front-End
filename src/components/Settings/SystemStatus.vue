@@ -38,6 +38,7 @@ import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 const statuses = ref([])
 const selectedStatus = ref();
+const isStatus = ref();
 
 onMounted(async () => {
   try {
@@ -50,32 +51,14 @@ onMounted(async () => {
 });
 
 async function add_status(statusText) {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${useBaseURLComposable()}add-status/`, { status: statusText }, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        statuses.value = await getStatuses();
-        console.log("Status Added Succefully")
-        alert("Status successfully added.", response.data);
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
+    console.log(statusText)
 
-        alert("Failed to add item. Check console.");
-    }
-}
+    const token = localStorage.getItem('token');
 
-async function remove_status(statusText) {
-    try {
-
-        const token = localStorage.getItem('token');
-        await axios.delete(`${useBaseURLComposable()}delete-status/`, {
+    if (!selectedStatus.value) {
+        alert("Please Enter a Status")
+    } else {
+        const response = await axios.get(`${useBaseURLComposable()}get-status/`, {
             params: {
                 status: statusText
             },
@@ -83,17 +66,83 @@ async function remove_status(statusText) {
                 Authorization: `Bearer ${token}`
             }
         });
-        statuses.value = await getStatuses();
-        console.log("Status Has Been Deleted")
-        alert("Status Has Been Deleted")
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
 
-        alert("Failed to find Client. Check console.");
+        isStatus.value = response.data;
+
+        console.log(isStatus.value)
+
+        if (isStatus.value == true) {
+            alert("This Status Is Already In The System")
+        } else {
+            try {
+                const response = await axios.post(`${useBaseURLComposable()}add-status/`, { status: statusText }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                statuses.value = await getStatuses();
+                console.log("Status Added Succefully")
+                alert("Status successfully added.", response.data);
+            } catch (error) {
+                console.error(
+                "Error creating item:",
+                error.response?.data || error.message
+                );
+                console.error("Detail:", error.response?.data?.detail);
+
+                alert("Failed to add item. Check console.");
+            }
+        }
+    }
+}
+
+async function remove_status(statusText) {
+    console.log(statusText)
+
+    const token = localStorage.getItem('token');
+    if (!selectedStatus.value) {
+        alert("Please Enter a Status")
+    } else {
+        const response = await axios.get(`${useBaseURLComposable()}get-status/`, {
+            params: {
+                status: statusText
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        isStatus.value = response.data;
+
+        console.log(isStatus.value)
+
+        if (isStatus.value == false) {
+            alert("This Status Is Not In The System")
+        } else {
+            try {
+
+                const token = localStorage.getItem('token');
+                await axios.delete(`${useBaseURLComposable()}delete-status/`, {
+                    params: {
+                        status: statusText
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                statuses.value = await getStatuses();
+                console.log("Status Has Been Deleted")
+                alert("Status Has Been Deleted")
+            } catch (error) {
+                console.error(
+                "Error creating item:",
+                error.response?.data || error.message
+                );
+                console.error("Detail:", error.response?.data?.detail);
+
+                alert("Failed to find Client. Check console.");
+            }
+        }
     }
 }
 </script>

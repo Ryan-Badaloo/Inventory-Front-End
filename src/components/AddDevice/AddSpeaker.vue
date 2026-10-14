@@ -2,11 +2,11 @@
 <AddTemplate templateName="Speaker">
     <form @submit.prevent="addSpeaker()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="speaker_brand" labelFor="speaker_brand" fieldName="Brand: " v-model="speaker_brand"/>
+            <TextField id="speaker_brand" labelFor="speaker_brand" fieldName="Brand: " v-model="speaker_brand" :required="true"/>
 
-            <TextField id="speaker_model" labelFor="speaker_model" fieldName="Model: " v-model="speaker_model"/>
+            <TextField id="speaker_model" labelFor="speaker_model" fieldName="Model: " v-model="speaker_model" :required="true"/>
 
-            <TextField id="speaker_serial_number" labelFor="speaker_serial_number" fieldName="Serial Number: " v-model="speaker_serial_number"/>
+            <TextField id="speaker_serial_number" labelFor="speaker_serial_number" fieldName="Serial Number: " v-model="speaker_serial_number" :required="true"/>
 
             <TextField id="speaker_inventory_number" labelFor="speaker_inventory_number" fieldName="Inventory Number: " v-model="speaker_inventory_number"/>
 
@@ -66,11 +66,11 @@
             </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="speaker_status" :class="[option_field_class]" class="bg-white" v-model.number="speaker_status">
+                <select id="speaker_status" :class="[option_field_class]" class="bg-white" v-model.number="speaker_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
                 </select>
-                <TextLabel labelFor="speaker_status" fieldName="System Status: "/>
+                <TextLabel labelFor="speaker_status" fieldName="System Status: " :required="true"/>
             </div>
         </div>
 
@@ -132,6 +132,14 @@
                 </select>
                 <TextLabel labelFor="speaker_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="speaker_branch" :class="[option_field_class]" class="bg-white" v-model.number="speaker_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="speaker_branch" fieldName="Branch" />
+            </div>
         </div>
 
         <CommentField id="speaker_comment" labelFor="speaker_comment" fieldName="Comment: " v-model="speaker_comment"/>
@@ -155,7 +163,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getSpeakerTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getSpeakerTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -164,6 +172,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const speaker_types = ref([])
 const divisions = ref([])
@@ -179,16 +188,20 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
     
     locationTypes.value = await getLocationTypes();
 
-    if (speaker_location.value) {
-        locationChange(speaker_location.value)
-    } else if (speaker_parish.value) {
+    if (speaker_parish.value) {
         parishChange(speaker_parish.value)
+    }
+
+    if (speaker_division.value) {
+        divisionChange(speaker_division.value)
     }
 
 
@@ -202,7 +215,7 @@ const fieldNames = [
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
   "returned_date", "number_speakers", "type",
   "parish", "location_type", "location",
-  "division", "comment"
+  "division", "branch", "comment"
 ];
 
 const speakerRefs = {};
@@ -236,6 +249,7 @@ const {
     speaker_location_type,
     speaker_location,
     speaker_division,
+    speaker_branch,
     speaker_comment,
 } = speakerRefs;
 
@@ -246,42 +260,33 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (speaker_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (speaker_branch.value == null || !speaker_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(speaker_parish.value)
-        divisions.value = await getParishDivisions(speaker_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
+
 
 watch (
     speaker_parish, async (newParish, oldParish) => {
@@ -295,15 +300,13 @@ watch (
 )
 
 watch (
-    speaker_location, async (newLocation, oldLocation) => {
+    speaker_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", speaker_parish.value)
-        console.log("Divisions:", speaker_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", speaker_division.value, "type:", typeof speaker_division.value);
+        console.log("Branch value:", speaker_branch.value, "type:", typeof speaker_branch.value);
 
-        console.log("location value:", speaker_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -340,9 +343,10 @@ async function addSpeaker() {
         number_of_speakers: speaker_number_speakers.value,
 
         parish_id: speaker_parish.value,
-        location_type_id: speaker_location_type.value,
+        ltype_id: speaker_location_type.value,
         location_id: speaker_location.value,
         division_id: speaker_division.value,
+        branch_id: speaker_branch.value,
         comment: speaker_comment.value,
         
     }
@@ -354,9 +358,11 @@ async function addSpeaker() {
     }
 
     if (speaker.delivery_date > speaker.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (!speaker.serial_number || !speaker.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Deployment Date must be earlier than Delivery Date")
+    } else if (speaker.return_date > speaker.bos_date) {
+        alert("Return Date must be earlier than BOS Date")
+    } else if (speaker.delivery_date > speaker.return_date) {
+        alert("Delivery Date must be earlier than Return Date")
     } else {
         try {
             const token = localStorage.getItem('token');

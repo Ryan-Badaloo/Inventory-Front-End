@@ -47,6 +47,7 @@ async function confirmDeleteUser() {
             }
         });
         console.log("User Has Been Deleted")
+        alert("User Has Been Deleted")
     } catch (error) {
         console.error(
         "Error creating item:",

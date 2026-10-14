@@ -3,11 +3,11 @@
     <form @submit.prevent="addMouse()" class="space-y-4">
  
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="mouse_brand" labelFor="mouse_brand" fieldName="Brand: " v-model="mouse_brand"/>
+            <TextField id="mouse_brand" labelFor="mouse_brand" fieldName="Brand: " v-model="mouse_brand" :required="true"/>
 
-            <TextField id="mouse_model" labelFor="mouse_model" fieldName="Model: " v-model="mouse_model"/>
+            <TextField id="mouse_model" labelFor="mouse_model" fieldName="Model: " v-model="mouse_model" :required="true"/>
 
-            <TextField id="mouse_serial_number" labelFor="mouse_serial_number" fieldName="Serial Number: " v-model="mouse_serial_number"/>
+            <TextField id="mouse_serial_number" labelFor="mouse_serial_number" fieldName="Serial Number: " v-model="mouse_serial_number" :required="true"/>
 
             <TextField id="mouse_inventory_number" labelFor="mouse_inventory_number" fieldName="Inventory Number: " v-model="mouse_inventory_number"/>
 
@@ -51,12 +51,12 @@
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="mouse_status" :class="[option_field_class]" class="bg-white" v-model.number="mouse_status">
+                <select id="mouse_status" :class="[option_field_class]" class="bg-white" v-model.number="mouse_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
 
                 </select>
-                <TextLabel labelFor="mouse_status" fieldName="System Status: "/>
+                <TextLabel labelFor="mouse_status" fieldName="System Status: " :required="true"/>
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
@@ -101,7 +101,17 @@
                 </select>
                 <TextLabel labelFor="mouse_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="mouse_branch" :class="[option_field_class]" class="bg-white" v-model.number="mouse_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="mouse_branch" fieldName="Branch" />
+            </div>
         </div>
+
+        
 
 
         <CommentField id="mouse_comment" labelFor="mouse_comment" fieldName="Comment: " v-model="mouse_comment"/>
@@ -125,7 +135,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -134,6 +144,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const connection_types = ref([])
 const divisions = ref([])
@@ -149,20 +160,24 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
     
     locationTypes.value = await getLocationTypes();
 
-    if (mouse_location.value) {
-        locationChange(mouse_location.value)
-    } else if (mouse_parish.value) {
+    if (mouse_parish.value) {
         parishChange(mouse_parish.value)
     }
 
+    if (mouse_division.value) {
+        divisionChange(mouse_division.value)
+    }
+
   } catch (err) {
-    console.error("Failed to load statuses", err);
+    console.error(err);
   }
 });
 
@@ -170,7 +185,7 @@ onMounted(async () => {
 const fieldNames = [
   "brand", "model", "serial_number", "inventory_number",
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status", "connection_type", "parish", "location_type",
-  "location", "division", "comment"
+  "location", "division", "branch", "comment"
 ];
 
 const mouseRefs = {};
@@ -204,6 +219,7 @@ const {
     mouse_location_type,
     mouse_location,
     mouse_division,
+    mouse_branch,
     mouse_comment,
 } = mouseRefs;
 
@@ -214,40 +230,30 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (mouse_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (mouse_branch.value == null || !mouse_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(mouse_parish.value)
-        divisions.value = await getParishDivisions(mouse_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
 
@@ -263,15 +269,13 @@ watch (
 )
 
 watch (
-    mouse_location, async (newLocation, oldLocation) => {
+    mouse_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", mouse_parish.value)
-        console.log("Divisions:", mouse_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", mouse_division.value, "type:", typeof mouse_division.value);
+        console.log("Branch value:", mouse_branch.value, "type:", typeof mouse_branch.value);
 
-        console.log("location value:", mouse_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -306,9 +310,10 @@ async function addMouse() {
         connection_type_id: mouse_connection_type.value, 
 
         parish_id: mouse_parish.value,
-        location_type_id: mouse_location_type.value,
+        ltype_id: mouse_location_type.value,
         location_id: mouse_location.value,
         division_id: mouse_division.value,
+        branch_id: mouse_branch.value,
         comment: mouse_comment.value,
     }
     console.log("read values into mouse")
@@ -321,9 +326,7 @@ async function addMouse() {
 
 
     if (mouse.delivery_date > mouse.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (!mouse.serial_number || !mouse.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Delivery Date must be earlier than Deployment Date")
     } else {
         try {
             const token = localStorage.getItem('token');

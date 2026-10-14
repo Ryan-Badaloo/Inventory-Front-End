@@ -115,7 +115,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in filteredDevices" :key="item.devices_id" class="bg-white border-b hover:bg-gray-200">
+                    <tr v-for="item in paginatedItems" :key="item.devices_id" class="bg-white border-b hover:bg-gray-200">
                       <td class="px-6 py-4">{{ item.location_name }}</td>
                       <td class="px-6 py-4">{{ item.category }}</td>
                       <td class="px-6 py-4">{{ item.brand }}</td>
@@ -127,6 +127,21 @@
                     </tr>
                   </tbody>
                 </table>
+
+
+                <!-- Pagination component -->
+                <div class="pagination-overall-container">
+                    <vue-awesome-paginate
+                    :total-items="filteredDevices.length"
+                    :items-per-page="itemsPerPage"
+                    :max-pages-shown="10"
+                    :show-ending-buttons="true"
+                    :show-breakpoint-buttons="false"
+                    v-model="currentPage"
+                    paginate-buttons-class="paginate-buttons"
+                    active-page-class="active-page"
+                    />
+                </div>
               </div>
             </SectionTemplate>
 
@@ -135,11 +150,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import SectionTemplate from '@/components/SectionTemplate.vue';
 import AddItemButton from '@/components/AddItemButton.vue';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
+
+
 
 // STATE VARIABLES ////////////////////////////////////////////////////////
 const locations = ref([]);
@@ -150,6 +167,16 @@ const selectedParishes = ref([]);
 const selectedStatuses = ref([]);
 const selectedComponents = ref([]);
 const filteredDevices = ref([]);
+
+const currentPage = ref(1)
+const itemsPerPage = 10
+
+// Get the posts for the current page
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredDevices.value.slice(start, end);
+});
 
 // Static component list
 const components = [

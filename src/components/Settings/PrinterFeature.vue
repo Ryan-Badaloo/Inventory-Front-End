@@ -38,6 +38,7 @@ import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 const features = ref([])
 const selectedFeature = ref();
+const isPrinterFeature = ref();
 
 onMounted(async () => {
   try {
@@ -50,32 +51,13 @@ onMounted(async () => {
 });
 
 async function add_printer_feature(printerFeatureText) {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${useBaseURLComposable()}add-printer-feature/`, { printer_feature: printerFeatureText }, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        features.value = await getPrinterFeatures();
-        console.log("Printer Feature Added Succefully")
-        alert("Printer Feature successfully added.", response.data);
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
+    console.log(printerFeatureText)
 
-        alert("Failed to add item. Check console.");
-    }
-}
-
-async function remove_printer_feature(printerFeatureText) {
-    try {
-
-        const token = localStorage.getItem('token');
-        await axios.delete(`${useBaseURLComposable()}delete-printer-feature/`, {
+    const token = localStorage.getItem('token');
+    if (!selectedFeature.value) {
+        alert("Please Enter a Feature Type")
+    } else {
+        const response = await axios.get(`${useBaseURLComposable()}get-printer-feature/`, {
             params: {
                 printer_feature: printerFeatureText
             },
@@ -83,17 +65,83 @@ async function remove_printer_feature(printerFeatureText) {
                 Authorization: `Bearer ${token}`
             }
         });
-        features.value = await getPrinterFeatures();
-        console.log("Printer Feature Has Been Deleted")
-        alert("Printer Feature Has Been Deleted")
-    } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
-        console.error("Detail:", error.response?.data?.detail);
 
-        alert("Failed to find Client. Check console.");
+        isPrinterFeature.value = response.data;
+
+        console.log(isPrinterFeature.value)
+
+        if (isPrinterFeature.value == true) {
+            alert("This Printer feature Is Already In The System")
+        } else {
+            try {
+                const response = await axios.post(`${useBaseURLComposable()}add-printer-feature/`, { printer_feature: printerFeatureText }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                features.value = await getPrinterFeatures();
+                console.log("Printer Feature Added Succefully")
+                alert("Printer Feature successfully added.", response.data);
+            } catch (error) {
+                console.error(
+                "Error creating item:",
+                error.response?.data || error.message
+                );
+                console.error("Detail:", error.response?.data?.detail);
+
+                alert("Failed to add item. Check console.");
+            }
+        }
+    }
+}
+
+async function remove_printer_feature(printerFeatureText) {
+    console.log(printerFeatureText)
+
+    const token = localStorage.getItem('token');
+    if (!selectedFeature.value) {
+        alert("Please Enter a Feature Type")
+    } else {
+        const response = await axios.get(`${useBaseURLComposable()}get-printer-feature/`, {
+            params: {
+                printer_feature: printerFeatureText
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        isPrinterFeature.value = response.data;
+
+        console.log(isPrinterFeature.value)
+
+        if (isPrinterFeature.value == false) {
+            alert("This Printer feature Is Not In The System")
+        } else {
+            try {
+
+                const token = localStorage.getItem('token');
+                await axios.delete(`${useBaseURLComposable()}delete-printer-feature/`, {
+                    params: {
+                        printer_feature: printerFeatureText
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                features.value = await getPrinterFeatures();
+                console.log("Printer Feature Has Been Deleted")
+                alert("Printer Feature Has Been Deleted")
+            } catch (error) {
+                console.error(
+                "Error creating item:",
+                error.response?.data || error.message
+                );
+                console.error("Detail:", error.response?.data?.detail);
+
+                alert("Failed to find Client. Check console.");
+            }
+        }
     }
 }
 </script>

@@ -2,11 +2,11 @@
 <AddTemplate templateName="Surge Protector">
     <form @submit.prevent="addSurge()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="surge_protector_brand" labelFor="surge_protector_brand" fieldName="Brand: " v-model="surge_protector_brand"/>
+            <TextField id="surge_protector_brand" labelFor="surge_protector_brand" fieldName="Brand: " v-model="surge_protector_brand" :required="true"/>
 
-            <TextField id="surge_protector_model" labelFor="surge_protector_model" fieldName="Model: " v-model="surge_protector_model"/>
+            <TextField id="surge_protector_model" labelFor="surge_protector_model" fieldName="Model: " v-model="surge_protector_model" :required="true"/>
 
-            <TextField id="surge_protector_serial_number" labelFor="surge_protector_serial_number" fieldName="Serial Number: " v-model="surge_protector_serial_number"/>
+            <TextField id="surge_protector_serial_number" labelFor="surge_protector_serial_number" fieldName="Serial Number: " v-model="surge_protector_serial_number" :required="true"/>
 
             <TextField id="surge_protector_inventory_number" labelFor="surge_protector_inventory_number" fieldName="Inventory Number: " v-model="surge_protector_inventory_number"/>
 
@@ -66,17 +66,17 @@
             </div> -->
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="surge_protector_status" :class="[option_field_class]" class="bg-white" v-model.number="surge_protector_status">
+                <select id="surge_protector_status" :class="[option_field_class]" class="bg-white" v-model.number="surge_protector_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
 
                 </select>
-                <TextLabel labelFor="surge_protector_status" fieldName="System Status: "/>
+                <TextLabel labelFor="surge_protector_status" fieldName="System Status: " :required="true"/>
             </div>
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
-            <TextField id="surge_protector_number_outlets" labelFor="surge_protector_number_outlets" fieldName="Number Of Outlets: " v-model="surge_protector_number_outlets"/>
+            <TextField id="surge_protector_number_outlets" labelFor="surge_protector_number_outlets" fieldName="Number Of Outlets: " v-model="surge_protector_number_outlets" :required="true"/>
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
@@ -112,6 +112,14 @@
                 </select>
                 <TextLabel labelFor="surge_protector_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="surge_protector_branch" :class="[option_field_class]" class="bg-white" v-model.number="surge_protector_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="surge_protector_branch" fieldName="Branch" />
+            </div>
         </div>
 
         <CommentField id="surge_protector_comment" labelFor="surge_protector_comment" fieldName="Comment: " v-model="surge_protector_comment"/>
@@ -135,7 +143,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -144,6 +152,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const branches = ref([])
 const statuses = ref([])
 const divisions = ref([])
 const locations = ref([])
@@ -156,16 +165,20 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
     
     locationTypes.value = await getLocationTypes();
 
-    if (surge_protector_location.value) {
-        locationChange(surge_protector_location.value)
-    } else if (surge_protector_parish.value) {
+    if (surge_protector_parish.value) {
         parishChange(surge_protector_parish.value)
+    }
+
+    if (surge_protector_division.value) {
+        divisionChange(surge_protector_division.value)
     }
 
 
@@ -179,7 +192,7 @@ const fieldNames = [
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
   "number_outlets",
   "parish", "location_type", "location",
-  "division", "comment"
+  "division", "branch", "comment"
 ];
 
 const surgeProtectorRefs = {};
@@ -212,6 +225,7 @@ const {
     surge_protector_location_type,
     surge_protector_location,
     surge_protector_division,
+    surge_protector_branch,
     surge_protector_comment,
 } = surgeProtectorRefs;
 
@@ -222,42 +236,33 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (surge_protector_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (surge_protector_branch.value == null || !surge_protector_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(surge_protector_parish.value)
-        divisions.value = await getParishDivisions(surge_protector_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
+
 
 watch (
     surge_protector_parish, async (newParish, oldParish) => {
@@ -271,15 +276,13 @@ watch (
 )
 
 watch (
-    surge_protector_location, async (newLocation, oldLocation) => {
+    surge_protector_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", surge_protector_parish.value)
-        console.log("Divisions:", surge_protector_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", surge_protector_division.value, "type:", typeof surge_protector_division.value);
+        console.log("Branch value:", surge_protector_branch.value, "type:", typeof surge_protector_branch.value);
 
-        console.log("location value:", surge_protector_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -315,9 +318,10 @@ async function addSurge() {
         number_of_outlets: surge_protector_number_outlets.value,
 
         parish_id: surge_protector_parish.value,
-        location_type_id: surge_protector_location_type.value,
+        ltype_id: surge_protector_location_type.value,
         location_id: surge_protector_location.value,
         division_id: surge_protector_division.value,
+        branch_id: surge_protector_branch.value,
         comment: surge_protector_comment.value,
     }
     console.log("read values into surge protector")
@@ -329,9 +333,7 @@ async function addSurge() {
     }
 
     if (surge_protector.delivery_date > surge_protector.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (!surge_protector.serial_number || !surge_protector.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Deployment Date must be earlier than Delivery Date")
     } else {
         try {
             const token = localStorage.getItem('token');

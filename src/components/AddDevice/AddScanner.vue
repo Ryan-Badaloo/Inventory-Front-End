@@ -2,11 +2,11 @@
 <AddTemplate templateName="Scanner">
     <form @submit.prevent="createScanner()" class="space-y-4">
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="scanner_brand" labelFor="scanner_brand" fieldName="Brand: " v-model="scanner_brand"/>
+            <TextField id="scanner_brand" labelFor="scanner_brand" fieldName="Brand: " v-model="scanner_brand" :required="true"/>
 
-            <TextField id="scanner_model" labelFor="scanner_model" fieldName="Model: " v-model="scanner_model"/>
+            <TextField id="scanner_model" labelFor="scanner_model" fieldName="Model: " v-model="scanner_model" :required="true"/>
 
-            <TextField id="scanner_serial_number" labelFor="scanner_serial_number" fieldName="Serial Number: " v-model="scanner_serial_number"/>
+            <TextField id="scanner_serial_number" labelFor="scanner_serial_number" fieldName="Serial Number: " v-model="scanner_serial_number" :required="true"/>
 
             <TextField id="scanner_inventory_number" labelFor="scanner_inventory_number" fieldName="Inventory Number: " v-model="scanner_inventory_number"/>
 
@@ -55,26 +55,26 @@
 
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="scanner_status" :class="[option_field_class]" class="bg-white" v-model.number="scanner_status">
+                <select id="scanner_status" :class="[option_field_class]" class="bg-white" v-model.number="scanner_status" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
 
                 </select>
-                <TextLabel labelFor="scanner_status" fieldName="System Status: "/>
+                <TextLabel labelFor="scanner_status" fieldName="System Status: " :required="true"/>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="scanner_mac_address" labelFor="scanner_mac_address" fieldName="Mac Address: " v-model="scanner_mac_address"/>
+            <TextField id="scanner_mac_address" labelFor="scanner_mac_address" fieldName="Mac Address: " v-model="scanner_mac_address" :required="true"/>
 
             <TextField id="scanner_ip_address" labelFor="scanner_ip_address" fieldName="IP Address: " v-model="scanner_ip_address"/>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="scanner_connection_type" :class="[option_field_class]" class="bg-white" v-model.number="scanner_connection_type">
+                <select id="scanner_connection_type" :class="[option_field_class]" class="bg-white" v-model.number="scanner_connection_type" :required="true">
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="ctype in connection_types" :key="ctype.ctype_id" :value=ctype.ctype_id class="text-black">{{ ctype.ctype_description }}</option>
                 </select>
-                <TextLabel labelFor="scanner_connection_type" fieldName="Connection Type: "/>
+                <TextLabel labelFor="scanner_connection_type" fieldName="Connection Type: " :required="true"/>
             </div>
 
         </div>
@@ -112,6 +112,14 @@
                 </select>
                 <TextLabel labelFor="scanner_division" fieldName="Division" />
             </div>
+
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="scanner_branch" :class="[option_field_class]" class="bg-white" v-model.number="scanner_branch">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                </select>
+                <TextLabel labelFor="scanner_branch" fieldName="Branch" />
+            </div>
         </div>
 
         <CommentField id="scanner_comment" labelFor="scanner_comment" fieldName="Comment: " v-model="scanner_comment"/>
@@ -135,7 +143,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 
 import AddItemButton from '@/components/AddItemButton.vue';
@@ -145,7 +153,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
-
+const branches = ref([])
 const statuses = ref([])
 const connection_types = ref([])
 const divisions = ref([])
@@ -161,16 +169,20 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
     
     locationTypes.value = await getLocationTypes();
 
-    if (scanner_location.value) {
-        locationChange(scanner_location.value)
-    } else if (scanner_parish.value) {
+    if (scanner_parish.value) {
         parishChange(scanner_parish.value)
+    }
+
+    if (scanner_division.value) {
+        divisionChange(scanner_division.value)
     }
 
 
@@ -184,7 +196,7 @@ const fieldNames = [
   "delivery_date", "deployment_date",, "bos_date", "supplier_name", "device_cost", "status",
   "mac_address", "ip_address", "connection_type",
   "parish", "location_type", "location",
-  "division", "comment"
+  "division", "branch", "comment"
 ];
 
 const scannerRefs = {};
@@ -218,6 +230,7 @@ const {
     scanner_location_type,
     scanner_location,
     scanner_division,
+    scanner_branch,
     scanner_comment,
 } = scannerRefs;
 
@@ -228,42 +241,33 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (scanner_location.value != null) {
+async function divisionChange(divisionValue) {
+    if (scanner_branch.value == null || !scanner_branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(scanner_parish.value)
-        divisions.value = await getParishDivisions(scanner_parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
+
 
 watch (
     scanner_parish, async (newParish, oldParish) => {
@@ -277,15 +281,13 @@ watch (
 )
 
 watch (
-    scanner_location, async (newLocation, oldLocation) => {
+    scanner_division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", scanner_parish.value)
-        console.log("Divisions:", scanner_division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", scanner_division.value, "type:", typeof scanner_division.value);
+        console.log("Branch value:", scanner_branch.value, "type:", typeof scanner_branch.value);
 
-        console.log("location value:", scanner_location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
@@ -323,9 +325,10 @@ async function createScanner() {
         status_id: scanner_status.value,
 
         parish_id: scanner_parish.value,
-        location_type_id: scanner_location_type.value,
+        ltype_id: scanner_location_type.value,
         location_id: scanner_location.value,
         division_id: scanner_division.value,
+        branch_id: scanner_branch.value,
         comment: scanner_comment.value,
     }
     console.log("read values into scanner")
@@ -337,9 +340,7 @@ async function createScanner() {
     }
 
     if (scanner.delivery_date > scanner.deployment_date) {
-        alert("Deployment Date must be larger than Delivery Date")
-    } else if (!scanner.serial_number || !scanner.inventory_number) {
-        alert("Serial Number and Inventory Number are required.")
+        alert("Deployment Date must be earlier than Delivery Date")
     } else {
         try {
             const token = localStorage.getItem('token');
