@@ -7,7 +7,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+node_modules/
+.env
+.vscode
 .DS_Store
 dist
 dist-ssr
@@ -18,8 +20,6 @@ coverage
 /cypress/screenshots/
 
 # Editor directories and files
-.vscode
-.env
 !.vscode/extensions.json
 .idea
 *.suo
@@ -27,5 +27,4 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-
 *.tsbuildinfo
