@@ -161,7 +161,7 @@
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="parish in parishes" :key="parish.parish_id" :value=parish.parish_id class="text-black">{{ parish.parish_name }}</option>
                 </select>
-                <TextLabel :labelFor="monitor_parish" fieldName="Parish" />
+                <TextLabel labelFor="monitor_parish" fieldName="Parish" />
             </div>
             
             <div class="flex flex-row-reverse mb-6 group">
@@ -169,7 +169,7 @@
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="location_type in locationTypes" :key="location_type.ltype_id" :value=location_type.ltype_id class="text-black">{{ location_type.ltype_name }}</option>
                 </select>
-                <TextLabel :labelFor="monitor_location_type" fieldName="Location Type" />
+                <TextLabel labelFor="monitor_location_type" fieldName="Location Type" />
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
@@ -177,7 +177,7 @@
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="location in locations" :key="location.location_id" :value=location.location_id class="text-black">{{ location.location_name }}</option>
                 </select>
-                <TextLabel :labelFor="monitor_location" fieldName="Location" />
+                <TextLabel labelFor="monitor_location" fieldName="Location" />
             </div>
 
             <div class="flex flex-row-reverse mb-6 group">
@@ -254,10 +254,10 @@ onMounted(async () => {
     
     locationTypes.value = await getLocationTypes();
 
-    if (monitor_switch_location.value) {
-        locationChange(monitor_switch_location.value)
-    } else if (monitor_switch_parish.value) {
-        parishChange(monitor_switch_parish.value)
+    if (monitor_location.value) {
+        locationChange(monitor_location.value)
+    } else if (monitor_parish.value) {
+        parishChange(monitor_parish.value)
     }
 
 

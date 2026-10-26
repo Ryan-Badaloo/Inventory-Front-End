@@ -1,9 +1,10 @@
 <template>
 <div>
     <div>
-<!-- THIS DISPLAYS THE SEARCH BAR AND RADIO BUTTONS ////////////////////////////////////////////////////////////-->
+        <!-- THIS DISPLAYS THE SEARCH BAR AND RADIO BUTTONS ////////////////////////////////////////////////////////////-->
         <div>
 
+            <!-- THESE ARE THE SEARCH FIELDS ////////////////////////////////////////////////////////////////////-->
             <div class="grid grid-cols-4 gap-4 p-2">
                 <!-- Device Type Search Bar -->
                 <div>
@@ -223,6 +224,7 @@
                 
             </div>
 
+            <!-- THIS IS THE SEARCH BUTTON ////////////////////////////////////////////////////////////////////-->
             <div class="p-2">
                 <button
                     type="submit"
@@ -238,8 +240,8 @@
         </div>
 
         
-<!-- THIS DISPLAYS THE SEARCH RESULTS TABLE ///////////////////////////////////////////////////////////////////-->
-        <SectionTemplate v-if="items.length > 0" template-name="Update Devices">
+        <!-- THIS DISPLAYS THE SEARCH RESULTS TABLE ///////////////////////////////////////////////////////////////////-->
+        <SectionTemplate v-if="items.length > 0" template-name="Devices">
             <div class="relative overflow-x-auto">
                  <table class="w-full table-fixed text-sm text-left rtl:text-right text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -294,7 +296,7 @@
                             <td class="px-6 py-4 inline-block align-middle w-[8vw] break-words whitespace-normal">
                                 <!-- @click="openConfirmModal(item.Serial_Number, item.Brand, item.Model, item.Inventory_Number, item.System_Status)" -->
                                 <div class="flex space-x-1">
-                                    <button @click="openDeviceModal(item.serial_number, item.category)" class="material-icons !text-3xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
+                                    <button @click="openDeviceDetails(item.serial_number, item.category)" class="material-icons !text-3xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
                                     search
                                     </button>
 
@@ -335,1956 +337,7 @@
         </SectionTemplate>
     </div>
 
-    <!-- THIS IS THE MODAL TO SHOW DEVICE DETAILS -->
-    <div v-show="showDeviceModal" @close="closeDeviceModal" class="fixed inset-0 z-60 bg-black/70 flex justify-center items-start">
-        <div ref="detailRef" class="p-2 z-50 w-9/10 mt-5 bg-gray-100 border-2 border-gray-600 rounded-md shadow-lg shadow-black">
-            <SectionTemplate template-name="Item Details">
-                <!-- THIS IS THE DEVICE SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="deviceData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ deviceData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ deviceData.device_cost }}</h1>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- THIS IS THE LAPTOP SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="laptopData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ laptopData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">CPU Type:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.cpu_type_id }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Hard Disk Capacity:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.hard_disk_capacity }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Memory Capacity:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.memory_capacity }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Processor Speed:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.processor_speed }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Processor Type:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.processor_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Computer Name:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.computer_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Mac Address:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.mac_address }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Operating System:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.operating_system }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Microsoft Office Version:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.microsoft_office_version }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Antivirus:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.antivirus }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Pdf:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.pdf_reader }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty Start Date:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.warranty_start_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty End Date:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.warranty_end_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Returned Date:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.return_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Manufactured Date:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.manufactured_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Memory Type:</h1>
-                            <h1 class="show_detail_body">{{ laptopData.memory_type }}</h1>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- THIS IS THE DESKTOP SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="desktopData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ desktopData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">CPU Type:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.cpu_type_id }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Hard Disk Capacity:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.hard_disk_capacity }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Memory Capacity:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.memory_capacity }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Processor Speed:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.processor_speed }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Processor Type:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.processor_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Computer Name:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.computer_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Mac Address:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.mac_address }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Operating System:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.operating_system }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Microsoft Office Version:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.microsoft_office_version }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Antivirus:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.antivirus }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Pdf:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.pdf_reader }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty Start Date:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.warranty_start_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty End Date:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.warranty_end_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Returned Date:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.return_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Manufactured Date:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.manufactured_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Memory Type:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.memory_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Form Factor:</h1>
-                            <h1 class="show_detail_body">{{ desktopData.form_factor }}</h1>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- THIS IS THE SERVER SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="serverData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ serverData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ serverData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ serverData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ serverData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ serverData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ serverData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ serverData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ serverData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ serverData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ serverData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ serverData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ serverData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ serverData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ serverData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ serverData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ serverData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ serverData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ serverData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ serverData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ serverData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">CPU Type:</h1>
-                            <h1 class="show_detail_body">{{ serverData.cpu_type_id }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Hard Disk Capacity:</h1>
-                            <h1 class="show_detail_body">{{ serverData.hard_disk_capacity }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Memory Capacity:</h1>
-                            <h1 class="show_detail_body">{{ serverData.memory_capacity }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Processor Speed:</h1>
-                            <h1 class="show_detail_body">{{ serverData.processor_speed }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Processor Type:</h1>
-                            <h1 class="show_detail_body">{{ serverData.processor_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Computer Name:</h1>
-                            <h1 class="show_detail_body">{{ serverData.computer_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Mac Address:</h1>
-                            <h1 class="show_detail_body">{{ serverData.mac_address }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Operating System:</h1>
-                            <h1 class="show_detail_body">{{ serverData.operating_system }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Microsoft Office Version:</h1>
-                            <h1 class="show_detail_body">{{ serverData.microsoft_office_version }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Antivirus:</h1>
-                            <h1 class="show_detail_body">{{ serverData.antivirus }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Pdf:</h1>
-                            <h1 class="show_detail_body">{{ serverData.pdf_reader }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty Start Date:</h1>
-                            <h1 class="show_detail_body">{{ serverData.warranty_start_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty End Date:</h1>
-                            <h1 class="show_detail_body">{{ serverData.warranty_end_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Returned Date:</h1>
-                            <h1 class="show_detail_body">{{ serverData.return_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Manufactured Date:</h1>
-                            <h1 class="show_detail_body">{{ serverData.manufactured_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Memory Type:</h1>
-                            <h1 class="show_detail_body">{{ serverData.memory_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Form Factor:</h1>
-                            <h1 class="show_detail_body">{{ serverData.form_factor }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Raid Type:</h1>
-                            <h1 class="show_detail_body">{{ serverData.raid_type }}</h1>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- THIS IS THE TABLET SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="tabletData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ tabletData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">IMEI Number:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.imei_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Operating System:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.operating_system }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Version:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.version }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Hard Disk Capacity:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.hard_disk_capacity }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Memory Capacity:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.memory_capacity }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty Start Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.warranty_start_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty End Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.warranty_end_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Returned Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.return_date }}</h1>
-                        </div>
-
-                    </div>
-
-                    <h1 class="text-2xl font-bold text-gray-500 [-webkit-text-stroke:1px_black] mt-8 mb-3">Bag Information</h1>
-
-                    <div v-if="tabletData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bag_brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bag_model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Ministry Number:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bag_ministry_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bag_delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assignment Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bag_assignment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bag_bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Bag Type:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bag_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Bag Fabric Type:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.bag_fabric_type }}</h1>
-                        </div>
-                    </div>
-
-                    <h1 class="text-2xl font-bold text-gray-500 [-webkit-text-stroke:1px_black] mt-8 mb-3">Adapter Information</h1>
-
-                    <div v-if="tabletData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.adapter_serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.adapter_brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.adapter_model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Ministry Number:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.adapter_ministry_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.adapter_delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assignment Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.adapter_assignment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ tabletData.adapter_bos_date }}</h1>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- THIS IS THE MOUSE KEYBOARD SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="mouseKeyboardData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Connection Type:</h1>
-                            <h1 class="show_detail_body">{{ mouseKeyboardData.connection_type }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE SCANNER SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="scannerData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ scannerData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Connection Type:</h1>
-                            <h1 class="show_detail_body">{{ scannerData.connection_type }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE SURGE PROTECTOR SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="surgeProtectorData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Number Of Outlets:</h1>
-                            <h1 class="show_detail_body">{{ surgeProtectorData.number_of_outlets }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE UPS SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="upsData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ upsData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ upsData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ upsData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ upsData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ upsData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ upsData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ upsData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ upsData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ upsData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ upsData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ upsData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ upsData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ upsData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ upsData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ upsData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ upsData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ upsData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ upsData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ upsData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ upsData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Number Of Outlets:</h1>
-                            <h1 class="show_detail_body">{{ upsData.number_of_outlets }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Return Date:</h1>
-                            <h1 class="show_detail_body">{{ upsData.return_date }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE SPEAKER SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="speakerData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ speakerData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Number Of Speakers:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.number_of_speakers }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Return Date:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.return_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Speaker Type:</h1>
-                            <h1 class="show_detail_body">{{ speakerData.speaker_type }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE WEBCAM SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="webcamData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ webcamData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ webcamData.device_cost }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE OTHER EQUIPMENT SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="otherEquipmentData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Equipment type:</h1>
-                            <h1 class="show_detail_body">{{ otherEquipmentData.equipment_type }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE PRINTER SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="printerData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ printerData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ printerData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ printerData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ printerData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ printerData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ printerData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ printerData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ printerData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ printerData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ printerData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ printerData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ printerData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ printerData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ printerData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ printerData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ printerData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ printerData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ printerData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ printerData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ printerData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">IP Address ID:</h1>
-                            <h1 class="show_detail_body">{{ printerData.ip_address }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Feature ID:</h1>
-                            <h1 class="show_detail_body">{{ printerData.feature }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Connection Type:</h1>
-                            <h1 class="show_detail_body">{{ printerData.connection_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Return Date:</h1>
-                            <h1 class="show_detail_body">{{ printerData.return_date }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE PROJECTOR SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="projectorData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ projectorData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ projectorData.device_cost }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE CRAV SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="cravData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ cravData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ cravData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ cravData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ cravData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ cravData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ cravData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ cravData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ cravData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ cravData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ cravData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ cravData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ cravData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ cravData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ cravData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ cravData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ cravData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ cravData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ cravData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ cravData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ cravData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Name:</h1>
-                            <h1 class="show_detail_body">{{ cravData.name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">IP Address ID:</h1>
-                            <h1 class="show_detail_body">{{ cravData.ip_address }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Mac Address:</h1>
-                            <h1 class="show_detail_body">{{ cravData.mac_address }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Meeting Room:</h1>
-                            <h1 class="show_detail_body">{{ cravData.meeting_room }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Equipment Type:</h1>
-                            <h1 class="show_detail_body">{{ cravData.equipment_type }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE NETWORK SWITCH SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="networkSwitchData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty Start Date:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.warranty_start_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty End Date:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.warranty_end_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Return Date:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.return_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Mac Address:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.mac_address }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Size:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.device_size }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Firmware Type:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.firmware_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Firmware Version:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.firmware_version }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Name:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.device_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Manufactured Date:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.manufactured_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Physical Location:</h1>
-                            <h1 class="show_detail_body">{{ networkSwitchData.physical_location }}</h1>
-                        </div>
-                            
-                    </div>
-                </div>
-
-                <!-- THIS IS THE MONITOR SECTION -->
-                <div class="max-h-[75vh] overflow-y-auto pr-2">
-                    <div v-if="monitorData" class="grid grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <h1 class="show_detail_head">Category: </h1>
-                            <h1 class="show_detail_body">{{ monitorData.category }}</h1>
-                        </div>
-
-                        <div class="flex">
-                            <h1 class="show_detail_head">Brand:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.brand }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Model:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.model }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Serial Number:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.serial_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Inventory Number:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.inventory_number }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Delivery Date:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.delivery_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployment Date:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.deployment_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Status:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.status_description }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Division:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.division_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Client Name:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.client_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Added By:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.added_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Last Updated By:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.last_updated_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Repaired Date:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.repaired_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS Date:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.bos_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">BOS By:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.bos_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Deployed By:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.deployed_by }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Assigned On:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.assigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Unassigned On:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.unassigned_on }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Supplier Name:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.supplier_name }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Device Cost:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.device_cost }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty Start Date:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.warranty_start_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Warranty End Date:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.warranty_end_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Return Date:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.return_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Manufactured Date:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.manufactured_date }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Monitor Size:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.monitor_size }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Monitor Type:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.monitor_type }}</h1>
-                        </div>
-                        <div class="flex">
-                            <h1 class="show_detail_head">Monitor Function:</h1>
-                            <h1 class="show_detail_body">{{ monitorData.monitor_function }}</h1>
-                        </div>
-                    </div>
-                </div>
-            </SectionTemplate>
-        </div>
-    </div>
+    
 
     <!-- THIS IS THE MODAL TO SHOW DEVICE COMMENTS -->
      <div v-show="showCommentModal" @close="closeCommentModal" class="fixed inset-0 z-60 bg-black/70 flex justify-center items-start">
@@ -3167,13 +1220,610 @@
         </div>
     </div>
 
+    <!-- THIS IS THE SECTION TO SHOW DEVICE DETAILS -->
+    <div ref="deviceDetailsSection" class="scroll-mt-24">
+        <SectionTemplate v-show="showDeviceDetails" template-name="Device Details">
+            <!-- THIS IS THE DEVICE SECTION -->
+            <div class="">
+                <div v-if="deviceData" class="grid grid-cols-2 gap-x-6 gap-y-2">
+                    <div class="flex">
+                        <h1 class="show_detail_head">Category: </h1>
+                        <h1 class="show_detail_body">{{ deviceData.category }}</h1>
+                    </div>
+
+                    <div class="flex">
+                        <h1 class="show_detail_head">Brand:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.brand }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Model:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.model }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Serial Number:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.serial_number }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Inventory Number:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.inventory_number }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Delivery Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.delivery_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Deployment Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.deployment_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Status:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.status_description }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Parish:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.parish_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Location Type:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.ltype_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Location:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.location_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Division:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.division_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Branch:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.branch_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Client Name:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.client_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Added By:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.added_by }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Last Updated By:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.last_updated_by }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Repaired Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.repaired_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">BOS Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.bos_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">BOS By:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.bos_by }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Return Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.return_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Deployed By:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.deployed_by }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Assigned On:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.assigned_on }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Unassigned On:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.unassigned_on }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Supplier Name:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.supplier_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Device Cost:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.device_cost }}</h1>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- THIS IS THE LAPTOP SECTION -->
+            <div class="pt-2">
+                <div v-if="deviceCategory === 'Laptop' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                    <div class="flex">
+                        <h1 class="show_detail_head">CPU Type:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.cpu_type_id }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Hard Disk Capacity:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.hard_disk_capacity }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Memory Capacity:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.memory_capacity }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Processor Speed:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.processor_speed }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Processor Type:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.processor_type }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Computer Name:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.computer_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Mac Address:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.mac_address }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Operating System:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.operating_system }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Microsoft Office Version:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.microsoft_office_version }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Antivirus:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.antivirus }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Pdf:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.pdf_reader }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Warranty Start Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.warranty_start_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Warranty End Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.warranty_end_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Manufactured Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.manufactured_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Memory Type:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.memory_type }}</h1>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- THIS IS THE DESKTOP SECTION -->
+            <div v-if="deviceCategory === 'Desktop' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">CPU Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.cpu_type }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Hard Disk Capacity:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.hard_disk_capacity }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Memory Capacity:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.memory_capacity }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Processor Speed:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.processor_speed }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Processor Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.processor_type }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Computer Name:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.computer_name }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Mac Address:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.mac_address }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Operating System:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.operating_system }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Microsoft Office Version:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.microsoft_office_version }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Antivirus:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.antivirus }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Pdf:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.pdf_reader }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Warranty Start Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.warranty_start_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Warranty End Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.warranty_end_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Manufactured Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.manufactured_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Memory Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.memory_type }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Form Factor:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.form_factor }}</h1>
+                </div>
+
+            </div>
+
+
+
+            <!-- THIS IS THE SERVER SECTION -->
+            <div class="pt-2">
+                <div v-if="deviceCategory === 'Server' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                    <div class="flex">
+                        <h1 class="show_detail_head">CPU Type:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.cpu_type_id }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Hard Disk Capacity:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.hard_disk_capacity }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Memory Capacity:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.memory_capacity }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Processor Speed:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.processor_speed }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Processor Type:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.processor_type }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Computer Name:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.computer_name }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Mac Address:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.mac_address }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Operating System:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.operating_system }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Microsoft Office Version:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.microsoft_office_version }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Antivirus:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.antivirus }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Pdf:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.pdf_reader }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Warranty Start Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.warranty_start_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Warranty End Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.warranty_end_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Manufactured Date:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.manufactured_date }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Memory Type:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.memory_type }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Form Factor:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.form_factor }}</h1>
+                    </div>
+                    <div class="flex">
+                        <h1 class="show_detail_head">Raid Type:</h1>
+                        <h1 class="show_detail_body">{{ deviceData.raid_type }}</h1>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- THIS IS THE TABLET SECTION -->
+            <div v-if="deviceCategory === 'Tablet' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">IMEI Number:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.imei_number }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Operating System:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.operating_system }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Version:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.version }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Hard Disk Capacity:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.hard_disk_capacity }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Memory Capacity:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.memory_capacity }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Warranty Start Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.warranty_start_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Warranty End Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.warranty_end_date }}</h1>
+                </div>
+            </div>
+
+            <div v-if="deviceCategory === 'Tablet' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Brand:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.bag_brand }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Model:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.bag_model }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Ministry Number:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.bag_ministry_number }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Delivery Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.bag_delivery_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Assignment Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.bag_assignment_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">BOS Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.bag_bos_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Bag Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.bag_type }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Bag Fabric Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.bag_fabric_type }}</h1>
+                </div>
+            </div>
+
+            <div v-if="deviceCategory === 'Tablet' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Serial Number:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.adapter_serial_number }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Brand:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.adapter_brand }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Model:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.adapter_model }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Ministry Number:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.adapter_ministry_number }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Delivery Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.adapter_delivery_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Assignment Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.adapter_assignment_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">BOS Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.adapter_bos_date }}</h1>
+                </div>
+            </div>
+
+
+
+            <!-- THIS IS THE MOUSE KEYBOARD SECTION -->
+            <div v-if="(deviceCategory === 'Mouse' || deviceCategory === 'Keyboard') && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Connection Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.connection_type }}</h1>
+                </div>
+                    
+            </div>
+
+            <!-- THIS IS THE SCANNER SECTION -->
+            <div v-if="deviceCategory === 'Scanner' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Connection Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.connection_type }}</h1>
+                </div>
+                    
+            </div>
+
+            <!-- THIS IS THE SURGE PROTECTOR SECTION -->
+            <div v-if="deviceCategory === 'Surge Protector' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Number Of Outlets:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.number_of_outlets }}</h1>
+                </div>
+                    
+            </div>
+
+            <!-- THIS IS THE UPS SECTION -->
+             <div v-if="deviceCategory === 'UPS' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Number Of Outlets:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.number_of_outlets }}</h1>
+                </div>
+            </div>
+
+            <!-- THIS IS THE SPEAKER SECTION -->
+            <div v-if="deviceCategory === 'Speaker' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Number Of Speakers:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.number_of_speakers }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Speaker Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.speaker_type }}</h1>
+                </div>
+                    
+            </div>
+
+            <!-- THIS IS THE OTHER EQUIPMENT SECTION -->
+            <div v-if="deviceCategory === 'Other Equipment' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Equipment type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.equipment_type }}</h1>
+                </div>
+                    
+            </div>
+
+            <!-- THIS IS THE PRINTER SECTION -->
+            <div v-if="deviceCategory === 'Printer' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">IP Address ID:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.ip_address }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Feature ID:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.feature }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Connection Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.connection_type }}</h1>
+                </div>
+            </div>
+
+            <!-- THIS IS THE CRAV SECTION -->
+            <div v-if="deviceCategory === 'CRAV' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Name:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.name }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">IP Address ID:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.ip_address }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Mac Address:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.mac_address }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Meeting Room:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.meeting_room }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Equipment Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.equipment_type }}</h1>
+                </div>
+                    
+            </div>
+
+            <!-- THIS IS THE NETWORK SWITCH SECTION -->
+            <div v-if="deviceCategory === 'Network Switch' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Warranty Start Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.warranty_start_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Warranty End Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.warranty_end_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Mac Address:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.mac_address }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Device Size:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.device_size }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Firmware Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.firmware_type }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Firmware Version:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.firmware_version }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Device Name:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.device_name }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Manufactured Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.manufactured_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Physical Location:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.physical_location }}</h1>
+                </div>
+                    
+            </div>
+
+            <!-- THIS IS THE MONITOR SECTION -->
+            <div v-if="deviceCategory === 'Monitor' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
+                <div class="flex">
+                    <h1 class="show_detail_head">Warranty Start Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.warranty_start_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Warranty End Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.warranty_end_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Manufactured Date:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.manufactured_date }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Monitor Size:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.monitor_size }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Monitor Type:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.monitor_type }}</h1>
+                </div>
+                <div class="flex">
+                    <h1 class="show_detail_head">Monitor Function:</h1>
+                    <h1 class="show_detail_body">{{ deviceData.monitor_function }}</h1>
+                </div>
+            </div>
+            
+        </SectionTemplate>
+    </div>
 
 
 </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import axios from 'axios';
 import SectionTemplate from '../SectionTemplate.vue';
@@ -3203,7 +1853,12 @@ const paginatedItems = computed(() => {
 
 // DEVICE DETAIL REFS ///////////////////////////////////////////
 const showDeviceModal = ref(false);
+const showDeviceDetails = ref(false);
+
 const deviceData = ref();
+const deviceCategory = ref();
+const deviceDetailsSection = ref(null);
+
 const laptopData = ref();
 const desktopData = ref();
 const serverData = ref();
@@ -3502,6 +2157,8 @@ async function get_items() {
     console.log("Status: ", status_search.value);
     console.log("Division: ", division_search.value);
 
+    showDeviceDetails.value = false;
+
     try {
         const token = localStorage.getItem('token');
         const response = await axios.get(`${useBaseURLComposable()}get-items/`, {
@@ -3725,8 +2382,63 @@ async function updateDevice() {
 }
 
 //THIS IS THE VIEW SECTION///////////////////////////////////////////////////////////////////////////////
+async function openDeviceDetails(serial_number, category) {
+    console.log(serial_number)
+
+    // Clear previous device information
+    deviceData.value = null;
+
+
+    deviceCategory.value = category;
+    console.log("Device Category: ", deviceCategory.value)
+
+    console.log("Opening Device Details")
+
+    try {
+        const response = await axios.get(`${useBaseURLComposable()}get-item-sn/`, {
+            params: {
+                serial_number: serial_number,
+                category: category,
+            }
+        });
+
+        console.log(response.data)
+
+        deviceData.value = response.data
+
+        for (const item in deviceData.value) {
+            if (deviceData.value[item] == undefined || deviceData.value[item] == null) {
+                deviceData.value[item] = "";
+            }
+        }
+
+        // Show the Device Details section
+        showDeviceDetails.value = true;
+
+        // Wait for Vue to update the DOM
+        await nextTick();
+
+        // Smoothly scroll to Device Details
+        deviceDetailsSection.value?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+        
+    } catch (error) {
+        if (error.response?.status === 401) {
+            this.$router.push({name: 'UserLogin' });
+            alert("Please Log In Again")
+        }
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to find item. Check console.");
+    }
+}
+
 function closeDeviceModal() {
     showDeviceModal.value = false;
+    showDeviceDetails.value = false;
+
     deviceData.value = null;
     laptopData.value = null;
     desktopData.value = null;
@@ -3749,6 +2461,7 @@ function closeDeviceModal() {
 async function openDeviceModal(serial_number, category) {
     console.log(serial_number)
     showDeviceModal.value = true;
+    showDeviceDetails.value = true;
     console.log("Opening Device Modal")
 
     try {
