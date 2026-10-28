@@ -365,7 +365,7 @@
                       <td class="px-6 py-4">{{ item.serial_number }}</td>
                       <td class="px-6 py-4">{{ item.status_description }}</td>
                       <td class="px-6 py-4">{{ item.delivery_date }}</td>
-                      <td class="px-6 py-4">{{ item.client_id }}</td>
+                      <td class="px-6 py-4">{{ item.client_name }}</td>
                     </tr>
                   </tbody>
                 </table>

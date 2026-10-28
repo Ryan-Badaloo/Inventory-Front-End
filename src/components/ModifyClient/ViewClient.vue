@@ -1,12 +1,13 @@
 <template>
     <SectionTemplate template-name="View Clients">
-        <div>
+        <div class="w-full min-w-0">
             <SearchBar v-model="name" />
         </div>
 
 
-        <div v-if="clients.length > 0" class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+        <div v-if="clients.length > 0" class="w-full min-w-0 max-w-full">
+            <div class="w-full max-w-full overflow-x-auto">
+                <table class="w-full min-w-max text-sm text-left rtl:text-right text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3">
@@ -25,13 +26,22 @@
                                 Position
                             </th>
                             <th scope="col" class="px-6 py-3">
+                                Parish
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Location
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Location Type
+                            </th>
+                            <th scope="col" class="px-6 py-3">
                                 Division
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Date Created
+                                Branch
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Last Updated By
+                                Date Created
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Added By
@@ -39,8 +49,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="client in paginatedItems" :key="client.client_id
-" class="bg-white border-bborder-gray-200 hover:bg-gray-200">
+                        <tr
+                            v-for="client in paginatedItems"
+                            :key="client.client_id"
+                            @click="toggleRow(client.client_id)"
+                            :class="[
+                                'border-b border-gray-200 cursor-pointer transition-colors duration-150',
+                                selectedRows.has(client.client_id)
+                                    ? 'bg-blue-200 hover:bg-blue-300'
+                                    : 'bg-white hover:bg-gray-200'
+                            ]"
+                        >                            
                             <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ client.firstname }}
                             </td>
@@ -57,13 +76,22 @@
                                 {{ client.position }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ client.division_id }}
+                                {{ client.parish_name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ client.location_name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ client.ltype_name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ client.division_name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ client.branch_name }}
                             </td>
                             <td class="px-6 py-4">
                                 {{ client.date_created }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ client.last_updated }}
                             </td>
                             <td class="px-6 py-4">
                                 {{ client.added_by }}
@@ -72,21 +100,22 @@
 
                     </tbody>
                 </table>
-
-                <!-- Pagination component -->
-                <div class="pagination-overall-container">
-                    <vue-awesome-paginate
-                    :total-items="clients.length"
-                    :items-per-page="itemsPerPage"
-                    :max-pages-shown="10"
-                    :show-ending-buttons="true"
-                    :show-breakpoint-buttons="false"
-                    v-model="currentPage"
-                    paginate-buttons-class="paginate-buttons"
-                    active-page-class="active-page"
-                    />
-                </div>
             </div>
+
+            <!-- Pagination component -->
+            <div class="pagination-overall-container">
+                <vue-awesome-paginate
+                :total-items="clients.length"
+                :items-per-page="itemsPerPage"
+                :max-pages-shown="10"
+                :show-ending-buttons="true"
+                :show-breakpoint-buttons="false"
+                v-model="currentPage"
+                paginate-buttons-class="paginate-buttons"
+                active-page-class="active-page"
+                />
+            </div>
+        </div>
     </SectionTemplate>
 </template>
 
@@ -113,6 +142,20 @@ const paginatedItems = computed(() => {
   const end = start + itemsPerPage;
   return clients.value.slice(start, end);
 });
+
+// Highlight Rows
+const selectedRows = ref(new Set())
+
+function toggleRow(clientId) {
+    if (selectedRows.value.has(clientId)) {
+        selectedRows.value.delete(clientId)
+    } else {
+        selectedRows.value.add(clientId)
+    }
+}
+
+
+
 
 let debounceTimeout = null
 

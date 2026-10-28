@@ -18,7 +18,6 @@
 <script setup>
 import { ref } from 'vue';
 import SideBar from '@/components/SideBar.vue';
-import SystemStatus from '@/components/Settings/SystemStatus.vue';
 import CPUType from '@/components/Settings/CPUType.vue';
 import ConnectionType from '@/components/Settings/ConnectionType.vue';
 import PrinterFeature from '@/components/Settings/PrinterFeature.vue';

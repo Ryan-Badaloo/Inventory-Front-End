@@ -1,7 +1,6 @@
 <template>
     <SectionTemplate templateName="Settings">
         <div class="p-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 gap-y-8 justify-items-center">
-            <SelectItemButton @click="selectSystemStatus()" buttonText="Edit System Status" icon="person" :isActive="deviceActive==='system_status'"/>
             <SelectItemButton @click="selectCPUType()" buttonText="Edit CPU Type" icon="person" :isActive="deviceActive==='cpu_type'"/>
             <SelectItemButton @click="selectConnectionType()" buttonText="Edit Connection Type" icon="person" :isActive="deviceActive==='connection_type'"/>
             <SelectItemButton @click="selectPrinterFeature()" buttonText="Edit Printer Feature" icon="person" :isActive="deviceActive==='printer_feature'"/>

@@ -1,7 +1,7 @@
 <template>
-  <div class="flex">
+  <div class="flex w-full">
     <SideBar />
-    <div class="w-full">
+    <div class="flex-1 min-w-0">
         <ModifyClient @device-selected="selectedDevice = $event" />
 
         <Transition name="fade" mode="out-in">

@@ -304,7 +304,7 @@
                                     comment
                                     </button>
 
-                                    <button @click="openUpdateModal(item.serial_number, item.category)" class="material-icons !text-3xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
+                                    <button @click="openUpdateSection(item.serial_number, item.category)" class="material-icons !text-3xl text-gray-500 hover:text-blue-500 cursor-pointer"> 
                                     construction
                                     </button>
 
@@ -1818,6 +1818,822 @@
         </SectionTemplate>
     </div>
 
+    <!-- THIS IS THE SECTION TO UPDATE DEVICES -->
+    <div ref="deviceUpdateSection" class="scroll-mt-24">
+        <SectionTemplate v-show="showUpdateSection" template-name="Update Device">
+            <form @submit.prevent="updateDevice" class="">
+                <!-- THIS IS THE BASE -->
+                <div class="grid grid-cols-2 gap-x-6">
+                    <TextField id="brand" labelFor="brand" fieldName="Brand: " v-model="brand"/>
+
+                    <TextField id="model" labelFor="model" fieldName="Model: " v-model="model"/>
+
+                    <TextField id="inventory_number" labelFor="inventory_number" fieldName="Inventory Number: " v-model="inventory_number"/>
+
+                    <!-- delivery date -->
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <VueDatePicker 
+                            v-model="delivery_date" 
+                            :enable-time-picker="false" 
+                            :input-class-name="'p-0 bg-green-500'"
+                            placeholder="Enter in the format MM/DD/YYY"
+                            text-input 
+                            :class="[date_field_class]">
+                        </VueDatePicker>
+                        <TextLabel labelFor="delivery_date" fieldName="Delivery Date: "/>
+                    </div>
+
+                    <!-- deployment date -->
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <VueDatePicker 
+                            v-model="deployment_date" 
+                            :enable-time-picker="false" 
+                            :input-class-name="'p-0 bg-green-500'"
+                            placeholder="Enter in the format MM/DD/YYY"
+                            text-input 
+                            :class="[date_field_class]">
+                        </VueDatePicker>
+                        <TextLabel labelFor="deployment_date" fieldName="Deployment Date: "/>
+                    </div>
+
+                    <!-- BOS Date date -->
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <VueDatePicker 
+                            v-model="bos_date" 
+                            :enable-time-picker="false" 
+                            :input-class-name="'p-0 bg-green-500'"
+                            placeholder="Enter in the format MM/DD/YYY"
+                            text-input 
+                            :class="[date_field_class]">
+                        </VueDatePicker>
+                        <TextLabel labelFor="bos_date" fieldName="BOS Date: "/>
+                    </div>
+
+                    <TextField id="supplier_name" labelFor="supplier_name" fieldName="Supplier Name: " v-model="supplier_name"/>
+
+                    <TextField id="device_cost" labelFor="device_cost" fieldName="Device Cost: " v-model="device_cost"/>
+
+                    <!-- pdf reader -->
+                    <!-- <div class="flex flex-row-reverse mb-6 group">
+                        <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="file_input" type="file" multiple>
+                        <TextLabel labelFor="file_input" fieldName="Upload File: "/>
+                    </div> -->
+
+                    <!-- pdf reader -->
+                    <!-- <div class="flex flex-row-reverse mb-6 group">
+                        <input class="basis-2/3 ml-4 block w-full rounded-md border border-gray-300 focus:outline-none focus:ring-0 shadow-sm peer" id="file_input" type="file" multiple>
+                        <TextLabel labelFor="file_input" fieldName="Upload File: "/>
+                    </div> -->
+
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="status" :class="[option_field_class]" class="bg-white" v-model.number="status">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="status in statuses" :key="status.status_id" :value=status.status_id class="text-black">{{ status.status_description }}</option>
+
+                        </select>
+                        <TextLabel labelFor="status" fieldName="System Status: "/>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE LAPTOP SECTION -->
+                <div v-if="isLaptop == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="hard_disk_capacity" labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="hard_disk_capacity"/>
+
+                        <TextField id="memory_capacity" labelFor="memory_capacity" fieldName="Memory Capacity: " v-model="memory_capacity"/>
+
+                        <!-- warranty start date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_start_date" 
+                                :enable-time-picker="false" 
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_start_date" fieldName="Warranty Start Date: "/>
+                        </div>
+
+                        <!-- warranty end date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_end_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_end_date" fieldName="Warranty End Date: "/>
+                        </div>
+
+                        <!-- returned date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="mac_address" labelFor="mac_address" fieldName="Mac Address: " v-model="mac_address"/>
+                    </div>
+
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="manufactured_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="manufactured_date" fieldName="Manufactured Date: "/>
+                        </div>
+
+                        <TextField id="memory_type" labelFor="memory_type" fieldName="Memory Type: " v-model="memory_type"/>
+
+
+                        <TextField id="operating_system" labelFor="operating_system" fieldName="Operating System: " v-model="operating_system"/>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="cpu_type" :class="[option_field_class]" class="bg-white" v-model="cpu_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="cpu_type in cpu_types" :key="cpu_type.cpu_type_id" :value=cpu_type.cpu_type_id class="text-black">{{ cpu_type.cpu_type_description }}</option>
+                            </select>
+                            <TextLabel labelFor="cpu_type" fieldName="CPU Type:" />
+                        </div>
+
+                        <TextField id="processor_speed" labelFor="processor_speed" fieldName="Processor Speed: " v-model="processor_speed"/>
+
+                        <TextField id="processor_type" labelFor="processor_type" fieldName="Processor Type: " v-model="processor_type"/>
+
+                        <TextField id="computer_name" labelFor="computer_name" fieldName="Computer Name: " v-model="computer_name"/>
+
+                        <TextField id="ms_office_version" labelFor="ms_office_version" fieldName="MS Office Version: " v-model="ms_office_version"/>
+
+                        <TextField id="antivirus" labelFor="antivirus" fieldName="Antivirus: " v-model="antivirus"/>
+
+                    </div>
+                </div>
+
+                <!-- THIS IS THE DESKTOP SECTION -->
+                <div v-if="isDesktop == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="hard_disk_capacity" labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="hard_disk_capacity"/>
+
+                        <TextField id="memory_capacity" labelFor="memory_capacity" fieldName="Memory Capacity: " v-model="memory_capacity"/>
+
+                        <!-- warranty start date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_start_date" 
+                                :enable-time-picker="false" 
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_start_date" fieldName="Warranty Start Date: "/>
+                        </div>
+
+                        <!-- warranty end date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_end_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_end_date" fieldName="Warranty End Date: "/>
+                        </div>
+
+                        <!-- returned date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="mac_address" labelFor="mac_address" fieldName="Mac Address: " v-model="mac_address"/>
+                    </div>
+
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="manufactured_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="manufactured_date" fieldName="Manufactured Date: "/>
+                        </div>
+
+                        <TextField id="memory_type" labelFor="memory_type" fieldName="Memory Type: " v-model="memory_type"/>
+
+
+                        <TextField id="operating_system" labelFor="operating_system" fieldName="Operating System: " v-model="operating_system"/>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="cpu_type" :class="[option_field_class]" class="bg-white" v-model="cpu_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="cpu_type in cpu_types" :key="cpu_type.cpu_type_id" :value=cpu_type.cpu_type_id class="text-black">{{ cpu_type.cpu_type_description }}</option>
+                            </select>
+                            <TextLabel labelFor="cpu_type" fieldName="CPU Type:" />
+                        </div>
+
+                        <TextField id="processor_speed" labelFor="processor_speed" fieldName="Processor Speed: " v-model="processor_speed"/>
+
+                        <TextField id="processor_type" labelFor="processor_type" fieldName="Processor Type: " v-model="processor_type"/>
+
+                        <TextField id="computer_name" labelFor="computer_name" fieldName="Computer Name: " v-model="computer_name"/>
+
+                        <TextField id="ms_office_version" labelFor="ms_office_version" fieldName="MS Office Version: " v-model="ms_office_version"/>
+
+                        <TextField id="antivirus" labelFor="antivirus" fieldName="Antivirus: " v-model="antivirus"/>
+
+                    </div>
+
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="form_factor" :class="[option_field_class]" class="bg-white" v-model.number="form_factor">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="form_factor in form_factors" :key="form_factor.form_factor_id" :value=form_factor.form_factor_id class="text-black">{{ form_factor.form_factor_description }}</option>
+                            </select>
+                            <TextLabel labelFor="form_factor" fieldName="Device Form Factor" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE SERVER SECTION -->
+                <div v-if="isServer == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="hard_disk_capacity" labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="hard_disk_capacity"/>
+
+                        <TextField id="memory_capacity" labelFor="memory_capacity" fieldName="Memory Capacity: " v-model="memory_capacity"/>
+
+                        <!-- warranty start date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_start_date" 
+                                :enable-time-picker="false" 
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_start_date" fieldName="Warranty Start Date: "/>
+                        </div>
+
+                        <!-- warranty end date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_end_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_end_date" fieldName="Warranty End Date: "/>
+                        </div>
+
+                        <!-- returned date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="mac_address" labelFor="mac_address" fieldName="Mac Address: " v-model="mac_address"/>
+                    </div>
+
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="manufactured_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="manufactured_date" fieldName="Manufactured Date: "/>
+                        </div>
+
+                        <TextField id="memory_type" labelFor="memory_type" fieldName="Memory Type: " v-model="memory_type"/>
+
+
+                        <TextField id="operating_system" labelFor="operating_system" fieldName="Operating System: " v-model="operating_system"/>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="cpu_type" :class="[option_field_class]" class="bg-white" v-model="cpu_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="cpu_type in cpu_types" :key="cpu_type.cpu_type_id" :value=cpu_type.cpu_type_id class="text-black">{{ cpu_type.cpu_type_description }}</option>
+                            </select>
+                            <TextLabel labelFor="cpu_type" fieldName="CPU Type:" />
+                        </div>
+
+                        <TextField id="processor_speed" labelFor="processor_speed" fieldName="Processor Speed: " v-model="processor_speed"/>
+
+                        <TextField id="processor_type" labelFor="processor_type" fieldName="Processor Type: " v-model="processor_type"/>
+
+                        <TextField id="computer_name" labelFor="computer_name" fieldName="Computer Name: " v-model="computer_name"/>
+
+                        <TextField id="ms_office_version" labelFor="ms_office_version" fieldName="MS Office Version: " v-model="ms_office_version"/>
+
+                        <TextField id="antivirus" labelFor="antivirus" fieldName="Antivirus: " v-model="antivirus"/>
+
+                    </div>
+
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="form_factor" :class="[option_field_class]" class="bg-white" v-model.number="form_factor">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="form_factor in form_factors" :key="form_factor.form_factor_id" :value=form_factor.form_factor_id class="text-black">{{ form_factor.form_factor_description }}</option>
+                            </select>
+                            <TextLabel labelFor="form_factor" fieldName="Device Form Factor" />
+                        </div>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="raid_type" :class="[option_field_class]" class="bg-white" v-model.number="raid_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="raid_type in raid_types" :key="raid_type.raid_type_id" :value=raid_type.raid_type_id class="text-black">{{ raid_type.raid_type_description }}</option>
+                            </select>
+                            <TextLabel labelFor="raid_type" fieldName="Device Raid Type" />
+                        </div>
+
+                        <TextField id="number_hard_drive" labelFor="number_hard_drive" fieldName="Number Of Hard Drives: " v-model="number_hard_drive"/>
+
+                        <TextField id="number_power_supply" labelFor="number_power_supply" fieldName="Number Of Power Supply: " v-model="number_power_supply"/>
+
+                    </div>
+
+                </div>
+
+                <!-- THIS IS THE TABLET SECTION -->
+                <div v-if="isTablet == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="hard_disk_capacity" labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="hard_disk_capacity"/>
+
+                        <TextField id="memory_capacity" labelFor="memory_capacity" fieldName="Memory Capacity: " v-model="memory_capacity"/>
+
+                        <!-- warranty start date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_start_date" 
+                                :enable-time-picker="false" 
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_start_date" fieldName="Warranty Start Date: "/>
+                        </div>
+
+                        <!-- warranty end date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_end_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_end_date" fieldName="Warranty End Date: "/>
+                        </div>
+
+                        <!-- returned date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+                    </div>
+
+
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="device_size" labelFor="device_size" fieldName="Device Size: " v-model="device_size"/>
+
+                        <TextField id="operating_system" labelFor="operating_system" fieldName="Operating System: " v-model="operating_system"/>
+
+                        <TextField id="imei_number" labelFor="imei_number" fieldName="IMEI Number: " v-model="imei_number"/>
+
+                        <TextField id="version" labelFor="version" fieldName="Version: " v-model="version"/>
+
+                    </div>
+                </div>
+
+                <!-- THIS IS THE MOUSE SECTION -->
+                <div v-if="isMouseKeyboard == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="connection_type" :class="[option_field_class]" class="bg-white" v-model.number="connection_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="ctype in connection_types" :key="ctype.ctype_id" :value=ctype.ctype_id class="text-black">{{ ctype.ctype_description }}</option>
+                            </select>
+                            <TextLabel labelFor="connection_type" fieldName="Connection Type: "/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE SCANNER SECTION -->
+                <div v-if="isScanner == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="mac_address" labelFor="mac_address" fieldName="Mac Address: " v-model="mac_address"/>
+
+                        <TextField id="ip_address" labelFor="ip_address" fieldName="IP Address: " v-model="ip_address"/>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="connection_type" :class="[option_field_class]" class="bg-white" v-model.number="connection_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="ctype in connection_types" :key="ctype.ctype_id" :value=ctype.ctype_id class="text-black">{{ ctype.ctype_description }}</option>
+                            </select>
+                            <TextLabel labelFor="connection_type" fieldName="Connection Type: "/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE SURGE PROTECTOR SECTION -->
+                <div v-if="isSurgeProtector == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="number_outlets" labelFor="number_outlets" fieldName="Number Of Outlets: " v-model="number_outlets"/>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE UPS SECTION -->
+                <div v-if="isUPS == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="number_outlets" labelFor="number_outlets" fieldName="Number Of Outlets: " v-model="number_outlets"/>
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE SPEAKER SECTION -->
+                <div v-if="isSpeaker == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="speaker_type" :class="[option_field_class]" class="bg-white" v-model.number="speaker_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="speaker_type in speaker_types" :key="speaker_type.speaker_type_id" :value=speaker_type.speaker_type_id class="text-black">{{ speaker_type.speaker_type_description }}</option>
+                            </select>
+                            <TextLabel labelFor="speaker_type" fieldName="Speaker Type: "/>
+                        </div>
+
+                        <TextField id="number_speakers" labelFor="number_speakers" fieldName="Number Of Speakers: " v-model="number_speakers"/>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE OTHER EQUIPMENT SECTION -->
+                <div v-if="isOtherEquipment == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="other_equipment_type" labelFor="other_equipment_type" fieldName="Equipment Type: " v-model="other_equipment_type"/>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE PRINTER SECTION -->
+                <div v-if="isPrinter == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <!-- returned date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-6">
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="printer_features" :class="[option_field_class]" v-model.number="printer_features">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="feature in features" :key="feature.feature_id" :value=feature.feature_id class="text-black">{{ feature.feature_description }}</option>
+
+                            </select>
+                            <TextLabel labelFor="printer_features" fieldName="Features: "/>
+                        </div>
+
+                        <TextField id="ip_address" labelFor="ip_address" fieldName="IP Address: " v-model="ip_address"/>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="connection_type" :class="[option_field_class]" v-model.number="connection_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="ctype in connection_types" :key="ctype.ctype_id" :value=ctype.ctype_id class="text-black">{{ ctype.ctype_description }}</option>
+
+                            </select>
+                            <TextLabel labelFor="connection_type" fieldName="Connection Type: "/>
+                        </div>
+
+                    </div>                
+                </div>
+
+                <!-- THIS IS THE CRAV SECTION -->
+                <div v-if="isCRAV == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="crav_equipment_type" :class="[option_field_class]" class="bg-white" v-model.number="crav_equipment_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="crav_equipment_type in crav_equipment_types" :key="crav_equipment_type.crav_equipment_type_id" :value=crav_equipment_type.crav_equipment_type_id class="text-black">{{ crav_equipment_type.crav_equipment_type_description }}</option>
+
+                            </select>
+                            <TextLabel labelFor="crav_equipment_type" fieldName="Equipment Type: "/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="name" labelFor="name" fieldName="Device Name: " v-model="name"/>
+
+                        <TextField id="mac_address" labelFor="mac_address" fieldName="Mac Address: " v-model="mac_address"/> 
+
+                        <TextField id="ip_address" labelFor="ip_address" fieldName="IP Address: " v-model="ip_address"/>  
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="meeting_room" :class="[option_field_class]" class="bg-white" v-model="meeting_room">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="meeting_room in meeting_rooms" :key="meeting_room.meeting_room_id" :value=meeting_room.meeting_room_id class="text-black">{{ meeting_room.meeting_room_description }}</option>
+
+                            </select>
+                            <TextLabel labelFor="meeting_room" fieldName="Meeting Room: "/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE NETWORK SWITCH SECTION -->
+                <div v-if="isNetworkSwitch == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+
+
+                        <!-- warranty start date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_start_date" 
+                                :enable-time-picker="false" 
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_start_date" fieldName="Warranty Start Date: "/>
+                        </div>
+
+                        <!-- warranty end date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_end_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_end_date" fieldName="Warranty End Date: "/>
+                        </div>
+
+                        <!-- returned date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <TextField id="mac_address" labelFor="mac_address" fieldName="Mac Address: " v-model="mac_address"/>
+
+                        <TextField id="number_ports" labelFor="number_ports" fieldName="Number Of Ports: " v-model="number_ports"/>
+
+                        <TextField id="device_size" labelFor="device_size" fieldName="Device Size: " v-model="device_size"/>
+
+                        <TextField id="firmware_type" labelFor="firmware_type" fieldName="Firmware Type: " v-model="firmware_type"/>
+
+                        <TextField id="firmware_version" labelFor="firmware_version" fieldName="Firmware Version: " v-model="firmware_version"/>
+
+                        <TextField id="device_name" labelFor="device_name" fieldName="Device Name: " v-model="device_name"/>
+
+                    </div>
+
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="manufactured_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="manufactured_date" fieldName="Manufactured Date: "/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THIS IS THE MONITOR SECTION -->
+                <div v-if="isMonitor == true">
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <!-- warranty start date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_start_date" 
+                                :enable-time-picker="false" 
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_start_date" fieldName="Warranty Start Date: "/>
+                        </div>
+
+                        <!-- warranty end date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="warranty_end_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="warranty_end_date" fieldName="Warranty End Date: "/>
+                        </div>
+
+                        <!-- returned date -->
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="returned_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="returned_date" fieldName="Returned Date: "/>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                    </div>
+
+
+                    <div class="grid grid-cols-2 gap-x-6">
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <VueDatePicker 
+                                v-model="manufactured_date" 
+                                :enable-time-picker="false" 
+                                :input-class-name="'p-0 bg-green-500'"
+                                placeholder="Enter in the format MM/DD/YYY"
+                                text-input 
+                                :class="[date_field_class]">
+                            </VueDatePicker>
+                            <TextLabel labelFor="manufactured_date" fieldName="Manufactured Date: "/>
+                        </div>
+
+                        <TextField id="size" labelFor="size" fieldName="Monitor Size: " v-model="size"/>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="monitor_type" :class="[option_field_class]" class="bg-white" v-model.number="monitor_type">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="monitor_type in monitor_types" :key="monitor_type.monitor_type_id" :value=monitor_type.monitor_type_id class="text-black">{{ monitor_type.monitor_type_description }}</option>
+
+                            </select>
+                            <TextLabel labelFor="monitor_type" fieldName="Monitor Type: "/>
+                        </div>
+
+                        <div class="flex flex-row-reverse mb-6 group">
+                            <select id="monitor_function" :class="[option_field_class]" class="bg-white" v-model.number="monitor_function">
+                                <option :value=null selected class="text-blue-100"></option>
+                                <option v-for="monitor_function in monitor_functions" :key="monitor_function.monitor_function_id" :value=monitor_function.monitor_function_id class="text-black">{{ monitor_function.monitor_function_description }}</option>
+
+                            </select>
+                            <TextLabel labelFor="function" fieldName="Monitor Function: "/>
+                        </div>
+                    </div>                
+                </div>
+
+                
+
+
+                <!-- THIS IS THE LOCATIONS SECTION -->
+                <div class="mt-8 grid grid-cols-2 gap-x-6">
+
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="parish" :class="[option_field_class]" class="bg-white" v-model.number="parish">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="parish in parishes" :key="parish.parish_id" :value=parish.parish_id class="text-black">{{ parish.parish_name }}</option>
+                        </select>
+                        <TextLabel labelFor="parish" fieldName="Parish" />
+                    </div>
+                    
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="location_type" :class="[option_field_class]" class="bg-white" v-model.number="location_type">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="location_type in locationTypes" :key="location_type.ltype_id" :value=location_type.ltype_id class="text-black">{{ location_type.ltype_name }}</option>
+                        </select>
+                        <TextLabel labelFor="location_type" fieldName="Location Type" />
+                    </div>
+
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="location" :class="[option_field_class]" class="bg-white" v-model.number="location">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="location in locations" :key="location.location_id" :value=location.location_id class="text-black">{{ location.location_name }}</option>
+                        </select>
+                        <TextLabel labelFor="location" fieldName="Location" />
+                    </div>
+
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="division" :class="[option_field_class]" class="bg-white" v-model.number="division">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="division in divisions" :key="division.division_id" :value=division.division_id class="text-black">{{ division.division_name }}</option>
+                        </select>
+                        <TextLabel labelFor="division" fieldName="Division" />
+                    </div>
+
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="branch" :class="[option_field_class]" class="bg-white" v-model.number="branch">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="branch in branches" :key="branch.branch_id" :value=branch.branch_id class="text-black">{{ branch.branch_name }}</option>
+                        </select>
+                        <TextLabel labelFor="branch" fieldName="Branch" />
+                    </div>
+                </div>
+                
+
+                <div class="flex justify-center">
+                    <AddItemButton buttonName="Update Item"/>
+                </div>
+            </form>
+        </SectionTemplate>
+    </div>
+
 
 </div>
 </template>
@@ -1837,7 +2653,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import CommentField from '@/components/Fields/CommentField.vue';
 import UpdateModal from './UpdateModal.vue';
 
-import { getStatuses, getRaidTypes, getMonitorFunctions, getMonitorTypes, getMeetingRooms, getCRAVEquipmentTypes, getSpeakerTypes, getCPUTypes, getFormFactors, getConnectionTypes, getPrinterFeatures, option_field_class, date_field_class, getDivisions, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions } from '@/utils/descriptions';
+import { getStatuses, getDivisions, getRaidTypes, getMonitorFunctions, getMonitorTypes, getMeetingRooms, getCRAVEquipmentTypes, getSpeakerTypes, getCPUTypes, getFormFactors, getConnectionTypes, getPrinterFeatures, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getDivisionBranches, getBranches } from '@/utils/descriptions';
 
 const items = ref([]); // Store the search results (list of items)
 const currentPage = ref(1)
@@ -1893,6 +2709,10 @@ const item_comment_text = ref();
 
 
 // UPDATE SECTION///////////////////////////////////////////////////////////////////////////////////
+const showUpdateSection = ref(false);
+
+const deviceUpdateSection = ref(null);
+
 const showUpdateModal = ref(false)
 const isOtherDevice = ref(false);
 const isLaptop = ref(false);
@@ -1913,6 +2733,7 @@ const isMonitor = ref(false);
 
 
 
+const branches = ref([])
 const statuses = ref([])
 const divisions = ref([])
 const locations = ref([])
@@ -1953,7 +2774,7 @@ const fieldNames = [
     "crav_equipment_type", "name", "meeting_room",
     "number_ports", "firmware_type", "firmware_version", "device_name",
     "size", "monitor_function", "monitor_type",
-    "location", "division", "comment"
+    "location", "division", "branch", "comment"
 ];
 
 const refs = {};
@@ -1961,11 +2782,19 @@ const refs = {};
 fieldNames.forEach(name => {
     const key = `${name}`;
     const saved = localStorage.getItem(`${key}_val`);
-    /* refs[key] = ref(saved || null); */
-    refs[key] = ref(saved === null || saved === "" || saved === "null" ? null : saved);
+
+    const invalidValues = [null, "", "null", "undefined", "false"];
+
+    refs[key] = ref(
+        invalidValues.includes(saved) ? null : saved
+    );
 
     watch(refs[key], val => {
-        localStorage.setItem(`${key}_val`, val == null ? "" : String(val));
+        if (val === null || val === undefined || val === false) {
+            localStorage.removeItem(`${key}_val`);
+        } else {
+            localStorage.setItem(`${key}_val`, String(val));
+        }
     });
 });
 
@@ -2024,6 +2853,7 @@ const {
     location_type,
     location,
     division,
+    branch,
     comment,
 } = refs;
 
@@ -2033,9 +2863,13 @@ onMounted(async () => {
 
     divisions.value = await getDivisions();
 
+    branches.value = await getBranches();
+
     locations.value = await getLocations();
 
     parishes.value = await getParishes();
+
+    locationTypes.value = await getLocationTypes();
 
     cpu_types.value = await getCPUTypes();
 
@@ -2057,10 +2891,12 @@ onMounted(async () => {
 
     monitor_functions.value = await getMonitorFunctions();
 
-    if (location.value) {
-        locationChange(location.value)
-    } else if (parish.value) {
+    if (parish.value) {
         parishChange(parish.value)
+    }
+
+    if (division.value) {
+        divisionChange(division.value)
     }
 
   } catch (err) {
@@ -2075,40 +2911,30 @@ async function parishChange(parishValue) {
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
 
-        divisions.value = await getParishDivisions(parishValue);
-        console.log(divisions.value);
-
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
+        console.log("Did not enter Parish Change If");
         locations.value = await getParishLocations(parishValue);
         console.log(locations.value);
     }
 }
 
-async function locationChange(locationValue) {
-    if (location.value != null) {
+async function divisionChange(divisionValue) {
+    if (branch.value == null || !branch.value) {
 
         try {
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        divisions.value = await getLocationDivisions(locationValue);
-        console.log(divisions.value);
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
 
         } catch (err) {
         console.error(err);
         }
     } else {
-        console.log("Did not enter if");
-        parishes.value = await getLocationParishes(locationValue);
-        console.log(parishes.value);
-
-        console.log(parish.value)
-        divisions.value = await getParishDivisions(parish.value);
-        console.log(divisions.value);
+        console.log("Did not enter division Change If");
+        branches.value = await getDivisionBranches(divisionValue);
+        console.log(branches.value);
     }
 }
 
@@ -2124,23 +2950,18 @@ watch (
 )
 
 watch (
-    location, async (newLocation, oldLocation) => {
+    division, async (newDivision, oldDivision) => {
 
-        console.log("Location changed:", newLocation);
-        console.log("Parishes:", parish.value)
-        console.log("Divisions:", division.value)
+        console.log("Division changed:", newDivision);
+        console.log("Division value:", division.value, "type:", typeof division.value);
+        console.log("Branch value:", branch.value, "type:", typeof branch.value);
 
-        console.log("location value:", location.value);
-        locationChange(newLocation)
-        
+        divisionChange(newDivision)
     }
 )
 
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-const search_category = ref();
-const search_filter = ref();
 
 const device_type_search = ref();
 const serial_number_search = ref();
@@ -2201,6 +3022,78 @@ const formatDateDisplay = (dateString) => {
 }
 
 // THIS IS THE UPDATE SECTION /////////////////////////////////////////////////////////////////
+async function openUpdateSection(serial_number, category) {
+    console.log(serial_number);
+    console.log(category);
+
+    updateSerial.value = serial_number;
+    updateCategory.value = category;
+
+    isLaptop.value = false
+    isDesktop.value = false
+    isServer.value = false
+    isTablet.value = false
+    isMouseKeyboard.value = false
+    isScanner.value = false
+    isSurgeProtector.value = false
+    isUPS.value = false
+    isSpeaker.value = false
+    isWebcam.value = false
+    isPrinter.value = false
+    isOtherEquipment.value = false
+    isCRAV.value = false
+    isNetworkSwitch.value = false
+    isMonitor.value = false
+    isOtherDevice.value = false
+
+    if (category == "Laptop") {
+        isLaptop.value = true
+    } else if (category == "Desktop") {
+        isDesktop.value = true
+    } else if (category == "Server") {
+        isServer.value = true
+    }  else if (category == "Tablet") {
+        isTablet.value = true
+    } else if (category == "Mouse" || category == "Keyboard") {
+        isMouseKeyboard.value = true
+    } else if (category == "Scanner") {
+        isScanner.value = true
+    } else if (category == "Surge Protector") {
+        isSurgeProtector.value = true
+    } else if (category == "UPS") {
+        isUPS.value = true
+    } else if (category == "Speaker") {
+        isSpeaker.value = true
+    } else if (category == "Webcam") {
+        isWebcam.value = true
+    } else if (category == "Printer") {
+        isPrinter.value = true
+    } else if (category == "Other Equipment") {
+        isOtherEquipment.value = true
+    } else if (category == "CRAV") {
+        isCRAV.value = true
+    } else if (category == "Network Switch") {
+        isNetworkSwitch.value = true
+    } else if (category == "Monitor") {
+        isMonitor.value = true
+    } else {
+        isOtherDevice.value = true
+    }
+
+    // Show the Update Device Section
+    showUpdateSection.value = true;
+
+    // Wait for Vue to update the DOM
+    await nextTick();
+
+    // Smoothly scroll to Device Details
+    deviceUpdateSection.value?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
 async function closeUpdateModal() {
     showUpdateModal.value = false;
     isLaptop.value = false;
@@ -2435,177 +3328,7 @@ async function openDeviceDetails(serial_number, category) {
     }
 }
 
-function closeDeviceModal() {
-    showDeviceModal.value = false;
-    showDeviceDetails.value = false;
 
-    deviceData.value = null;
-    laptopData.value = null;
-    desktopData.value = null;
-    tabletData.value = null;
-    mouseKeyboardData.value = null;
-    scannerData.value = null;
-    surgeProtectorData.value = null;
-    upsData.value = null;
-    speakerData.value = null;
-    webcamData.value = null;
-    otherEquipmentData.value = null;
-    printerData.value = null;
-    projectorData.value = null;
-    cravData.value = null;
-    networkSwitchData.value = null;
-    monitorData.value = null;
-    console.log("Closing Device Modal")
-}
-
-async function openDeviceModal(serial_number, category) {
-    console.log(serial_number)
-    showDeviceModal.value = true;
-    showDeviceDetails.value = true;
-    console.log("Opening Device Modal")
-
-    try {
-        const response = await axios.get(`${useBaseURLComposable()}get-item-sn/`, {
-            params: {
-                serial_number: serial_number,
-                category: category,
-            }
-        });
-
-        console.log(response.data)
-        
-        if (category === "Laptop") {
-            laptopData.value = response.data
-            for (const item in laptopData.value) {
-                if (laptopData.value[item] == undefined || laptopData.value[item] == null) {
-                    laptopData.value[item] = "";
-                }
-            }
-        } 
-        else if (category === "Desktop") {
-            desktopData.value = response.data
-            for (const item in desktopData.value) {
-                if (desktopData.value[item] == undefined || desktopData.value[item] == null) {
-                    desktopData.value[item] = "";
-                }
-            }
-        }
-        else if (category === "Server") {
-            serverData.value = response.data
-            for (const item in serverData.value) {
-                if (serverData.value[item] == undefined || serverData.value[item] == null) {
-                    serverData.value[item] = "";
-                }
-            }
-        } else if (category === "Tablet") {
-            tabletData.value = response.data
-            for (const item in tabletData.value) {
-                if (tabletData.value[item] == undefined || tabletData.value[item] == null) {
-                    tabletData.value[item] = "";
-                }
-            }
-        } else if (category === "Mouse" || category === "Keyboard") {
-            mouseKeyboardData.value = response.data
-            for (const item in mouseKeyboardData.value) {
-                if (mouseKeyboardData.value[item] == undefined || mouseKeyboardData.value[item] == null) {
-                    mouseKeyboardData.value[item] = "";
-                }
-            }
-        } else if (category === "Scanner") {
-            scannerData.value = response.data
-            for (const item in scannerData.value) {
-                if (scannerData.value[item] == undefined || scannerData.value[item] == null) {
-                    scannerData.value[item] = "";
-                }
-            }
-        } else if (category === "Surge Protector") {
-            surgeProtectorData.value = response.data
-            for (const item in surgeProtectorData.value) {
-                if (surgeProtectorData.value[item] == undefined || surgeProtectorData.value[item] == null) {
-                    surgeProtectorData.value[item] = "";
-                }
-            }
-        } else if (category === "UPS") {
-            upsData.value = response.data
-            for (const item in upsData.value) {
-                if (upsData.value[item] == undefined || upsData.value[item] == null) {
-                    upsData.value[item] = "";
-                }
-            }
-        } else if (category === "Speaker") {
-            speakerData.value = response.data
-            for (const item in speakerData.value) {
-                if (speakerData.value[item] == undefined || speakerData.value[item] == null) {
-                    speakerData.value[item] = "";
-                }
-            }
-        } else if (category === "Webcam") {
-            webcamData.value = response.data
-            for (const item in webcamData.value) {
-                if (webcamData.value[item] == undefined || webcamData.value[item] == null) {
-                    webcamData.value[item] = "";
-                }
-            }
-        } else if (category === "Other Equipment") {
-            otherEquipmentData.value = response.data
-            for (const item in otherEquipmentData.value) {
-                if (otherEquipmentData.value[item] == undefined || otherEquipmentData.value[item] == null) {
-                    otherEquipmentData.value[item] = "";
-                }
-            }
-        } else if (category === "Printer") {
-            printerData.value = response.data
-            for (const item in printerData.value) {
-                if (printerData.value[item] == undefined || printerData.value[item] == null) {
-                    printerData.value[item] = "";
-                }
-            }
-        } else if (category === "Projector") {
-            projectorData.value = response.data
-            for (const item in projectorData.value) {
-                if (projectorData.value[item] == undefined || projectorData.value[item] == null) {
-                    projectorData.value[item] = "";
-                }
-            }
-        } else if (category === "CRAV") {
-            cravData.value = response.data
-            for (const item in cravData.value) {
-                if (cravData.value[item] == undefined || cravData.value[item] == null) {
-                    cravData.value[item] = "";
-                }
-            }
-        } else if (category === "Network Switch") {
-            networkSwitchData.value = response.data
-            for (const item in networkSwitchData.value) {
-                if (networkSwitchData.value[item] == undefined || networkSwitchData.value[item] == null) {
-                    networkSwitchData.value[item] = "";
-                }
-            }
-        } else if (category === "Monitor") {
-            monitorData.value = response.data
-            for (const item in monitorData.value) {
-                if (monitorData.value[item] == undefined || monitorData.value[item] == null) {
-                    monitorData.value[item] = "";
-                }
-            }
-        } else {
-            deviceData.value = response.data
-            for (const item in deviceData.value) {
-                if (deviceData.value[item] == undefined || deviceData.value[item] == null) {
-                    deviceData.value[item] = "";
-                }
-            }
-        }
-        
-    } catch (error) {
-        if (error.response?.status === 401) {
-            this.$router.push({name: 'UserLogin' });
-            alert("Please Log In Again")
-        }
-        console.error('Error creating item:', error.response?.data || error.message);
-        alert("Failed to find item. Check console.");
-    }
-}
 
 
 //THIS IS THE COMMENT SECTION///////////////////////////////////////////////////////////////////////////////
