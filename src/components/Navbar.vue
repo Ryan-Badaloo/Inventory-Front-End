@@ -50,6 +50,11 @@ function logout() {
                   >Modify Users</RouterLink
                 >
                 <RouterLink
+                  to="/settings"
+                  :class="[isActiveLink('/add-user') ? 'bg-gray-700' : 'hover:bg-gray-900 hover:text-white', 'text-white', 'rounded-md', 'px-3', 'py-2']"
+                  >Settings</RouterLink
+                >
+                <RouterLink
                   to="/change-password"
                   :class="[isActiveLink('/add-user') ? 'bg-gray-700' : 'hover:bg-gray-900 hover:text-white', 'text-white', 'rounded-md', 'px-3', 'py-2']"
                   >Change Password</RouterLink

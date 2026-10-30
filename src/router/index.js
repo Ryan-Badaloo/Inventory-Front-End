@@ -83,7 +83,7 @@ const router = createRouter({
       name: 'Settings',
       component: Settings,
       props: true,
-      meta: { requiresAuth: true } // Protected
+      meta: { requiresAuth: true,  requiresAdmin: true } // Protected
     },
     {
       path: '/reports',

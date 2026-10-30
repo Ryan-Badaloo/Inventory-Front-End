@@ -1,7 +1,8 @@
-FROM node:iron-alpine3.22 AS base
+FROM node:alpine3.24 AS base
 
 #Define build arguments for enviroment variables
 ARG VITE_DEVELOPMENT_URL
+ENV VITE_DEVELOPMENT_URL=$VITE_DEVELOPMENT_URL
 
 WORKDIR /app
 COPY package*.json ./
