@@ -18,9 +18,10 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
+                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="conference_room_av_equipment_delivery_date" fieldName="Deployment Date: "/>
+                <TextLabel labelFor="conference_room_av_equipment_delivery_date" fieldName="Deployment Date: " :required="true"/>
             </div>
 
             <!-- Deployment Date -->
@@ -148,6 +149,16 @@
 
         <CommentField id="conference_room_av_equipment_comment" labelFor="conference_room_av_equipment_comment" fieldName="Comment: " v-model="conference_room_av_equipment_comment"/>
         
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="conference_room_av_equipment_workbench" :class="[option_field_class]" class="bg-white" v-model.number="conference_room_av_equipment_workbench">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="workbench in workbenches" :key="workbench.workbench_id" :value=workbench.workbench_id class="text-black">{{ workbench.workbench_name }}</option>
+                </select>
+                <TextLabel labelFor="conference_room_av_equipment_workbench" fieldName="Workbench" />
+            </div>
+        </div>
+
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
 
@@ -166,7 +177,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getCRAVEquipmentTypes, getMeetingRooms, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getWorkbenches, getStatuses, getCRAVEquipmentTypes, getMeetingRooms, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -175,6 +186,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
 const crav_equipment_types = ref([])
@@ -186,6 +198,7 @@ const locationTypes = ref([])
 
 onMounted(async () => {
   try {
+    workbenches.value = await getWorkbenches();
     statuses.value = await getStatuses();
 
     crav_equipment_types.value = await getCRAVEquipmentTypes();
@@ -223,7 +236,7 @@ const fieldNames = [
   "name", "mac_address", "ip_address", "meeting_room",
   "parish", "location_type", "location",
   "division", "branch", "comment",
-  "delivery_date", "deployment_date"
+  "delivery_date", "deployment_date", "workbench"
 ];
 
 const conferenceRoomAvEquipmentRefs = {};
@@ -261,6 +274,7 @@ const {
     conference_room_av_equipment_division,
     conference_room_av_equipment_branch,
     conference_room_av_equipment_comment,
+    conference_room_av_equipment_workbench,
 } = conferenceRoomAvEquipmentRefs;
 
 async function parishChange(parishValue) {
@@ -359,6 +373,7 @@ async function addConferenceRoomAVEquipment() {
         division_id: conference_room_av_equipment_division.value,
         branch_id: conference_room_av_equipment_branch.value,
         comment: conference_room_av_equipment_comment.value,
+        workbench_id: conference_room_av_equipment_workbench.value,
     }
 
     for (const key in cr_equipment) {

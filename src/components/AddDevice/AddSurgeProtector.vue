@@ -18,9 +18,10 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
+                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="surge_protector_delivery_date" fieldName="Delivery Date: "/>
+                <TextLabel labelFor="surge_protector_delivery_date" fieldName="Delivery Date: " :required="true"/>
             </div>
 
             <!-- deployment date -->
@@ -124,6 +125,16 @@
 
         <CommentField id="surge_protector_comment" labelFor="surge_protector_comment" fieldName="Comment: " v-model="surge_protector_comment"/>
         
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="surge_protector_workbench" :class="[option_field_class]" class="bg-white" v-model.number="surge_protector_workbench">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="workbench in workbenches" :key="workbench.workbench_id" :value=workbench.workbench_id class="text-black">{{ workbench.workbench_name }}</option>
+                </select>
+                <TextLabel labelFor="surge_protector_workbench" fieldName="Workbench" />
+            </div>
+        </div>
+
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
 
@@ -143,7 +154,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getWorkbenches, getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -152,6 +163,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
 const divisions = ref([])
@@ -161,6 +173,8 @@ const locationTypes = ref([])
 
 onMounted(async () => {
   try {
+    workbenches.value = await getWorkbenches();
+
     statuses.value = await getStatuses();
 
     divisions.value = await getDivisions();
@@ -192,7 +206,7 @@ const fieldNames = [
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
   "number_outlets",
   "parish", "location_type", "location",
-  "division", "branch", "comment"
+  "division", "branch", "comment", "workbench"
 ];
 
 const surgeProtectorRefs = {};
@@ -227,6 +241,7 @@ const {
     surge_protector_division,
     surge_protector_branch,
     surge_protector_comment,
+    surge_protector_workbench,
 } = surgeProtectorRefs;
 
 async function parishChange(parishValue) {
@@ -323,6 +338,7 @@ async function addSurge() {
         division_id: surge_protector_division.value,
         branch_id: surge_protector_branch.value,
         comment: surge_protector_comment.value,
+        workbench_id: surge_protector_workbench.value,
     }
     console.log("read values into surge protector")
 

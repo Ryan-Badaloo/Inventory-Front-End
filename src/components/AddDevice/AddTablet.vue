@@ -18,9 +18,10 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
+                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="tablet_delivery_date" fieldName="Delivery Date: "/>
+                <TextLabel labelFor="tablet_delivery_date" fieldName="Delivery Date: " :required="true"/>
             </div>
 
             <!-- deployment date -->
@@ -176,6 +177,16 @@
         </div>
         
         <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: " v-model="tablet_comment"/>
+
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="tablet_workbench" :class="[option_field_class]" class="bg-white" v-model.number="tablet_workbench">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="workbench in workbenches" :key="workbench.workbench_id" :value=workbench.workbench_id class="text-black">{{ workbench.workbench_name }}</option>
+                </select>
+                <TextLabel labelFor="tablet_workbench" fieldName="Workbench" />
+            </div>
+        </div>
 
         <button @click="illuminateBag()" type="button" class="content-center w-1/8 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
             Add Case/Bag
@@ -338,7 +349,7 @@ import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 
-import { getBagTypes, getBagFabricTypes, getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getWorkbenches, getBagTypes, getBagFabricTypes, getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -347,6 +358,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
 const divisions = ref([])
@@ -360,6 +372,8 @@ const showAdapter = ref(false)
 
 onMounted(async () => {
   try {
+    workbenches.value = await getWorkbenches();
+
     statuses.value = await getStatuses();
 
     divisions.value = await getDivisions();
@@ -397,11 +411,11 @@ const fieldNames = [
   "hard_disk_capacity", "memory_capacity", "warranty_start_date",
   "warranty_end_date", "returned_date", "device_size",
   "operating_system", "imei_number", "version", "parish", "location_type",
-  "location", "division", "branch", "comment", 
+  "location", "division", "branch", "comment", "workbench",
   "bag_type", "bag_brand", "bag_model", "bag_ministry_number", "bag_fabric_type", "bag_delivery_date", 
   "bag_assignment_date", "bag_status", "bag_bos_date",
   "adapter_serial_number", "adapter_brand", "adapter_model", "adapter_ministry_number", "adapter_delivery_date",
-  "adapter_assignment_date", "adapter_status", "adapter_bos_date", 
+  "adapter_assignment_date", "adapter_status", "adapter_bos_date"
 
 ];
 
@@ -446,6 +460,7 @@ tablet_location,
 tablet_division,
 tablet_branch,
 tablet_comment,
+tablet_workbench,
 
 tablet_bag_type,
 tablet_bag_brand,
@@ -568,6 +583,7 @@ async function addTablet() {
         division_id: tablet_division.value,
         branch_id: tablet_branch.value,
         comment: tablet_comment.value,
+        workbench_id: tablet_workbench.value,
         
     }
 

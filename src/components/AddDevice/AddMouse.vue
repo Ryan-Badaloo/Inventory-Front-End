@@ -19,9 +19,10 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
+                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="mouse_delivery_date" fieldName="Delivery Date: "/>
+                <TextLabel labelFor="mouse_delivery_date" fieldName="Delivery Date: " :required="true"/>
             </div>
 
             <!-- deployment date -->
@@ -116,6 +117,17 @@
 
         <CommentField id="mouse_comment" labelFor="mouse_comment" fieldName="Comment: " v-model="mouse_comment"/>
         
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="mouse_workbench" :class="[option_field_class]" class="bg-white" v-model.number="mouse_workbench">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="workbench in workbenches" :key="workbench.workbench_id" :value=workbench.workbench_id class="text-black">{{ workbench.workbench_name }}</option>
+                </select>
+                <TextLabel labelFor="mouse_workbench" fieldName="Workbench" />
+            </div>
+        </div>
+
+
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
 
@@ -135,7 +147,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getWorkbenches, getStatuses, getConnectionTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -144,6 +156,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
 const connection_types = ref([])
@@ -154,6 +167,8 @@ const locationTypes = ref([])
 
 onMounted(async () => {
   try {
+    workbenches.value = await getWorkbenches();
+
     statuses.value = await getStatuses();
 
     connection_types.value = await getConnectionTypes();
@@ -185,7 +200,7 @@ onMounted(async () => {
 const fieldNames = [
   "brand", "model", "serial_number", "inventory_number",
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status", "connection_type", "parish", "location_type",
-  "location", "division", "branch", "comment"
+  "location", "division", "branch", "comment", "workbench"
 ];
 
 const mouseRefs = {};
@@ -221,6 +236,7 @@ const {
     mouse_division,
     mouse_branch,
     mouse_comment,
+    mouse_workbench,
 } = mouseRefs;
 
 async function parishChange(parishValue) {
@@ -315,6 +331,7 @@ async function addMouse() {
         division_id: mouse_division.value,
         branch_id: mouse_branch.value,
         comment: mouse_comment.value,
+        workbench_id: mouse_workbench.value,
     }
     console.log("read values into mouse")
 

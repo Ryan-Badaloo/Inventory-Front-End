@@ -18,9 +18,10 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
+                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="speaker_delivery_date" fieldName="Delivery Date: "/>
+                <TextLabel labelFor="speaker_delivery_date" fieldName="Delivery Date: " :required="true"/>
             </div>
 
             <!-- deployment date -->
@@ -96,7 +97,7 @@
                 <TextLabel labelFor="speaker_type" fieldName="Speaker Type: "/>
             </div>
 
-            <TextField id="speaker_number_speakers" labelFor="speaker_number_speakers" fieldName="Number Of Speakers: " v-model="speaker_number_speakers"/>
+            <TextField id="speaker_number_speakers" labelFor="speaker_number_speakers" fieldName="Number Of Speakers: " v-model="speaker_number_speakers" :required="true"/>
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-6">
@@ -144,6 +145,16 @@
 
         <CommentField id="speaker_comment" labelFor="speaker_comment" fieldName="Comment: " v-model="speaker_comment"/>
         
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="speaker_workbench" :class="[option_field_class]" class="bg-white" v-model.number="speaker_workbench">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="workbench in workbenches" :key="workbench.workbench_id" :value=workbench.workbench_id class="text-black">{{ workbench.workbench_name }}</option>
+                </select>
+                <TextLabel labelFor="speaker_workbench" fieldName="Workbench" />
+            </div>
+        </div>
+
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
 
@@ -163,7 +174,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getSpeakerTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getWorkbenches, getStatuses, getSpeakerTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -172,6 +183,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
 const speaker_types = ref([])
@@ -182,6 +194,8 @@ const locationTypes = ref([])
 
 onMounted(async () => {
   try {
+    workbenches.value = await getWorkbenches();
+
     statuses.value = await getStatuses();
 
     speaker_types.value = await getSpeakerTypes();
@@ -215,7 +229,7 @@ const fieldNames = [
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
   "returned_date", "number_speakers", "type",
   "parish", "location_type", "location",
-  "division", "branch", "comment"
+  "division", "branch", "comment", "workbench"
 ];
 
 const speakerRefs = {};
@@ -251,6 +265,7 @@ const {
     speaker_division,
     speaker_branch,
     speaker_comment,
+    speaker_workbench,
 } = speakerRefs;
 
 async function parishChange(parishValue) {
@@ -348,7 +363,7 @@ async function addSpeaker() {
         division_id: speaker_division.value,
         branch_id: speaker_branch.value,
         comment: speaker_comment.value,
-        
+        workbench_id: speaker_workbench.value,
     }
 
     for (const key in speaker) {

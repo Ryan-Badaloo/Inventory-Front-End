@@ -3,6 +3,21 @@ import {useBaseURLComposable} from '../composable/useUrlcomposable'
 export const option_field_class = 'basis-2/3 ml-4 block w-full rounded-md border-2 border-gray-400 focus:outline-none focus:ring-0peer';
 export const date_field_class = 'basis-2/3 ml-4 block w-full rounded-md border-2 border-gray-400'
 
+export async function getWorkbenches() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-workbenches/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating item:', error.response?.data || error.message);
+        alert("Failed to add item. Check console.");
+    }
+}
+
 export async function getRoles() {
     try {
         const token = localStorage.getItem('token');

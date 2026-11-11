@@ -20,6 +20,8 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "date-fns": "^4.1.0",
     "flowbite": "^3.1.2",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.9",
     "jwt-decode": "^4.0.0",
     "material-icons": "^1.13.14",
     "vue": "^3.5.20",

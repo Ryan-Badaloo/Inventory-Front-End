@@ -90,6 +90,49 @@
                     </div>
                 </div>
 
+                <!-- Inventory Number Search Bar -->
+                <div>
+                    <label
+                        for="inventory_number"
+                        class="block mb-2 text-sm font-medium text-gray-900 sr-only"
+                    >
+                        Inventory Number
+                    </label>
+
+                    <div class="relative">
+
+                        <!-- Search Icon -->
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg
+                                class="w-4 h-4 text-gray-500"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="2"
+                                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                                />
+                            </svg>
+                        </div>
+
+                        <!-- Search Input -->
+                        <input
+                            type="search"
+                            v-model="inventory_number_search"
+                            id="inventory_number"
+                            class="block w-full p-3 ps-9 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm placeholder:text-gray-500 outline-none"
+                            placeholder="Inventory Number"
+                        />
+
+                    </div>
+                </div>
+
                 <!-- Client Search Bar -->
                 <div>
                     <label
@@ -265,7 +308,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in paginatedItems" :key="item.devices_id" class="bg-white border-b border-gray-200 hover:bg-gray-200">
+                        <tr v-for="item in paginatedItems" :key="item.devices_id" @dblclick="openDeviceDetails(item.serial_number, item.category)" class="bg-white cursor-pointer border-b border-gray-200 hover:bg-gray-200">
                             <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 {{ item.brand }}
                             </td>
@@ -359,8 +402,11 @@ import AddItemButton from '../AddItemButton.vue';
 import TextLabel from '../Fields/TextLabel.vue';
 import { onClickOutside } from '@vueuse/core'
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
+import { useRouter } from 'vue-router';
 
 import { option_field_class } from '@/utils/descriptions';
+
+const router = useRouter();
 
 const items = ref([]); // Store the search results (list of items)
 const currentPage = ref(1)
@@ -387,6 +433,7 @@ const unassignClientName = ref();
 
 const device_type_search = ref();
 const serial_number_search = ref();
+const inventory_number_search = ref();
 const client_search = ref();
 const status_search = ref();
 const division_search = ref();
@@ -402,6 +449,7 @@ async function get_items() {
             params: {
                 device_type: device_type_search.value,
                 serial_number: serial_number_search.value,
+                inventory_number: inventory_number_search.value,
                 client: client_search.value,
                 status: status_search.value,
                 division: division_search.value,
@@ -473,6 +521,19 @@ async function confirmUnassignItem() {
 
         alert("Failed to find item. Check console.");
     }
+}
+
+// THIS IS THE DETAILS SECTION /////////////////////////////////////////////////////////////////
+function openDeviceDetails(serial_number, category) {
+    router.push({
+        name: 'ViewItem',
+        params: {
+            serial_number: serial_number
+        },
+        query: {
+            category: category
+        }
+    });
 }
 
 const unassignRef = ref(null)

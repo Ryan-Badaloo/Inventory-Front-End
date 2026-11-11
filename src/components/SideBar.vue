@@ -30,7 +30,7 @@ const open = ref(false);
                             </div>
                         </RouterLink>
 
-                        <RouterLink to="/update-item-page" class="">
+                        <RouterLink to="/search-item-page" class="">
                             <div class="p-1 rounded hover:shadow-sm group">
                                 <h2 class="transition duration-100 ease-in-out group-hover:translate-x-2 text-xl font-semibold italic">Search Device</h2>
                             </div>
@@ -48,9 +48,27 @@ const open = ref(false);
                             </div>
                         </RouterLink>
 
+                        <RouterLink to="/assign-workbench-page" class="">
+                            <div class="p-1 rounded hover:shadow-sm group">
+                                <h2 class="transition duration-100 ease-in-out group-hover:translate-x-2 text-xl font-semibold italic">Assign Workbench</h2>
+                            </div>
+                        </RouterLink>
+
+                        <RouterLink to="/unassign-workbench-page" class="">
+                            <div class="p-1 rounded hover:shadow-sm group">
+                                <h2 class="transition duration-100 ease-in-out group-hover:translate-x-2 text-xl font-semibold italic">Unassign Workbench</h2>
+                            </div>
+                        </RouterLink>
+
                         <RouterLink to="/modify-clients" class="">
                             <div class="p-1 rounded hover:shadow-sm group">
                                 <h2 class="transition duration-100 ease-in-out group-hover:translate-x-2 text-xl font-semibold italic">Modify Clients</h2>
+                            </div>
+                        </RouterLink>
+
+                        <RouterLink to="/modify-workbenches" class="">
+                            <div class="p-1 rounded hover:shadow-sm group">
+                                <h2 class="transition duration-100 ease-in-out group-hover:translate-x-2 text-xl font-semibold italic">Modify Workbenches</h2>
                             </div>
                         </RouterLink>
 

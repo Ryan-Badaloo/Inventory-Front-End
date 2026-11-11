@@ -9,5 +9,5 @@
 
 <script setup>
 import SideBar from '@/components/SideBar.vue';
-import UpdateItem from '@/components/UpdateDevice/UpdateItem.vue';
+import UpdateItem from '@/components/UpdateDevice/UpdateItemTemplate.vue';
 </script>

@@ -18,9 +18,10 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
+                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="laptop_delivery_date" fieldName="Delivery Date: "/>
+                <TextLabel labelFor="laptop_delivery_date" fieldName="Delivery Date: " :required="true"/>
             </div>
 
             <!-- deployment date -->
@@ -206,6 +207,16 @@
         </div>
 
         <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: " v-model="laptop_comment"/>
+
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="laptop_workbench" :class="[option_field_class]" class="bg-white" v-model.number="laptop_workbench">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="workbench in workbenches" :key="workbench.workbench_id" :value=workbench.workbench_id class="text-black">{{ workbench.workbench_name }}</option>
+                </select>
+                <TextLabel labelFor="laptop_workbench" fieldName="Workbench" />
+            </div>
+        </div>
         
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
@@ -226,7 +237,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getWorkbenches, getStatuses, getCPUTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -235,6 +246,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
 const cpu_types = ref([])
@@ -246,6 +258,8 @@ const divisions = ref([])
 
 onMounted(async () => {
   try {
+    workbenches.value = await getWorkbenches();
+
     statuses.value = await getStatuses();
 
     cpu_types.value = await getCPUTypes();
@@ -285,7 +299,7 @@ const fieldNames = [
   "operating_system", "cpu_type", "processor_speed",
   "processor_type", "computer_name", "ms_office_version",
   "antivirus", "parish", "location_type",
-  "location", "division", "branch", "comment"
+  "location", "division", "branch", "comment", "workbench"
 ];
 
 
@@ -304,38 +318,39 @@ fieldNames.forEach(name => {
 });
 
 const {
-  laptop_brand,
-  laptop_model,
-  laptop_serial_number,
-  laptop_inventory_number,
-  laptop_delivery_date,
-  laptop_deployment_date,
-  laptop_bos_date,
-  laptop_supplier_name,
-  laptop_device_cost,
-  laptop_status,
-  laptop_hard_disk_capacity,
-  laptop_memory_capacity,
-  laptop_warranty_start_date,
-  laptop_warranty_end_date,
-  laptop_returned_date,
-  laptop_mac_address,
-  laptop_manufactured_date,
-  laptop_memory_type,
-  laptop_operating_system,
-  laptop_cpu_type,
-  laptop_processor_speed,
-  laptop_processor_type,
-  laptop_computer_name,
-  laptop_ms_office_version,
-  laptop_antivirus,
-  
-  laptop_parish,
-  laptop_location_type,
-  laptop_location,
-  laptop_division,
-  laptop_branch,
-  laptop_comment,
+    laptop_brand,
+    laptop_model,
+    laptop_serial_number,
+    laptop_inventory_number,
+    laptop_delivery_date,
+    laptop_deployment_date,
+    laptop_bos_date,
+    laptop_supplier_name,
+    laptop_device_cost,
+    laptop_status,
+    laptop_hard_disk_capacity,
+    laptop_memory_capacity,
+    laptop_warranty_start_date,
+    laptop_warranty_end_date,
+    laptop_returned_date,
+    laptop_mac_address,
+    laptop_manufactured_date,
+    laptop_memory_type,
+    laptop_operating_system,
+    laptop_cpu_type,
+    laptop_processor_speed,
+    laptop_processor_type,
+    laptop_computer_name,
+    laptop_ms_office_version,
+    laptop_antivirus,
+    
+    laptop_parish,
+    laptop_location_type,
+    laptop_location,
+    laptop_division,
+    laptop_branch,
+    laptop_comment,
+    laptop_workbench,
 } = laptopRefs;
 
 async function parishChange(parishValue) {
@@ -448,7 +463,10 @@ async function addLaptop() {
         division_id: laptop_division.value,
         branch_id: laptop_branch.value,
         comment: laptop_comment.value,
+        workbench_id: laptop_workbench.value,
     }
+    
+    console.log("Laptop Workbench: ", laptop.workbench)
     console.log("read values into laptop")
 
 

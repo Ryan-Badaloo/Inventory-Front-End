@@ -12,17 +12,6 @@
 
             <TextField id="office" labelFor="office" name="office" fieldName="Enter Office: "/>
 
-            <!-- <div class="flex flex-row-reverse mb-6 group">
-                <select id="role_id" :class="[option_field_class]" class="bg-white" v-model="role_id">
-                    <option selected class="text-blue-100">Choose a Role</option>
-                    <option value=1>Administrator</option>
-                    <option value=2>Supervisor</option>
-                    <option value=3>Technician</option>
-                    <option value=4>View Only</option>
-                </select>
-                <TextLabel :labelFor="role_id" fieldName="User Role" />
-            </div> -->
-
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="role_id" :class="[option_field_class]" class="bg-white" v-model.number="role_id">
                     <option :value=null selected class="text-blue-100"></option>

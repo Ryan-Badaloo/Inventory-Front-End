@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
-    <SideBar />
-    <div class="w-full">
+    <SideBar class="shrink-0"/>
+    <div class="flex-1 min-w-0 max-w-full">
         <Reports @device-selected="selectedDevice = $event" />
 
         <Transition name="fade" mode="out-in">

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-full min-w-0 max-w-full">
         <SectionTemplate template-name="Filter Devices">
 
             <!-- COMPONENT /////////////////////////////////////////////////////////////// -->
@@ -307,87 +307,156 @@
                 <AddItemButton button-name="Search" @click="applyFilters"/>
             </div>
 
-            <!-- FILTER RESULTS TABLE -->
-            <SectionTemplate v-if="filteredDevices.length > 0" template-name="Filtered Results" ref="filteredResultsSection">
-              <!-- DEVICE COUNT SUMMARY -->
-              <div class="grid grid-cols-4 gap-4 mb-6">
-
-                  <!-- Total Device Count -->
-                  <div class="p-4 bg-white border border-gray-400 rounded-md shadow-sm">
-                      <h1 class="font-bold text-center text-lg">
-                          Total Devices
-                      </h1>
-                      <p class="text-center text-2xl font-bold text-blue-600">
-                          {{ filteredDevices.length }}
-                      </p>
-                  </div>
-
-                  <!-- Category Counts -->
-                  <div
-                      v-for="(count, category) in categoryCounts"
-                      :key="category"
-                      class="p-4 bg-white border border-gray-400 rounded-md shadow-sm"
-                  >
-                      <h1 class="font-bold text-center text-lg">
-                          {{ category }}
-                      </h1>
-
-                      <p class="text-center text-2xl font-bold text-blue-600">
-                          {{ count }}
-                      </p>
-                  </div>
-
-              </div>
-
-
-
-
-              <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                      <th class="px-6 py-3">Location</th>
-                      <th class="px-6 py-3">Category</th>
-                      <th class="px-6 py-3">Brand</th>
-                      <th class="px-6 py-3">Model</th>
-                      <th class="px-6 py-3">Serial Number</th>
-                      <th class="px-6 py-3">Status</th>
-                      <th class="px-6 py-3">Delivery Date</th>
-                      <th class="px-6 py-3">Client</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="item in paginatedItems" :key="item.devices_id" class="bg-white border-b hover:bg-gray-200">
-                      <td class="px-6 py-4">{{ item.location_name }}</td>
-                      <td class="px-6 py-4">{{ item.category }}</td>
-                      <td class="px-6 py-4">{{ item.brand }}</td>
-                      <td class="px-6 py-4">{{ item.model }}</td>
-                      <td class="px-6 py-4">{{ item.serial_number }}</td>
-                      <td class="px-6 py-4">{{ item.status_description }}</td>
-                      <td class="px-6 py-4">{{ item.delivery_date }}</td>
-                      <td class="px-6 py-4">{{ item.client_name }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-
-                <!-- Pagination component -->
-                <div class="pagination-overall-container">
-                    <vue-awesome-paginate
-                    :total-items="filteredDevices.length"
-                    :items-per-page="itemsPerPage"
-                    :max-pages-shown="10"
-                    :show-ending-buttons="true"
-                    :show-breakpoint-buttons="false"
-                    v-model="currentPage"
-                    paginate-buttons-class="paginate-buttons"
-                    active-page-class="active-page"
-                    />
-                </div>
-              </div>
-            </SectionTemplate>
+            
 
         </SectionTemplate>
+
+        <!-- FILTER RESULTS TABLE -->
+        <div class="w-full min-w-0 max-w-full">
+            <SectionTemplate v-if="filteredDevices.length > 0" template-name="Filtered Results" ref="filteredResultsSection">
+                <div class="w-full min-w-0 max-w-full">
+                    <!-- DEVICE COUNT SUMMARY -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+                        <!-- Total Device Count -->
+                        <div class="p-4 bg-white border border-gray-400 rounded-md shadow-sm">
+                            <h1 class="font-bold text-center text-lg">
+                                Total Devices
+                            </h1>
+                            <p class="text-center text-2xl font-bold text-blue-600">
+                                {{ filteredDevices.length }}
+                            </p>
+                        </div>
+
+                        <!-- Category Counts -->
+                        <div
+                            v-for="(count, category) in categoryCounts"
+                            :key="category"
+                            class="p-4 bg-white border border-gray-400 rounded-md shadow-sm"
+                        >
+                            <h1 class="font-bold text-center text-lg">
+                                {{ category }}
+                            </h1>
+
+                            <p class="text-center text-2xl font-bold text-blue-600">
+                                {{ count }}
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="w-full min-w-0 max-w-full overflow-x-auto border border-gray-200 rounded-lg">
+                        <table class="min-w-max whitespace-nowrap text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3">Category</th>
+                                    <th class="px-6 py-3">Brand</th>
+                                    <th class="px-6 py-3">Model</th>
+                                    <th class="px-6 py-3">Serial Number</th>
+                                    <th class="px-6 py-3">Inventory Number</th>
+                                    <th class="px-6 py-3">Delivery Date</th>
+                                    <th class="px-6 py-3">Deployment Date</th>
+                                    <th class="px-6 py-3">Deployed By</th>
+                                    <th class="px-6 py-3">Returned Date</th>
+                                    <th class="px-6 py-3">Repaired Date</th>
+                                    <th class="px-6 py-3">Repaired By</th>
+                                    <th class="px-6 py-3">BOS Date</th>
+                                    <th class="px-6 py-3">BOS By</th>
+                                    <th class="px-6 py-3">Supplier Name</th>
+                                    <th class="px-6 py-3">Device Cost</th>
+                                    <th class="px-6 py-3">Status</th>
+                                    <th class="px-6 py-3">Parish</th>
+                                    <th class="px-6 py-3">Location</th>
+                                    <th class="px-6 py-3">Location Type</th>
+                                    <th class="px-6 py-3">Division</th>
+                                    <th class="px-6 py-3">Branch</th>
+                                    <th class="px-6 py-3">Client</th>
+                                    <th class="px-6 py-3">Added By</th>
+                                    <th class="px-6 py-3">Last Updated Date</th>
+                                    <th class="px-6 py-3">Last Updated By</th>
+                                    <th class="px-6 py-3">Workbench</th>
+                                    <th class="px-6 py-3">Verify</th>
+                                    <th class="px-6 py-3">Verified By</th>
+                                    <th class="px-6 py-3">Pending Delete</th>
+                                    <th class="px-6 py-3">Pending Delete By</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in paginatedItems" :key="item.devices_id" @click="openDeviceDetails(item.serial_number, item.category)"  class="bg-white border-b cursor-pointer hover:bg-gray-200">
+                                    <td class="px-6 py-4">{{ item.category }}</td>
+                                    <td class="px-6 py-4">{{ item.brand }}</td>
+                                    <td class="px-6 py-4">{{ item.model }}</td>
+                                    <td class="px-6 py-4">{{ item.serial_number }}</td>
+                                    <td class="px-6 py-4">{{ item.inventory_number }}</td>
+                                    <td class="px-6 py-4">{{ item.delivery_date }}</td>
+                                    <td class="px-6 py-4">{{ item.deployment_date }}</td>
+                                    <td class="px-6 py-4">{{ item.deployed_by }}</td>
+                                    <td class="px-6 py-4">{{ item.return_date }}</td>
+                                    <td class="px-6 py-4">{{ item.repaired_date }}</td>
+                                    <td class="px-6 py-4">{{ item.repaired_by }}</td>
+                                    <td class="px-6 py-4">{{ item.bos_date }}</td>
+                                    <td class="px-6 py-4">{{ item.bos_by }}</td>
+                                    <td class="px-6 py-4">{{ item.supplier_name }}</td>
+                                    <td class="px-6 py-4">{{ item.device_cost }}</td>
+                                    <td class="px-6 py-4">{{ item.status_description }}</td>
+                                    <td class="px-6 py-4">{{ item.parish_name }}</td>
+                                    <td class="px-6 py-4">{{ item.location_name }}</td>
+                                    <td class="px-6 py-4">{{ item.ltype_name }}</td>
+                                    <td class="px-6 py-4">{{ item.division_name }}</td>
+                                    <td class="px-6 py-4">{{ item.branch_name }}</td>
+                                    <td class="px-6 py-4">{{ item.client_name }}</td>
+                                    <td class="px-6 py-4">{{ item.added_by }}</td>
+                                    <td class="px-6 py-4">{{ item.last_updated_date }}</td>
+                                    <td class="px-6 py-4">{{ item.last_updated_by }}</td>
+                                    <td class="px-6 py-4">{{ item.workbench_name }}</td>
+                                    <td class="px-6 py-4">{{ item.verification }}</td>
+                                    <td class="px-6 py-4">{{ item.verified_by }}</td>
+                                    <td class="px-6 py-4">{{ item.pending_delete }}</td>
+                                    <td class="px-6 py-4">{{ item.pending_delete_by }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination component -->
+                    <div class="pagination-overall-container">
+                        <vue-awesome-paginate
+                        :total-items="filteredDevices.length"
+                        :items-per-page="itemsPerPage"
+                        :max-pages-shown="10"
+                        :show-ending-buttons="true"
+                        :show-breakpoint-buttons="false"
+                        v-model="currentPage"
+                        paginate-buttons-class="paginate-buttons"
+                        active-page-class="active-page"
+                        />
+                    </div>
+                </div>
+
+                <!-- EXPORT BUTTONS -->
+                <div class="flex justify-end gap-3 mb-6">
+
+                    <!-- CSV Export -->
+                    <button
+                        @click="exportCSV"
+                        class="bg-green-400 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg cursor-pointer"
+                    >
+                        Export CSV
+                    </button>
+
+                    <!-- PDF Export -->
+                    <button
+                        @click="exportPDF"
+                        class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg cursor-pointer"
+                    >
+                        Export PDF
+                    </button>
+
+                </div>
+            </SectionTemplate>
+        </div>
     </div>
 </template>
 
@@ -404,7 +473,48 @@ import { option_field_class, date_field_class } from '@/utils/descriptions';
 import TextLabel from '@/components/Fields/TextLabel.vue';
 import { DateRangePicker } from 'flowbite-datepicker';
 
+import { jsPDF } from "jspdf";
+import { autoTable } from "jspdf-autotable";
 
+import { useRoute, useRouter } from 'vue-router';
+
+const route = useRoute();
+const router = useRouter();
+
+
+// ITEMS TO BE EXPORTED ///////////////////////////////////////////////////
+const exportColumns = [
+    { key: "category", label: "Category" },
+    { key: "brand", label: "Brand" },
+    { key: "model", label: "Model" },
+    { key: "serial_number", label: "Serial Number" },
+    { key: "inventory_number", label: "Inventory Number" },
+    { key: "delivery_date", label: "Delivery Date" },
+    { key: "deployment_date", label: "Deployment Date" },
+    { key: "deployed_by", label: "Deployed By" },
+    { key: "return_date", label: "Returned Date" },
+    { key: "repaired_date", label: "Repaired Date" },
+    { key: "repaired_by", label: "Repaired By" },
+    { key: "bos_date", label: "BOS Date" },
+    { key: "bos_by", label: "BOS By" },
+    { key: "supplier_name", label: "Supplier Name" },
+    { key: "device_cost", label: "Device Cost" },
+    { key: "status_description", label: "Status" },
+    { key: "parish_name", label: "Parish" },
+    { key: "location_name", label: "Location" },
+    { key: "ltype_name", label: "Location Type" },
+    { key: "division_name", label: "Division" },
+    { key: "branch_name", label: "Branch" },
+    { key: "client_name", label: "Client" },
+    { key: "added_by", label: "Added By" },
+    { key: "last_updated_date", label: "Last Updated Date" },
+    { key: "last_updated_by", label: "Last Updated By" },
+    { key: "workbench_name", label: "Workbench" },
+    { key: "verification", label: "Verification" },
+    { key: "verified_by", label: "Verified By" },
+    { key: "pending_delete", label: "Pending Delete" },
+    { key: "pending_delete_by", label: "Pending Delete By" },
+];
 
 // STATE VARIABLES ////////////////////////////////////////////////////////
 const filteredResultsSection = ref(null);
@@ -452,7 +562,7 @@ const categoryCounts = computed(() => {
 });
 
 const currentPage = ref(1)
-const itemsPerPage = 10
+const itemsPerPage = 7
 
 // Get the posts for the current page
 const paginatedItems = computed(() => {
@@ -700,9 +810,196 @@ async function applyFilters() {
         console.error("Error filtering devices:", error);
     }
 }
+
+
+// CREATE EXPORT FILES //////////////////////////////////////////////////////
+function exportCSV() {
+    console.log("Beginnign of exportCSV")
+
+    // Check if there are devices to export
+    if (filteredDevices.value.length === 0) {
+        alert("No devices available to export.");
+        return;
+    }
+
+    // Get column headings
+    const headers = exportColumns.map(column => column.label);
+
+    // Get device data
+    const rows = filteredDevices.value.map(device => {
+
+        return exportColumns.map(column => {
+
+            const value = device[column.key] ?? "";
+
+            // Escape double quotes for CSV formatting
+            return `"${String(value).replace(/"/g, '""')}"`;
+
+        });
+
+    });
+
+    // Combine headings and rows
+    const csvContent = [
+        headers.map(header => `"${header.replace(/"/g, '""')}"`).join(","),
+        ...rows.map(row => row.join(","))
+    ].join("\r\n");
+
+    // Create CSV file
+    const blob = new Blob(
+        ["\uFEFF", csvContent],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    // Generate download URL
+    const url = URL.createObjectURL(blob);
+
+    // Create temporary download link
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "filtered_devices.csv";
+
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    console.log("End of exportCSV")
+
+}
+
+function exportPDF() {
+
+    // Check if devices exist
+    if (filteredDevices.value.length === 0) {
+        alert("No devices available to export.");
+        return;
+    }
+
+    // Create PDF document
+    const doc = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: "a3"
+    });
+
+    // Report title
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+
+    doc.text("Filtered Devices Report", 14, 20);
+
+    // Report date
+    const currentDate = new Date().toLocaleDateString();
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+
+    doc.text(`Generated: ${currentDate}`, 14, 28);
+
+    // Total devices
+    doc.text(
+        `Total Devices: ${filteredDevices.value.length}`,
+        14,
+        35
+    );
+
+    // Table headings
+    const headers = exportColumns.map(column => column.label);
+
+    // Table data
+    const rows = filteredDevices.value.map(device => {
+
+        return exportColumns.map(column => {
+
+            return String(device[column.key] ?? "");
+
+        });
+
+    });
+
+    // Generate table
+    autoTable(doc, {
+
+        head: [headers],
+
+        body: rows,
+
+        startY: 42,
+
+        theme: "grid",
+
+        styles: {
+            fontSize: 6,
+            cellPadding: 2,
+            overflow: "linebreak"
+        },
+
+        headStyles: {
+            fillColor: [37, 99, 235],
+            textColor: 255,
+            fontStyle: "bold"
+        },
+
+        alternateRowStyles: {
+            fillColor: [245, 245, 245]
+        },
+
+        margin: {
+            left: 10,
+            right: 10
+        },
+
+        showHead: "everyPage",
+
+        horizontalPageBreak: true,
+
+        didDrawPage: function (data) {
+
+            const pageHeight = doc.internal.pageSize.height;
+
+            doc.setFontSize(9);
+
+            doc.text(
+                `Page ${data.pageNumber}`,
+                data.settings.margin.left,
+                pageHeight - 10
+            );
+
+        }
+
+    });
+
+    // Download PDF
+    doc.save("filtered_devices.pdf");
+
+}
+
+
+
+function openDeviceDetails(serial_number, category) {
+    router.push({
+        name: 'ViewItem',
+        params: {
+            serial_number: serial_number
+        },
+        query: {
+            category: category
+        }
+    });
+}
 </script>
 
 <style scoped>
+.pagination-overall-container {
+    display: flex;
+    justify-content: center;
+}
+
 /* Styling spacing between checkbox groups */
 .grid {
   margin-top: 0.5rem;

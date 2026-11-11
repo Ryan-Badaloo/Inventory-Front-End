@@ -11,7 +11,7 @@
             <SelectItemButton @click="selectMonitorFunction()" buttonText="Edit Monitor Function" icon="person" :isActive="deviceActive==='monitor_function'"/>
             <SelectItemButton @click="selectBagType()" buttonText="Edit Bag Type" icon="person" :isActive="deviceActive==='bag_type'"/>
             <SelectItemButton @click="selectBagFabricType()" buttonText="Edit Bag Fabric Type" icon="person" :isActive="deviceActive==='bag_fabric_type'"/>
-            <SelectItemButton @click="selectDivision()" buttonText="Edit Divisions" icon="person" :isActive="deviceActive==='division'"/>
+            <!-- <SelectItemButton @click="selectDivision()" buttonText="Edit Divisions" icon="person" :isActive="deviceActive==='division'"/> -->
         </div>
     </SectionTemplate>
 </template>

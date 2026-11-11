@@ -1,13 +1,13 @@
 <template>
-<div class="flex">
+  <div class="flex">
     <SideBar />
     <div class="w-full">
-    <SearchItem />
+      <UpdateItem />
     </div>
-</div>
+  </div>
 </template>
 
 <script setup>
 import SideBar from '@/components/SideBar.vue';
-import SearchItem from '@/components/SearchItem.vue';
+import UpdateItem from '@/components/UpdateDevice/SearchItem.vue';
 </script>

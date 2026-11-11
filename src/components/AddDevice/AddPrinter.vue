@@ -18,9 +18,10 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
+                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="printer_delivery_date" fieldName="Delivery Date: "/>
+                <TextLabel labelFor="printer_delivery_date" fieldName="Delivery Date: " :required="true"/>
             </div>
 
             <!-- deployment date -->
@@ -159,6 +160,16 @@
 
         <CommentField id="printer_comment" labelFor="printer_comment" fieldName="Comment: " v-model="printer_comment"/>
         
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="printer_workbench" :class="[option_field_class]" class="bg-white" v-model.number="printer_workbench">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="workbench in workbenches" :key="workbench.workbench_id" :value=workbench.workbench_id class="text-black">{{ workbench.workbench_name }}</option>
+                </select>
+                <TextLabel labelFor="printer_workbench" fieldName="Workbench" />
+            </div>
+        </div>
+
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
 
@@ -178,7 +189,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getConnectionTypes, getPrinterFeatures, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getWorkbenches, getStatuses, getConnectionTypes, getPrinterFeatures, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -187,6 +198,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([]);
 const connection_types = ref([]);
@@ -198,6 +210,8 @@ const locationTypes = ref([]);
 
 onMounted(async () => {
   try {
+    workbenches.value = await getWorkbenches();
+
     statuses.value = await getStatuses();
 
     connection_types.value = await getConnectionTypes();
@@ -234,19 +248,20 @@ const fieldNames = [
   "returned_date",
   "features", "ip_address", "connection_type",
   "parish", "location_type", "location",
-  "division", "branch", "comment"
+  "division", "branch", "comment", "workbench"
 ];
 
 const printerRefs = {};
 
 fieldNames.forEach(name => {
-  const key = `printer_${name}`;
-  const saved = localStorage.getItem(`${key}_val`);
-  printerRefs[key] = ref(saved || "");
+    const key = `printer_${name}`;
+    const saved = localStorage.getItem(`${key}_val`);
+    /* printerRefs[key] = ref(saved || null); */
+    printerRefs[key] = ref(saved === null || saved === "" || saved === "null" ? null : saved);
 
-  watch(printerRefs[key], val => {
-    localStorage.setItem(`${key}_val`, val);
-  });
+    watch(printerRefs[key], val => {
+        localStorage.setItem(`${key}_val`, val == null ? "" : String(val));
+    });
 });
 
 const {
@@ -270,6 +285,7 @@ const {
     printer_division,
     printer_branch,
     printer_comment,
+    printer_workbench,
 } = printerRefs;
 
 async function parishChange(parishValue) {
@@ -369,6 +385,7 @@ async function addPrinter() {
         division_id: printer_division.value,
         branch_id: printer_branch.value,
         comment: printer_comment.value,
+        workbench_id: printer_workbench.value,
     }
 
     if (printer.delivery_date > printer.deployment_date) {

@@ -8,7 +8,7 @@
 
             <TextField id="desktop_serial_number" labelFor="desktop_serial_number" fieldName="Serial Number: " v-model="desktop_serial_number" :required="true"/>
 
-            <TextField id="desktop_inventory_number" labelFor="desktop_inventory_number" fieldName="Inventory Number: " v-model="desktop_inventory_number" />
+            <TextField id="desktop_inventory_number" labelFor="desktop_inventory_number" fieldName="Inventory Number: " v-model="desktop_inventory_number"/>
 
             <!-- delivery date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -18,9 +18,10 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
+                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="desktop_delivery_date" fieldName="Delivery Date: "/>
+                <TextLabel labelFor="desktop_delivery_date" fieldName="Delivery Date: " :required="true"/>
             </div>
 
             <!-- deployment date -->
@@ -225,6 +226,16 @@
 
         <CommentField id="desktop_comment" labelFor="desktop_comment" fieldName="Comment: " v-model="desktop_comment"/>
         
+        <div class="mt-8 grid grid-cols-2 gap-x-6">
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="desktop_workbench" :class="[option_field_class]" class="bg-white" v-model.number="desktop_workbench">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="workbench in workbenches" :key="workbench.workbench_id" :value=workbench.workbench_id class="text-black">{{ workbench.workbench_name }}</option>
+                </select>
+                <TextLabel labelFor="desktop_workbench" fieldName="Workbench" />
+            </div>
+        </div>
+
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
 
@@ -244,7 +255,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getStatuses, getCPUTypes, getFormFactors, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getDivisionBranches, getBranches } from '@/utils/descriptions';
+import { getWorkbenches, getStatuses, getCPUTypes, getFormFactors, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getDivisionBranches, getBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -253,6 +264,7 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
 const cpu_types = ref([])
@@ -265,6 +277,8 @@ const selectedFiles = ref([]);
 
 onMounted(async () => {
   try {
+    workbenches.value = await getWorkbenches();
+
     statuses.value = await getStatuses();
 
     cpu_types.value = await getCPUTypes();
@@ -303,7 +317,7 @@ const fieldNames = [
   "operating_system", "cpu_type", "processor_speed",
   "processor_type", "computer_name", "ms_office_version",
   "antivirus", "form_factor", "parish", "location_type",
-  "location", "division", "branch", "comment"
+  "location", "division", "branch", "comment", "workbench"
 ];
 
 const desktopRefs = {};
@@ -353,6 +367,7 @@ const {
   desktop_division,
   desktop_branch,
   desktop_comment,
+  desktop_workbench,
 } = desktopRefs;
 
 async function parishChange(parishValue) {
@@ -463,6 +478,7 @@ async function addDesktop() {
         division_id: desktop_division.value,
         branch_id: desktop_branch.value,
         comment: desktop_comment.value,
+        workbench_id: desktop_workbench.value,
     }
     console.log("read values into desktop")
     console.log(desktop.parish_id)
