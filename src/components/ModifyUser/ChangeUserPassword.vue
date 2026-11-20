@@ -1,5 +1,5 @@
 <template>
-<SectionTemplate templateName="Remove User">
+<SectionTemplate templateName="Change User Password">
     <form @submit.prevent="change_password" class="space-y-4">
         <div class="flex flex-col md:flex-row md:gap-20">
                <div class="left-side w-full md:w-1/2 space-y-2">
@@ -50,13 +50,16 @@ async function change_password() {
          console.log("Password Succesfully Changed")
          alert("Password Changed Succefully", response.data);
       } catch (error) {
-         console.error(
-         "Error creating item:",
-         error.response?.data || error.message
-         );
+         console.error("Error creating item:",error.response?.data || error.message);
          console.error("Detail:", error.response?.data?.detail);
 
-         alert("Failed to change password. Check console.");
+         if (error.response?.status === 404) {
+            console.log("User not found");
+            alert("User not found")
+        } else {
+            console.log("An error occurred");
+            alert("An error occurred")
+        }
       }
    } else {
       alert("Passwords are not the same")

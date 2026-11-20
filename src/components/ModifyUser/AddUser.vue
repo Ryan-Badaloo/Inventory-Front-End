@@ -2,18 +2,18 @@
 <SectionTemplate templateName="Add User">
     <form @submit.prevent="addUser()" class="space-y-4">
         <div class="mt-8 grid grid-cols-2 gap-x-6">
-            <TextField id="first_name" labelFor="first_name" name="first_name" fieldName="Enter First Name: " v-model="first_name"/>
+            <TextField id="first_name" labelFor="first_name" name="first_name" fieldName="Enter First Name: " v-model="first_name" required/>
 
-            <TextField id="last_name" labelFor="last_name" name="last_name" fieldName="Enter Last Name: " v-model="last_name"/>
+            <TextField id="last_name" labelFor="last_name" name="last_name" fieldName="Enter Last Name: " v-model="last_name" required/>
 
-            <TextField id="username" labelFor="username" name="username" fieldName="Enter Email: " v-model="username"/>
+            <TextField id="username" labelFor="username" name="username" fieldName="Enter Email: " v-model="username" required/>
 
-            <PasswordField id="password" labelFor="password" name="password" fieldName="Enter Password: " v-model="password"/>
+            <PasswordField id="password" labelFor="password" name="password" fieldName="Enter Password: " v-model="password" required/>
 
-            <TextField id="office" labelFor="office" name="office" fieldName="Enter Office: "/>
+            <TextField id="office" labelFor="office" name="office" fieldName="Enter Office: " required/>
 
             <div class="flex flex-row-reverse mb-6 group">
-                <select id="role_id" :class="[option_field_class]" class="bg-white" v-model.number="role_id">
+                <select id="role_id" :class="[option_field_class]" class="bg-white" v-model.number="role_id" required>
                     <option :value=null selected class="text-blue-100"></option>
                     <option v-for="role in roles" :key="role.role_id" :value=role.role_id class="text-black">{{ role.role_name }}</option>
 

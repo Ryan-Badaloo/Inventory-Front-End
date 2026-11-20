@@ -3,11 +3,11 @@
     <form @submit.prevent="addClient()" class="space-y-4">
         <div class="mt-8 grid grid-cols-2 gap-x-6 text-teal-800">
         
-            <TextField id="client_first_name" labelFor="client_first_name" name="client_first_name" fieldName="Enter First Name: " v-model="client_first_name"/>
+            <TextField id="client_first_name" labelFor="client_first_name" name="client_first_name" fieldName="Enter First Name: " v-model="client_first_name" required/>
 
-            <TextField id="client_last_name" labelFor="client_last_name" name="client_last_name" fieldName="Enter Last Name: " v-model="client_last_name"/>
+            <TextField id="client_last_name" labelFor="client_last_name" name="client_last_name" fieldName="Enter Last Name: " v-model="client_last_name" required/>
 
-            <TextField id="client_username" labelFor="client_username" name="client_username" fieldName="Enter Email: " v-model="client_username"/>
+            <TextField id="client_username" labelFor="client_username" name="client_username" fieldName="Enter Email: " v-model="client_username" required/>
 
             <TextField id="client_phone_number" labelFor="client_phone_number" name="client_phone_number" fieldName="Enter Phone Number: " v-model="client_phone_number"/>
 
@@ -238,14 +238,10 @@ async function addClient() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            if (response.data == "User Found") {
-                alert("User Already Exists", response.data)
-                console.log(response.data)
-            }
-            else {
-                console.log(response.data)
-                alert("Client successfully added.", response.data);
-            }
+            
+            console.log(response.data)
+            alert(response.data.message);
+            
         } catch (error) {
             console.error(
             "Error creating item:",

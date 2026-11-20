@@ -18,10 +18,9 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
-                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="conference_room_av_equipment_delivery_date" fieldName="Deployment Date: " :required="true"/>
+                <TextLabel labelFor="conference_room_av_equipment_delivery_date" fieldName="Deployment Date: "/>
             </div>
 
             <!-- Deployment Date -->
@@ -149,7 +148,7 @@
 
         <CommentField id="conference_room_av_equipment_comment" labelFor="conference_room_av_equipment_comment" fieldName="Comment: " v-model="conference_room_av_equipment_comment"/>
         
-        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        <!-- <div class="mt-8 grid grid-cols-2 gap-x-6">
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="conference_room_av_equipment_workbench" :class="[option_field_class]" class="bg-white" v-model.number="conference_room_av_equipment_workbench">
                     <option :value=null selected class="text-blue-100"></option>
@@ -157,7 +156,7 @@
                 </select>
                 <TextLabel labelFor="conference_room_av_equipment_workbench" fieldName="Workbench" />
             </div>
-        </div>
+        </div> -->
 
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

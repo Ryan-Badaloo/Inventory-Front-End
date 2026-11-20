@@ -2,11 +2,7 @@
 <SectionTemplate templateName="Remove User">
     <form @submit.prevent="confirmDeleteUser()" class="space-y-4">
         <div class="mt-8 grid grid-cols-2 gap-x-6">
-                <TextField id="first_name" labelFor="first_name" name="first_name" fieldName="Enter First Name: " v-model="first_name"/>
-
-                <TextField id="last_name" labelFor="last_name" name="last_name" fieldName="Enter Last Name: " v-model="last_name"/>
-
-                <TextField id="username" labelFor="username" name="username" fieldName="Enter Email: " v-model="username"/>
+                <TextField id="username" labelFor="username" name="username" fieldName="Enter Email: " v-model="username" required/>
         </div>
         
         <div class="flex justify-center">
@@ -28,18 +24,14 @@ import SectionTemplate from '@/components/SectionTemplate.vue';
 
 import { option_field_class } from '@/utils/descriptions';
 
-const first_name = ref();
-const last_name = ref();
 const username = ref();
 
 async function confirmDeleteUser() {
     try {
 
         const token = localStorage.getItem('token');
-        await axios.delete(`${useBaseURLComposable()}delete-user/`, {
+        const response = await axios.delete(`${useBaseURLComposable()}delete-user/`, {
             params: {
-                first_name: first_name.value,
-                last_name: last_name.value,
                 email: username.value,
             },
             headers: {
@@ -47,15 +39,19 @@ async function confirmDeleteUser() {
             }
         });
         console.log("User Has Been Deleted")
-        alert("User Has Been Deleted")
+        alert(response.data.message)
+
     } catch (error) {
-        console.error(
-        "Error creating item:",
-        error.response?.data || error.message
-        );
+        console.error("Error creating item:", error.response?.data || error.message);
         console.error("Detail:", error.response?.data?.detail);
 
-        alert("Failed to find User. Check console.");
+        if (error.response?.status === 404) {
+            console.log("User not found");
+            alert("User not found")
+        } else {
+            console.log("An error occurred");
+            alert("An error occurred")
+        }
     }
 }
 

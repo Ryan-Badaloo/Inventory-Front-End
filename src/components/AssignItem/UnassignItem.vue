@@ -544,6 +544,10 @@ onClickOutside(unassignRef, () => {
   }
 })
 
+onMounted(() => {
+    get_items();
+});
+
 
 
 

@@ -18,10 +18,9 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
-                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="server_delivery_date" fieldName="Delivery Date: " :required="true"/>
+                <TextLabel labelFor="server_delivery_date" fieldName="Delivery Date: "/>
             </div>
 
             <!-- deployment date -->
@@ -233,7 +232,7 @@
 
         <CommentField id="server_comment" labelFor="server_comment" fieldName="Comment: " v-model="server_comment"/>
         
-        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        <!-- <div class="mt-8 grid grid-cols-2 gap-x-6">
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="server_workbench" :class="[option_field_class]" class="bg-white" v-model.number="server_workbench">
                     <option :value=null selected class="text-blue-100"></option>
@@ -241,7 +240,7 @@
                 </select>
                 <TextLabel labelFor="server_workbench" fieldName="Workbench" />
             </div>
-        </div>
+        </div> -->
 
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>

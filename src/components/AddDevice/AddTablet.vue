@@ -18,10 +18,9 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
-                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="tablet_delivery_date" fieldName="Delivery Date: " :required="true"/>
+                <TextLabel labelFor="tablet_delivery_date" fieldName="Delivery Date: "/>
             </div>
 
             <!-- deployment date -->
@@ -178,7 +177,7 @@
         
         <CommentField id="tablet_comment" labelFor="tablet_comment" fieldName="Comment: " v-model="tablet_comment"/>
 
-        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        <!-- <div class="mt-8 grid grid-cols-2 gap-x-6">
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="tablet_workbench" :class="[option_field_class]" class="bg-white" v-model.number="tablet_workbench">
                     <option :value=null selected class="text-blue-100"></option>
@@ -186,7 +185,7 @@
                 </select>
                 <TextLabel labelFor="tablet_workbench" fieldName="Workbench" />
             </div>
-        </div>
+        </div> -->
 
         <button @click="illuminateBag()" type="button" class="content-center w-1/8 cursor-pointer py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-md shadow focus:outline-none focus:ring-2">
             Add Case/Bag

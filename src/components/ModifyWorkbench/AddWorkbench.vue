@@ -1,8 +1,8 @@
 <template>
-<SectionTemplate templateName="Add User">
+<SectionTemplate templateName="Add Workbench">
     <form @submit.prevent="createWorkbench()" class="space-y-4">
         <div class="mt-8 grid grid-cols-2 gap-x-6">
-            <TextField id="workbench_name" labelFor="workbench_name" name="workbench_name" fieldName="Enter Workbench Name: " v-model="workbench_name"/>
+            <TextField id="workbench_name" labelFor="workbench_name" name="workbench_name" fieldName="Enter Workbench Name: " v-model="workbench_name" required/>
             
             <div class="flex mb-6 group"> 
                 <TextLabel fieldName="Choose Your Client:" />

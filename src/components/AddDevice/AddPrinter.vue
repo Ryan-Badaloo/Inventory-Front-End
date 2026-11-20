@@ -18,10 +18,9 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
-                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="printer_delivery_date" fieldName="Delivery Date: " :required="true"/>
+                <TextLabel labelFor="printer_delivery_date" fieldName="Delivery Date: "/>
             </div>
 
             <!-- deployment date -->
@@ -87,6 +86,10 @@
                     :class="[date_field_class]">
                 </VueDatePicker>
                 <TextLabel labelFor="printer_returned_date" fieldName="Returned Date: "/>
+            </div>
+
+            <div class="grid grid-cols-2 gap-x-6">
+                <TextField id="printer_mac_address" labelFor="printer_mac_address" fieldName="Mac Address: " v-model="printer_mac_address"/>
             </div>
         </div>
 
@@ -160,7 +163,7 @@
 
         <CommentField id="printer_comment" labelFor="printer_comment" fieldName="Comment: " v-model="printer_comment"/>
         
-        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        <!-- <div class="mt-8 grid grid-cols-2 gap-x-6">
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="printer_workbench" :class="[option_field_class]" class="bg-white" v-model.number="printer_workbench">
                     <option :value=null selected class="text-blue-100"></option>
@@ -168,7 +171,7 @@
                 </select>
                 <TextLabel labelFor="printer_workbench" fieldName="Workbench" />
             </div>
-        </div>
+        </div> -->
 
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
@@ -245,7 +248,7 @@ onMounted(async () => {
 const fieldNames = [
   "brand", "model", "serial_number", "inventory_number",
   "delivery_date", "deployment_date", "bos_date", "supplier_name", "device_cost", "status",
-  "returned_date",
+  "returned_date", "mac_address",
   "features", "ip_address", "connection_type",
   "parish", "location_type", "location",
   "division", "branch", "comment", "workbench"
@@ -276,6 +279,7 @@ const {
     printer_device_cost,
     printer_status,
     printer_returned_date,
+    printer_mac_address,
     printer_features,
     printer_ip_address,
     printer_connection_type,
@@ -375,6 +379,7 @@ async function addPrinter() {
         status_id: printer_status.value,
 
         return_date: formatDate(printer_returned_date.value),
+        mac_address: printer_mac_address.value,
         ip_address: printer_ip_address.value,
         feature_id: printer_features.value,
         connection_type_id: printer_connection_type.value,

@@ -18,10 +18,9 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
-                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="laptop_delivery_date" fieldName="Delivery Date: " :required="true"/>
+                <TextLabel labelFor="laptop_delivery_date" fieldName="Delivery Date: "/>
             </div>
 
             <!-- deployment date -->
@@ -208,7 +207,7 @@
 
         <CommentField id="laptop_comment" labelFor="laptop_comment" fieldName="Comment: " v-model="laptop_comment"/>
 
-        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        <!-- <div class="mt-8 grid grid-cols-2 gap-x-6">
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="laptop_workbench" :class="[option_field_class]" class="bg-white" v-model.number="laptop_workbench">
                     <option :value=null selected class="text-blue-100"></option>
@@ -216,7 +215,7 @@
                 </select>
                 <TextLabel labelFor="laptop_workbench" fieldName="Workbench" />
             </div>
-        </div>
+        </div> -->
         
         <div class="flex justify-around">
             <AddItemButton buttonName="Add Item"/>
@@ -494,22 +493,16 @@ async function addLaptop() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            if (response.data == "Serial Found") {
-                alert("Serial Number Already Exists", response.data)
-                console.log(response.data)
-            } else if (response.data == "Inventory Found") {
-                alert("Inventory Number Already Exists", response.data)
-                console.log(response.data)
-            } else {
-                alert("Item has been added successfully")
-                console.log("Item has been added successfully")
-            }
+            
+            alert(response.data.message)
+            console.log("Item has been added successfully")
+            
         } catch (error) {
-            console.error("Error creating item:", error.response?.data || error.message);
-            console.error("Detail:", error.response?.data?.detail);
-            console.error("Error:", error);
+            const errorData = error.response?.data?.detail;
 
-            alert("Failed to add item. Check console.");
+            console.error("Technical Error:", errorData?.error);
+
+            alert(errorData?.message || "Failed to add laptop");
         }
     }
 

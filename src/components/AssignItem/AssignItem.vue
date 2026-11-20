@@ -312,6 +312,7 @@
 
         </SectionTemplate>
 
+        <!-- THIS DISPLAY THE CART ITEMS ////////////////////////////////////////////////////////////////////////-->
         <SectionTemplate v-if="cart.length > 0" template-name="Cart">
             <div class="mb-6 relative overflow-x-auto">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500">
@@ -385,8 +386,11 @@
 
                 </datalist>
             </div>
-
-            <AddItemButton button-name="Assign To Client" @click="assign_items()"/>
+            
+            <div class="flex justify-between">
+                <AddItemButton button-name="Assign To Client" @click="assign_items()"/>
+                <AddItemButton button-name="Assign As Workbench" @click="assign_as_workbench()"/>
+            </div>
 
         </SectionTemplate>
     </div>
@@ -543,10 +547,12 @@ async function assign_items() {
     console.log(cart.value)
     const token = localStorage.getItem('token');
 
-    for (const device of cart.value) {
-        console.log(device.serial_number)
+    
 
-        try {
+    try {
+        for (const device of [...cart.value]) {
+            console.log(device.serial_number)
+
             if (!assignClient.value?.client_id) {
                 alert("Please select a client")
                 return
@@ -561,22 +567,35 @@ async function assign_items() {
                     }
                 });
                 console.log(response.data)
+
+                // Remove device from cart immediately
+                cart.value = cart.value.filter(
+                    item => item.devices_id !== device.devices_id
+                );
+
+                // Remove device from available items immediately
+                items.value = items.value.filter(
+                    item => item.devices_id !== device.devices_id
+                );
                 
             }
-            
-            
-        } catch (error) {
-            console.error(
-            "Error creating item:",
-            error.response?.data || error.message
-            );
-            console.error("Detail:", error.response?.data?.detail);
-
-            alert("Failed to assign Device. Check console.");
         }
+
+        alert("Assignment was successful")
+
+    } catch (error) {
+        console.error(
+        "Error creating item:",
+        error.response?.data || error.message
+        );
+        console.error("Detail:", error.response?.data?.detail);
+
+        alert("Failed to assign Device. Check console.");
     }
-    alert("Assignment was successful");
+    
+    
 }
+
 
 onMounted(() => {
     get_items();

@@ -19,10 +19,9 @@
                     :input-class-name="'p-0 bg-green-500'"
                     placeholder="Enter in the format MM/DD/YYY"
                     text-input 
-                    required
                     :class="[date_field_class]">
                 </VueDatePicker>
-                <TextLabel labelFor="mouse_delivery_date" fieldName="Delivery Date: " :required="true"/>
+                <TextLabel labelFor="mouse_delivery_date" fieldName="Delivery Date: "/>
             </div>
 
             <!-- deployment date -->
@@ -117,7 +116,7 @@
 
         <CommentField id="mouse_comment" labelFor="mouse_comment" fieldName="Comment: " v-model="mouse_comment"/>
         
-        <div class="mt-8 grid grid-cols-2 gap-x-6">
+        <!-- <div class="mt-8 grid grid-cols-2 gap-x-6">
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="mouse_workbench" :class="[option_field_class]" class="bg-white" v-model.number="mouse_workbench">
                     <option :value=null selected class="text-blue-100"></option>
@@ -125,7 +124,7 @@
                 </select>
                 <TextLabel labelFor="mouse_workbench" fieldName="Workbench" />
             </div>
-        </div>
+        </div> -->
 
 
         <div class="flex justify-around">
