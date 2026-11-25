@@ -76,9 +76,21 @@
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="tablet_hard_disk_capacity" labelFor="tablet_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="tablet_hard_disk_capacity" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="tablet_hard_disk_capacity" :class="[option_field_class]" class="bg-white" v-model="tablet_hard_disk_capacity" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="hard_disk_capacity in hard_disk_capacities" :key="hard_disk_capacity.hard_disk_capacity_id" :value=hard_disk_capacity.hard_disk_capacity_id class="text-black">{{ hard_disk_capacity.hard_disk_capacity_description }}</option>
+                </select>
+                <TextLabel labelFor="tablet_hard_disk_capacity" fieldName="Hard Disk Capacity:" :required="true"/>
+            </div>
 
-            <TextField id="tablet_memory_capacity" labelFor="tablet_memory_capacity" fieldName="Memory Capacity: " v-model="tablet_memory_capacity" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="tablet_memory_capacity" :class="[option_field_class]" class="bg-white" v-model="tablet_memory_capacity" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="memory_capacity in memory_capacities" :key="memory_capacity.memory_capacity_id" :value=memory_capacity.memory_capacity_id class="text-black">{{ memory_capacity.memory_capacity_description }}</option>
+                </select>
+                <TextLabel labelFor="tablet_memory_capacity" fieldName="Memory Capacity:" :required="true"/>
+            </div>
 
             <!-- warranty start date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -124,7 +136,13 @@
         <div class="grid grid-cols-2 gap-x-6">
             <TextField id="tablet_device_size" labelFor="tablet_device_size" fieldName="Device Size: " v-model="tablet_device_size" :required="true"/>
 
-            <TextField id="tablet_operating_system" labelFor="tablet_operating_system" fieldName="Operating System: " v-model="tablet_operating_system" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="tablet_operating_system" :class="[option_field_class]" class="bg-white" v-model="tablet_operating_system" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="operating_system in operating_systems" :key="operating_system.operating_system_id" :value=operating_system.operating_system_id class="text-black">{{ operating_system.operating_system_description }}</option>
+                </select>
+                <TextLabel labelFor="tablet_operating_system" fieldName="Operating System:" :required="true"/>
+            </div>
 
             <TextField id="tablet_imei_number" labelFor="tablet_imei_number" fieldName="IMEI Number: " v-model="tablet_imei_number" :required="true"/>
 
@@ -348,7 +366,7 @@ import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
 
-import { getWorkbenches, getBagTypes, getBagFabricTypes, getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getHardDiskCapacities, getMemoryCapacities, getOperatingSystems, getWorkbenches, getBagTypes, getBagFabricTypes, getStatuses, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -357,6 +375,9 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const hard_disk_capacities = ref([])
+const memory_capacities = ref([])
+const operating_systems = ref([])
 const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
@@ -374,6 +395,12 @@ onMounted(async () => {
     workbenches.value = await getWorkbenches();
 
     statuses.value = await getStatuses();
+
+    operating_systems.value = await getOperatingSystems();
+
+    memory_capacities.value = await getMemoryCapacities();
+
+    hard_disk_capacities.value = await getHardDiskCapacities();
 
     divisions.value = await getDivisions();
 
@@ -566,13 +593,13 @@ async function addTablet() {
         supplier_name: tablet_supplier_name.value,
         device_cost: Number(tablet_device_cost.value),
         status_id: tablet_status.value,
-        hard_disk_capacity: tablet_hard_disk_capacity.value,
-        memory_capacity: tablet_memory_capacity.value,
+        hard_disk_capacity_id: tablet_hard_disk_capacity.value,
+        memory_capacity_id: tablet_memory_capacity.value,
         warranty_start_date: formatDate(tablet_warranty_start_date.value),
         warranty_end_date: formatDate(tablet_warranty_end_date.value),
         return_date: formatDate(tablet_returned_date.value),
         device_size: tablet_device_size.value,
-        operating_system: tablet_operating_system.value,
+        operating_system_id: tablet_operating_system.value,
         imei_number: tablet_imei_number.value,
         version: tablet_version.value,
 
@@ -654,25 +681,16 @@ async function addTablet() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            if (response.data == "Serial Found") {
-                alert("Serial Number Already Exists", response.data)
-                console.log(response.data)
-            } else if (response.data == "Inventory Found") {
-                alert("Inventory Number Already Exists", response.data)
-                console.log(response.data)
-            } else {
-                alert("Item has been added successfully")
-                console.log("Item has been added successfully")
-            }
-        } catch (error) {
-            console.error(
-            "Error creating item:",
-            error.response?.data || error.message
-            );
-            console.error("Detail:", error.response?.data?.detail);
-            console.error("Error:", error);
+            
+            alert(response.data.message)
+            console.log("Item has been added successfully")
 
-            alert("Failed to add item. Check console.");
+        } catch (error) {
+            const errorData = error.response?.data?.detail;
+
+            console.error("Technical Error:", errorData?.error);
+
+            alert(errorData?.message || "Failed to add Tablet");
         }
     }
 }

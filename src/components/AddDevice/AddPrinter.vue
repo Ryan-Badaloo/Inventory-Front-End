@@ -89,7 +89,7 @@
             </div>
 
             <div class="grid grid-cols-2 gap-x-6">
-                <TextField id="printer_mac_address" labelFor="printer_mac_address" fieldName="Mac Address: " v-model="printer_mac_address"/>
+                
             </div>
         </div>
 
@@ -114,6 +114,8 @@
                 </select>
                 <TextLabel labelFor="printer_connection_type" fieldName="Connection Type: " :required="true"/>
             </div>
+
+            <TextField id="printer_mac_address" labelFor="printer_mac_address" fieldName="Mac Address: " v-model="printer_mac_address"/>
 
         </div>
 
@@ -407,25 +409,16 @@ async function addPrinter() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            if (response.data == "Serial Found") {
-                alert("Serial Number Already Exists", response.data)
-                console.log(response.data)
-            } else if (response.data == "Inventory Found") {
-                alert("Inventory Number Already Exists", response.data)
-                console.log(response.data)
-            } else {
-                alert("Item has been added successfully")
-                console.log("Item has been added successfully")
-            }
-        } catch (error) {
-            console.error(
-            "Error creating item:",
-            error.response?.data || error.message
-            );
-            console.error("Detail:", error.response?.data?.detail);
-            console.error("Error:", error);
 
-            alert("Failed to add item. Check console.");
+            alert(response.data.message)
+            console.log("Item has been added successfully")
+
+        } catch (error) {
+            const errorData = error.response?.data?.detail;
+
+            console.error("Technical Error:", errorData?.error);
+
+            alert(errorData?.message || "Failed to add Printer");
         }
     }
 }

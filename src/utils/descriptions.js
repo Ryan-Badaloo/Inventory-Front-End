@@ -248,6 +248,85 @@ export async function getBagFabricTypes() {
     }
 }
 
+
+
+export async function getOperatingSystems() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-operating-systems/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error retrieving operating systems:', error.response?.data || error.message);
+        alert("Failed to retrieve operating systems. Check console.");
+    }
+}
+
+export async function getMemoryCapacities() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-memory-capacities/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error retrieving memories:', error.response?.data || error.message);
+        alert("Failed to retrieve memories. Check console.");
+    }
+}
+
+export async function getHardDiskCapacities() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-hard-disk-capacities/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error retrieving hard disk capacities:', error.response?.data || error.message);
+        alert("Failed to retrieve hard disk capacities. Check console.");
+    }
+}
+
+export async function getMicrosoftOfficeVersions() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-microsoft-office-versions/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error retrieving MS Office versions:', error.response?.data || error.message);
+        alert("Failed to retrieve MS Office versions. Check console.");
+    }
+}
+
+export async function getProcessorTypes() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${useBaseURLComposable()}get-processor-types/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error retrieving processor types:', error.response?.data || error.message);
+        alert("Failed to retrieve processor types. Check console.");
+    }
+}
+
+
+
 export async function getDivisions() {
     try {
         const token = localStorage.getItem('token');

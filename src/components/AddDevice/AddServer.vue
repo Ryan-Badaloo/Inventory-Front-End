@@ -76,9 +76,21 @@
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="server_hard_disk_capacity" labelFor="server_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="server_hard_disk_capacity" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="server_hard_disk_capacity" :class="[option_field_class]" class="bg-white" v-model="server_hard_disk_capacity" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="hard_disk_capacity in hard_disk_capacities" :key="hard_disk_capacity.hard_disk_capacity_id" :value=hard_disk_capacity.hard_disk_capacity_id class="text-black">{{ hard_disk_capacity.hard_disk_capacity_description }}</option>
+                </select>
+                <TextLabel labelFor="server_hard_disk_capacity" fieldName="Hard Disk Capacity:" :required="true"/>
+            </div>
 
-            <TextField id="server_memory_capacity" labelFor="server_memory_capacity" fieldName="Memory Capacity: " v-model="server_memory_capacity" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="server_memory_capacity" :class="[option_field_class]" class="bg-white" v-model="server_memory_capacity" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="memory_capacity in memory_capacities" :key="memory_capacity.memory_capacity_id" :value=memory_capacity.memory_capacity_id class="text-black">{{ memory_capacity.memory_capacity_description }}</option>
+                </select>
+                <TextLabel labelFor="server_memory_capacity" fieldName="Memory Capacity:" :required="true"/>
+            </div>
 
             <!-- warranty start date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -139,8 +151,13 @@
 
             <TextField id="server_memory_type" labelFor="server_memory_type" fieldName="Memory Type: " v-model="server_memory_type"/>
 
-
-            <TextField id="server_operating_system" labelFor="server_operating_system" fieldName="Operating System: " v-model="server_operating_system" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="server_operating_system" :class="[option_field_class]" class="bg-white" v-model="server_operating_system" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="operating_system in operating_systems" :key="operating_system.operating_system_id" :value=operating_system.operating_system_id class="text-black">{{ operating_system.operating_system_description }}</option>
+                </select>
+                <TextLabel labelFor="server_operating_system" fieldName="Operating System:" :required="true"/>
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="server_cpu_type" :class="[option_field_class]" class="bg-white" v-model="server_cpu_type" :required="true">
@@ -152,11 +169,23 @@
 
             <TextField id="server_processor_speed" labelFor="server_processor_speed" fieldName="Processor Speed: " v-model="server_processor_speed"/>
 
-            <TextField id="server_processor_type" labelFor="server_processor_type" fieldName="Processor Type: " v-model="server_processor_type" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="server_processor_type" :class="[option_field_class]" class="bg-white" v-model="server_processor_type" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="processor_type in processor_types" :key="processor_type.processor_type_id" :value=processor_type.processor_type_id class="text-black">{{ processor_type.processor_type_description }}</option>
+                </select>
+                <TextLabel labelFor="server_processor_type" fieldName="Processor Type:" :required="true"/>
+            </div>
 
             <TextField id="server_computer_name" labelFor="server_computer_name" fieldName="Computer Name: " v-model="server_computer_name"/>
 
-            <TextField id="server_ms_office_version" labelFor="server_ms_office_version" fieldName="MS Office Version: " v-model="server_ms_office_version"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="server_microsoft_office_version" :class="[option_field_class]" class="bg-white" v-model="server_microsoft_office_version" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="microsoft_office_version in microsoft_office_versions" :key="microsoft_office_version.microsoft_office_version_id" :value=microsoft_office_version.microsoft_office_version_id class="text-black">{{ microsoft_office_version.microsoft_office_version_description }}</option>
+                </select>
+                <TextLabel labelFor="server_microsoft_office_version" fieldName="MS Office Version:" :required="true"/>
+            </div>
 
             <TextField id="server_antivirus" labelFor="server_antivirus" fieldName="Antivirus: " v-model="server_antivirus"/>
 
@@ -261,7 +290,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getWorkbenches, getStatuses, getCPUTypes, getFormFactors, getRaidTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
+import { getProcessorTypes, getMicrosoftOfficeVersions, getHardDiskCapacities, getMemoryCapacities, getOperatingSystems, getWorkbenches, getStatuses, getCPUTypes, getFormFactors, getRaidTypes, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getBranches, getDivisionBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -270,6 +299,11 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const processor_types = ref([])
+const microsoft_office_versions = ref([])
+const hard_disk_capacities = ref([])
+const memory_capacities = ref([])
+const operating_systems = ref([])
 const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
@@ -292,6 +326,16 @@ onMounted(async () => {
     form_factors.value = await getFormFactors();
 
     raid_types.value = await getRaidTypes();
+
+    operating_systems.value = await getOperatingSystems();
+
+    memory_capacities.value = await getMemoryCapacities();
+
+    hard_disk_capacities.value = await getHardDiskCapacities();
+
+    microsoft_office_versions.value = await getMicrosoftOfficeVersions();
+
+    processor_types.value = await getProcessorTypes();
 
     divisions.value = await getDivisions();
     branches.value = await getBranches();
@@ -322,7 +366,7 @@ const fieldNames = [
   "hard_disk_capacity", "memory_capacity", "warranty_start_date",
   "warranty_end_date", "returned_date", "mac_address", "manufactured_date", "memory_type",
   "operating_system", "cpu_type", "processor_speed",
-  "processor_type", "computer_name", "ms_office_version",
+  "processor_type", "computer_name", "microsoft_office_version",
   "antivirus", "form_factor", "raid_type", "number_hard_drive", "number_power_supply", "parish", "location_type",
   "location", "division", "branch", "comment", "workbench"
 ];
@@ -364,7 +408,7 @@ const {
     server_processor_speed,
     server_processor_type,
     server_computer_name,
-    server_ms_office_version,
+    server_microsoft_office_version,
     server_antivirus,
     server_form_factor,
     server_raid_type,
@@ -464,20 +508,20 @@ async function addServer() {
         supplier_name: server_supplier_name.value,
         device_cost: Number(server_device_cost.value),
         status_id: server_status.value,
-        hard_disk_capacity: server_hard_disk_capacity.value,
-        memory_capacity: server_memory_capacity.value,
+        hard_disk_capacity_id: server_hard_disk_capacity.value,
+        memory_capacity_id: server_memory_capacity.value,
         warranty_start_date: formatDate(server_warranty_start_date.value),
         warranty_end_date: formatDate(server_warranty_end_date.value),
         return_date: formatDate(server_returned_date.value),
         mac_address: server_mac_address.value,
         manufactured_date: formatDate(server_manufactured_date.value),
         memory_type: server_memory_type.value,
-        operating_system: server_operating_system.value,
+        operating_system_id: server_operating_system.value,
         cpu_type_id: server_cpu_type.value,
         processor_speed: server_processor_speed.value,
-        processor_type: server_processor_type.value,
+        processor_type_id: server_processor_type.value,
         computer_name: server_computer_name.value,
-        microsoft_office_version: server_ms_office_version.value,
+        microsoft_office_version_id: server_microsoft_office_version.value,
         antivirus: server_antivirus.value,
         form_factor_id: server_form_factor.value,
         raid_type_id: server_raid_type.value,
@@ -518,25 +562,16 @@ async function addServer() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            if (response.data == "Serial Found") {
-                alert("Serial Number Already Exists", response.data)
-                console.log(response.data)
-            } else if (response.data == "Inventory Found") {
-                alert("Inventory Number Already Exists", response.data)
-                console.log(response.data)
-            } else {
-                alert("Item has been added successfully")
-                console.log("Item has been added successfully")
-            }
-        } catch (error) {
-            console.error(
-            "Error creating item:",
-            error.response?.data || error.message
-            );
-            console.error("Detail:", error.response?.data?.detail);
-            console.error("Error:", error);
 
-            alert("Failed to add item. Check console.");
+            alert(response.data.message)
+            console.log("Item has been added successfully")
+
+        } catch (error) {
+            const errorData = error.response?.data?.detail;
+
+            console.error("Technical Error:", errorData?.error);
+
+            alert(errorData?.message || "Failed to add Server");
         }
     }
     

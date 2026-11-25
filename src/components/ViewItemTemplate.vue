@@ -118,7 +118,7 @@
             <div v-if="deviceCategory === 'Laptop' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
                 <div class="flex">
                     <h1 class="show_detail_head">CPU Type:</h1>
-                    <h1 class="show_detail_body">{{ deviceData.cpu_type_id }}</h1>
+                    <h1 class="show_detail_body">{{ deviceData.cpu_type }}</h1>
                 </div>
                 <div class="flex">
                     <h1 class="show_detail_head">Hard Disk Capacity:</h1>
@@ -257,7 +257,7 @@
             <div v-if="deviceCategory === 'Server' && deviceData" class="pt-2 grid grid-cols-2 gap-x-6 gap-y-2">
                 <div class="flex">
                     <h1 class="show_detail_head">CPU Type:</h1>
-                    <h1 class="show_detail_body">{{ deviceData.cpu_type_id }}</h1>
+                    <h1 class="show_detail_body">{{ deviceData.cpu_type }}</h1>
                 </div>
                 <div class="flex">
                     <h1 class="show_detail_head">Hard Disk Capacity:</h1>

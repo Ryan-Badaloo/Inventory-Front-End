@@ -11,7 +11,11 @@
             <SelectItemButton @click="selectMonitorFunction()" buttonText="Edit Monitor Function" icon="person" :isActive="deviceActive==='monitor_function'"/>
             <SelectItemButton @click="selectBagType()" buttonText="Edit Bag Type" icon="person" :isActive="deviceActive==='bag_type'"/>
             <SelectItemButton @click="selectBagFabricType()" buttonText="Edit Bag Fabric Type" icon="person" :isActive="deviceActive==='bag_fabric_type'"/>
-            <!-- <SelectItemButton @click="selectDivision()" buttonText="Edit Divisions" icon="person" :isActive="deviceActive==='division'"/> -->
+            <SelectItemButton @click="selectOperatingSystem()" buttonText="Edit Operating System" icon="person" :isActive="deviceActive==='operating_system'"/>
+            <SelectItemButton @click="selectMemoryCapacity()" buttonText="Edit Memory Capacity" icon="person" :isActive="deviceActive==='memory_capacity'"/>
+            <SelectItemButton @click="selectHardDiskCapacity()" buttonText="Edit Hard Disk Capacity" icon="person" :isActive="deviceActive==='hard_disk_capacity'"/>
+            <SelectItemButton @click="selectMicrosoftOfficeVersion()" buttonText="Edit Microsoft Office Version" icon="person" :isActive="deviceActive==='microsoft_office_version'"/>
+            <SelectItemButton @click="selectProcessorType()" buttonText="Edit Processor Type" icon="person" :isActive="deviceActive==='processor_type'"/>
         </div>
     </SectionTemplate>
 </template>
@@ -112,8 +116,36 @@ async function selectBagFabricType() {
     await nextTick();
     scrollToSecondForm();
 }
-async function selectDivision() {
-    deviceActive.value = 'division';
+async function selectOperatingSystem() {
+    deviceActive.value = 'operating_system';
+    emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
+}
+async function selectMemoryCapacity() {
+    deviceActive.value = 'memory_capacity';
+    emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
+}
+async function selectHardDiskCapacity() {
+    deviceActive.value = 'hard_disk_capacity';
+    emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
+}
+async function selectMicrosoftOfficeVersion() {
+    deviceActive.value = 'microsoft_office_version';
+    emit('deviceSelected', deviceActive.value);
+
+    await nextTick();
+    scrollToSecondForm();
+}
+async function selectProcessorType() {
+    deviceActive.value = 'processor_type';
     emit('deviceSelected', deviceActive.value);
 
     await nextTick();

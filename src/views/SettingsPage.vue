@@ -26,11 +26,13 @@ import RaidType from '@/components/Settings/RaidType.vue';
 import MeetingRoom from '@/components/Settings/MeetingRoom.vue';
 import MonitorType from '@/components/Settings/MonitorType.vue';
 import MonitorFunction from '@/components/Settings/MonitorFunction.vue';
-import Division from '@/components/Settings/Division.vue';
 import BagType from '@/components/Settings/BagType.vue';
 import BagFabricType from '@/components/Settings/BagFabricType.vue';
-
-
+import OperatingSystem from '@/components/Settings/OperatingSystem.vue';
+import MemoryCapacity from '@/components/Settings/MemoryCapacity.vue';
+import HardDiskCapacity from '@/components/Settings/HardDiskCapacity.vue';
+import MicrosoftOfficeVersion from '@/components/Settings/MicrosoftOfficeVersion.vue';
+import ProcessorType from '@/components/Settings/ProcessorType.vue';
 
 import Settings from '@/components/Settings/Settings.vue';
 
@@ -60,8 +62,16 @@ const getComponent = (device) => {
             return BagType;
         case 'bag_fabric_type':
             return BagFabricType;
-        case 'division':
-            return Division;
+        case 'operating_system':
+            return OperatingSystem;
+        case 'memory_capacity':
+            return MemoryCapacity;
+        case 'hard_disk_capacity':
+            return HardDiskCapacity;
+        case 'microsoft_office_version':
+            return MicrosoftOfficeVersion;
+        case 'processor_type':
+            return ProcessorType;
         default:
             return null;
     }

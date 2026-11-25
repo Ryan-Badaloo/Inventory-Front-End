@@ -82,9 +82,21 @@
         </div>
 
         <div class="grid grid-cols-2 gap-x-6">
-            <TextField id="desktop_hard_disk_capacity" labelFor="desktop_hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="desktop_hard_disk_capacity" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="desktop_hard_disk_capacity" :class="[option_field_class]" class="bg-white" v-model="desktop_hard_disk_capacity" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="hard_disk_capacity in hard_disk_capacities" :key="hard_disk_capacity.hard_disk_capacity_id" :value=hard_disk_capacity.hard_disk_capacity_id class="text-black">{{ hard_disk_capacity.hard_disk_capacity_description }}</option>
+                </select>
+                <TextLabel labelFor="desktop_hard_disk_capacity" fieldName="Hard Disk Capacity:" :required="true"/>
+            </div>
 
-            <TextField id="desktop_memory_capacity" labelFor="desktop_memory_capacity" fieldName="Memory Capacity: " v-model="desktop_memory_capacity" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="desktop_memory_capacity" :class="[option_field_class]" class="bg-white" v-model="desktop_memory_capacity" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="memory_capacity in memory_capacities" :key="memory_capacity.memory_capacity_id" :value=memory_capacity.memory_capacity_id class="text-black">{{ memory_capacity.memory_capacity_description }}</option>
+                </select>
+                <TextLabel labelFor="desktop_memory_capacity" fieldName="Memory Capacity:" :required="true"/>
+            </div>
 
             <!-- warranty start date -->
             <div class="flex flex-row-reverse mb-6 group">
@@ -145,8 +157,13 @@
 
             <TextField id="desktop_memory_type" labelFor="desktop_memory_type" fieldName="Memory Type: " v-model="desktop_memory_type"/>
 
-
-            <TextField id="desktop_operating_system" labelFor="desktop_operating_system" fieldName="Operating System: " v-model="desktop_operating_system" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="desktop_operating_system" :class="[option_field_class]" class="bg-white" v-model="desktop_operating_system" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="operating_system in operating_systems" :key="operating_system.operating_system_id" :value=operating_system.operating_system_id class="text-black">{{ operating_system.operating_system_description }}</option>
+                </select>
+                <TextLabel labelFor="desktop_operating_system" fieldName="Operating System:" :required="true"/>
+            </div>
 
             <div class="flex flex-row-reverse mb-6 group">
                 <select id="desktop_cpu_type" :class="[option_field_class]" class="bg-white" v-model="desktop_cpu_type" :required="true">
@@ -158,11 +175,23 @@
 
             <TextField id="desktop_processor_speed" labelFor="desktop_processor_speed" fieldName="Processor Speed: " v-model="desktop_processor_speed"/>
 
-            <TextField id="desktop_processor_type" labelFor="desktop_processor_type" fieldName="Processor Type: " v-model="desktop_processor_type" :required="true"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="desktop_processor_type" :class="[option_field_class]" class="bg-white" v-model="desktop_processor_type" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="processor_type in processor_types" :key="processor_type.processor_type_id" :value=processor_type.processor_type_id class="text-black">{{ processor_type.processor_type_description }}</option>
+                </select>
+                <TextLabel labelFor="desktop_processor_type" fieldName="Processor Type:" :required="true"/>
+            </div>
 
             <TextField id="desktop_computer_name" labelFor="desktop_computer_name" fieldName="Computer Name: " v-model="desktop_computer_name"/>
 
-            <TextField id="desktop_ms_office_version" labelFor="desktop_ms_office_version" fieldName="MS Office Version: " v-model="desktop_ms_office_version"/>
+            <div class="flex flex-row-reverse mb-6 group">
+                <select id="desktop_microsoft_office_version" :class="[option_field_class]" class="bg-white" v-model="desktop_microsoft_office_version" :required="true">
+                    <option :value=null selected class="text-blue-100"></option>
+                    <option v-for="microsoft_office_version in microsoft_office_versions" :key="microsoft_office_version.microsoft_office_version_id" :value=microsoft_office_version.microsoft_office_version_id class="text-black">{{ microsoft_office_version.microsoft_office_version_description }}</option>
+                </select>
+                <TextLabel labelFor="desktop_microsoft_office_version" fieldName="MS Office Version:" :required="true"/>
+            </div>
 
             <TextField id="desktop_antivirus" labelFor="desktop_antivirus" fieldName="Antivirus: " v-model="desktop_antivirus"/>
 
@@ -254,7 +283,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import axios from 'axios';
 import {useBaseURLComposable} from '@/composable/useUrlcomposable'
 
-import { getWorkbenches, getStatuses, getCPUTypes, getFormFactors, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getDivisionBranches, getBranches } from '@/utils/descriptions';
+import { getProcessorTypes, getMicrosoftOfficeVersions, getHardDiskCapacities, getMemoryCapacities, getOperatingSystems, getWorkbenches, getStatuses, getCPUTypes, getFormFactors, getDivisions, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getDivisionBranches, getBranches } from '@/utils/descriptions';
 
 import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
@@ -263,6 +292,11 @@ import AddTemplate from '../SectionTemplate.vue';
 import LocationOptions from './LocationOptions.vue';
 import CommentField from '../Fields/CommentField.vue';
 
+const processor_types = ref([])
+const microsoft_office_versions = ref([])
+const hard_disk_capacities = ref([])
+const memory_capacities = ref([])
+const operating_systems = ref([])
 const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
@@ -283,6 +317,16 @@ onMounted(async () => {
     cpu_types.value = await getCPUTypes();
 
     form_factors.value = await getFormFactors();
+
+    operating_systems.value = await getOperatingSystems();
+
+    memory_capacities.value = await getMemoryCapacities();
+
+    hard_disk_capacities.value = await getHardDiskCapacities();
+
+    microsoft_office_versions.value = await getMicrosoftOfficeVersions();
+
+    processor_types.value = await getProcessorTypes();
 
     divisions.value = await getDivisions();
 
@@ -314,7 +358,7 @@ const fieldNames = [
   "hard_disk_capacity", "memory_capacity", "warranty_start_date",
   "warranty_end_date", "returned_date", "mac_address", "manufactured_date", "memory_type",
   "operating_system", "cpu_type", "processor_speed",
-  "processor_type", "computer_name", "ms_office_version",
+  "processor_type", "computer_name", "microsoft_office_version",
   "antivirus", "form_factor", "parish", "location_type",
   "location", "division", "branch", "comment", "workbench"
 ];
@@ -356,7 +400,7 @@ const {
   desktop_processor_speed,
   desktop_processor_type,
   desktop_computer_name,
-  desktop_ms_office_version,
+  desktop_microsoft_office_version,
   desktop_antivirus,
   desktop_form_factor,
   
@@ -454,20 +498,20 @@ async function addDesktop() {
         supplier_name: desktop_supplier_name.value,
         device_cost: desktop_device_cost.value,
         status_id: desktop_status.value,
-        hard_disk_capacity: desktop_hard_disk_capacity.value,
-        memory_capacity: desktop_memory_capacity.value,
+        hard_disk_capacity_id: desktop_hard_disk_capacity.value,
+        memory_capacity_id: desktop_memory_capacity.value,
         warranty_start_date: formatDate(desktop_warranty_start_date.value),
         warranty_end_date: formatDate(desktop_warranty_end_date.value),
         return_date: formatDate(desktop_returned_date.value),
         mac_address: desktop_mac_address.value,
         manufactured_date: formatDate(desktop_manufactured_date.value),
         memory_type: desktop_memory_type.value,
-        operating_system: desktop_operating_system.value,
+        operating_system_id: desktop_operating_system.value,
         cpu_type_id: desktop_cpu_type.value,
         processor_speed: desktop_processor_speed.value,
-        processor_type: desktop_processor_type.value,
+        processor_type_id: desktop_processor_type.value,
         computer_name: desktop_computer_name.value,
-        microsoft_office_version: desktop_ms_office_version.value,
+        microsoft_office_version_id: desktop_microsoft_office_version.value,
         antivirus: desktop_antivirus.value,
         form_factor_id: desktop_form_factor.value,
         
@@ -520,7 +564,7 @@ async function addDesktop() {
 
             console.error("Technical Error:", errorData?.error);
 
-            alert(errorData?.message || "Failed to add laptop");
+            alert(errorData?.message || "Failed to add Desktop");
         }
     }
     

@@ -95,9 +95,21 @@
             <!-- THIS IS THE LAPTOP SECTION -->
             <div v-if="category == 'Laptop'">
                 <div class="grid grid-cols-2 gap-x-6">
-                    <TextField id="hard_disk_capacity" labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="hard_disk_capacity"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="hard_disk_capacity" :class="[option_field_class]" class="bg-white" v-model="hard_disk_capacity" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="hard_disk_capacity in hard_disk_capacities" :key="hard_disk_capacity.hard_disk_capacity_id" :value=hard_disk_capacity.hard_disk_capacity_id class="text-black">{{ hard_disk_capacity.hard_disk_capacity_description }}</option>
+                        </select>
+                        <TextLabel labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity:" :required="true"/>
+                    </div>
 
-                    <TextField id="memory_capacity" labelFor="memory_capacity" fieldName="Memory Capacity: " v-model="memory_capacity"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="memory_capacity" :class="[option_field_class]" class="bg-white" v-model="memory_capacity" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="memory_capacity in memory_capacities" :key="memory_capacity.memory_capacity_id" :value=memory_capacity.memory_capacity_id class="text-black">{{ memory_capacity.memory_capacity_description }}</option>
+                        </select>
+                        <TextLabel labelFor="memory_capacity" fieldName="Memory Capacity:" :required="true"/>
+                    </div>
 
                     <!-- warranty start date -->
                     <div class="flex flex-row-reverse mb-6 group">
@@ -158,8 +170,13 @@
 
                     <TextField id="memory_type" labelFor="memory_type" fieldName="Memory Type: " v-model="memory_type"/>
 
-
-                    <TextField id="operating_system" labelFor="operating_system" fieldName="Operating System: " v-model="operating_system"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="operating_system" :class="[option_field_class]" class="bg-white" v-model="operating_system" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="operating_system in operating_systems" :key="operating_system.operating_system_id" :value=operating_system.operating_system_id class="text-black">{{ operating_system.operating_system_description }}</option>
+                        </select>
+                        <TextLabel labelFor="operating_system" fieldName="Operating System:" :required="true"/>
+                    </div>
 
                     <div class="flex flex-row-reverse mb-6 group">
                         <select id="cpu_type" :class="[option_field_class]" class="bg-white" v-model="cpu_type">
@@ -171,11 +188,23 @@
 
                     <TextField id="processor_speed" labelFor="processor_speed" fieldName="Processor Speed: " v-model="processor_speed"/>
 
-                    <TextField id="processor_type" labelFor="processor_type" fieldName="Processor Type: " v-model="processor_type"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="processor_type" :class="[option_field_class]" class="bg-white" v-model="processor_type" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="processor_type in processor_types" :key="processor_type.processor_type_id" :value=processor_type.processor_type_id class="text-black">{{ processor_type.processor_type_description }}</option>
+                        </select>
+                        <TextLabel labelFor="processor_type" fieldName="Processor Type:" :required="true"/>
+                    </div>
 
                     <TextField id="computer_name" labelFor="computer_name" fieldName="Computer Name: " v-model="computer_name"/>
 
-                    <TextField id="ms_office_version" labelFor="ms_office_version" fieldName="MS Office Version: " v-model="ms_office_version"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="microsoft_office_version" :class="[option_field_class]" class="bg-white" v-model="microsoft_office_version" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="microsoft_office_version in microsoft_office_versions" :key="microsoft_office_version.microsoft_office_version_id" :value=microsoft_office_version.microsoft_office_version_id class="text-black">{{ microsoft_office_version.microsoft_office_version_description }}</option>
+                        </select>
+                        <TextLabel labelFor="microsoft_office_version" fieldName="MS Office Version:" :required="true"/>
+                    </div>
 
                     <TextField id="antivirus" labelFor="antivirus" fieldName="Antivirus: " v-model="antivirus"/>
 
@@ -185,9 +214,21 @@
             <!-- THIS IS THE DESKTOP SECTION -->
             <div v-if="category == 'Desktop'">
                 <div class="grid grid-cols-2 gap-x-6">
-                    <TextField id="hard_disk_capacity" labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="hard_disk_capacity"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="hard_disk_capacity" :class="[option_field_class]" class="bg-white" v-model="hard_disk_capacity" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="hard_disk_capacity in hard_disk_capacities" :key="hard_disk_capacity.hard_disk_capacity_id" :value=hard_disk_capacity.hard_disk_capacity_id class="text-black">{{ hard_disk_capacity.hard_disk_capacity_description }}</option>
+                        </select>
+                        <TextLabel labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity:" :required="true"/>
+                    </div>
 
-                    <TextField id="memory_capacity" labelFor="memory_capacity" fieldName="Memory Capacity: " v-model="memory_capacity"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="memory_capacity" :class="[option_field_class]" class="bg-white" v-model="memory_capacity" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="memory_capacity in memory_capacities" :key="memory_capacity.memory_capacity_id" :value=memory_capacity.memory_capacity_id class="text-black">{{ memory_capacity.memory_capacity_description }}</option>
+                        </select>
+                        <TextLabel labelFor="memory_capacity" fieldName="Memory Capacity:" :required="true"/>
+                    </div>
 
                     <!-- warranty start date -->
                     <div class="flex flex-row-reverse mb-6 group">
@@ -249,7 +290,13 @@
                     <TextField id="memory_type" labelFor="memory_type" fieldName="Memory Type: " v-model="memory_type"/>
 
 
-                    <TextField id="operating_system" labelFor="operating_system" fieldName="Operating System: " v-model="operating_system"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="operating_system" :class="[option_field_class]" class="bg-white" v-model="operating_system" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="operating_system in operating_systems" :key="operating_system.operating_system_id" :value=operating_system.operating_system_id class="text-black">{{ operating_system.operating_system_description }}</option>
+                        </select>
+                        <TextLabel labelFor="operating_system" fieldName="Operating System:" :required="true"/>
+                    </div>
 
                     <div class="flex flex-row-reverse mb-6 group">
                         <select id="cpu_type" :class="[option_field_class]" class="bg-white" v-model="cpu_type">
@@ -261,11 +308,23 @@
 
                     <TextField id="processor_speed" labelFor="processor_speed" fieldName="Processor Speed: " v-model="processor_speed"/>
 
-                    <TextField id="processor_type" labelFor="processor_type" fieldName="Processor Type: " v-model="processor_type"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="processor_type" :class="[option_field_class]" class="bg-white" v-model="processor_type" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="processor_type in processor_types" :key="processor_type.processor_type_id" :value=processor_type.processor_type_id class="text-black">{{ processor_type.processor_type_description }}</option>
+                        </select>
+                        <TextLabel labelFor="processor_type" fieldName="Processor Type:" :required="true"/>
+                    </div>
 
                     <TextField id="computer_name" labelFor="computer_name" fieldName="Computer Name: " v-model="computer_name"/>
 
-                    <TextField id="ms_office_version" labelFor="ms_office_version" fieldName="MS Office Version: " v-model="ms_office_version"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="microsoft_office_version" :class="[option_field_class]" class="bg-white" v-model="microsoft_office_version" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="microsoft_office_version in microsoft_office_versions" :key="microsoft_office_version.microsoft_office_version_id" :value=microsoft_office_version.microsoft_office_version_id class="text-black">{{ microsoft_office_version.microsoft_office_version_description }}</option>
+                        </select>
+                        <TextLabel labelFor="microsoft_office_version" fieldName="MS Office Version:" :required="true"/>
+                    </div>
 
                     <TextField id="antivirus" labelFor="antivirus" fieldName="Antivirus: " v-model="antivirus"/>
 
@@ -286,9 +345,21 @@
             <!-- THIS IS THE SERVER SECTION -->
             <div v-if="category == 'Server'">
                 <div class="grid grid-cols-2 gap-x-6">
-                    <TextField id="hard_disk_capacity" labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="hard_disk_capacity"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="hard_disk_capacity" :class="[option_field_class]" class="bg-white" v-model="hard_disk_capacity" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="hard_disk_capacity in hard_disk_capacities" :key="hard_disk_capacity.hard_disk_capacity_id" :value=hard_disk_capacity.hard_disk_capacity_id class="text-black">{{ hard_disk_capacity.hard_disk_capacity_description }}</option>
+                        </select>
+                        <TextLabel labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity:" :required="true"/>
+                    </div>
 
-                    <TextField id="memory_capacity" labelFor="memory_capacity" fieldName="Memory Capacity: " v-model="memory_capacity"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="memory_capacity" :class="[option_field_class]" class="bg-white" v-model="memory_capacity" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="memory_capacity in memory_capacities" :key="memory_capacity.memory_capacity_id" :value=memory_capacity.memory_capacity_id class="text-black">{{ memory_capacity.memory_capacity_description }}</option>
+                        </select>
+                        <TextLabel labelFor="memory_capacity" fieldName="Memory Capacity:" :required="true"/>
+                    </div>
 
                     <!-- warranty start date -->
                     <div class="flex flex-row-reverse mb-6 group">
@@ -350,7 +421,13 @@
                     <TextField id="memory_type" labelFor="memory_type" fieldName="Memory Type: " v-model="memory_type"/>
 
 
-                    <TextField id="operating_system" labelFor="operating_system" fieldName="Operating System: " v-model="operating_system"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="operating_system" :class="[option_field_class]" class="bg-white" v-model="operating_system" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="operating_system in operating_systems" :key="operating_system.operating_system_id" :value=operating_system.operating_system_id class="text-black">{{ operating_system.operating_system_description }}</option>
+                        </select>
+                        <TextLabel labelFor="operating_system" fieldName="Operating System:" :required="true"/>
+                    </div>
 
                     <div class="flex flex-row-reverse mb-6 group">
                         <select id="cpu_type" :class="[option_field_class]" class="bg-white" v-model="cpu_type">
@@ -362,11 +439,23 @@
 
                     <TextField id="processor_speed" labelFor="processor_speed" fieldName="Processor Speed: " v-model="processor_speed"/>
 
-                    <TextField id="processor_type" labelFor="processor_type" fieldName="Processor Type: " v-model="processor_type"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="processor_type" :class="[option_field_class]" class="bg-white" v-model="processor_type" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="processor_type in processor_types" :key="processor_type.processor_type_id" :value=processor_type.processor_type_id class="text-black">{{ processor_type.processor_type_description }}</option>
+                        </select>
+                        <TextLabel labelFor="processor_type" fieldName="Processor Type:" :required="true"/>
+                    </div>
 
                     <TextField id="computer_name" labelFor="computer_name" fieldName="Computer Name: " v-model="computer_name"/>
 
-                    <TextField id="ms_office_version" labelFor="ms_office_version" fieldName="MS Office Version: " v-model="ms_office_version"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="microsoft_office_version" :class="[option_field_class]" class="bg-white" v-model="microsoft_office_version" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="microsoft_office_version in microsoft_office_versions" :key="microsoft_office_version.microsoft_office_version_id" :value=microsoft_office_version.microsoft_office_version_id class="text-black">{{ microsoft_office_version.microsoft_office_version_description }}</option>
+                        </select>
+                        <TextLabel labelFor="microsoft_office_version" fieldName="MS Office Version:" :required="true"/>
+                    </div>
 
                     <TextField id="antivirus" labelFor="antivirus" fieldName="Antivirus: " v-model="antivirus"/>
 
@@ -401,9 +490,21 @@
             <!-- THIS IS THE TABLET SECTION -->
             <div v-if="category == 'Tablet'">
                 <div class="grid grid-cols-2 gap-x-6">
-                    <TextField id="hard_disk_capacity" labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity: " v-model="hard_disk_capacity"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="hard_disk_capacity" :class="[option_field_class]" class="bg-white" v-model="hard_disk_capacity" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="hard_disk_capacity in hard_disk_capacities" :key="hard_disk_capacity.hard_disk_capacity_id" :value=hard_disk_capacity.hard_disk_capacity_id class="text-black">{{ hard_disk_capacity.hard_disk_capacity_description }}</option>
+                        </select>
+                        <TextLabel labelFor="hard_disk_capacity" fieldName="Hard Disk Capacity:" :required="true"/>
+                    </div>
 
-                    <TextField id="memory_capacity" labelFor="memory_capacity" fieldName="Memory Capacity: " v-model="memory_capacity"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="memory_capacity" :class="[option_field_class]" class="bg-white" v-model="memory_capacity" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="memory_capacity in memory_capacities" :key="memory_capacity.memory_capacity_id" :value=memory_capacity.memory_capacity_id class="text-black">{{ memory_capacity.memory_capacity_description }}</option>
+                        </select>
+                        <TextLabel labelFor="memory_capacity" fieldName="Memory Capacity:" :required="true"/>
+                    </div>  
 
                     <!-- warranty start date -->
                     <div class="flex flex-row-reverse mb-6 group">
@@ -449,7 +550,13 @@
                 <div class="grid grid-cols-2 gap-x-6">
                     <TextField id="device_size" labelFor="device_size" fieldName="Device Size: " v-model="device_size"/>
 
-                    <TextField id="operating_system" labelFor="operating_system" fieldName="Operating System: " v-model="operating_system"/>
+                    <div class="flex flex-row-reverse mb-6 group">
+                        <select id="operating_system" :class="[option_field_class]" class="bg-white" v-model="operating_system" :required="true">
+                            <option :value=null selected class="text-blue-100"></option>
+                            <option v-for="operating_system in operating_systems" :key="operating_system.operating_system_id" :value=operating_system.operating_system_id class="text-black">{{ operating_system.operating_system_description }}</option>
+                        </select>
+                        <TextLabel labelFor="operating_system" fieldName="Operating System:" :required="true"/>
+                    </div>
 
                     <TextField id="imei_number" labelFor="imei_number" fieldName="IMEI Number: " v-model="imei_number"/>
 
@@ -1014,7 +1121,7 @@ import AddItemButton from '@/components/AddItemButton.vue';
 import TextField from '@/components/Fields/TextField.vue';
 import TextLabel from '@/components/Fields/TextLabel.vue';
 
-import { getBagFabricTypes, getBagTypes, getWorkbenches, getStatuses, getDivisions, getRaidTypes, getMonitorFunctions, getMonitorTypes, getMeetingRooms, getCRAVEquipmentTypes, getSpeakerTypes, getCPUTypes, getFormFactors, getConnectionTypes, getPrinterFeatures, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getDivisionBranches, getBranches } from '@/utils/descriptions';
+import { getProcessorTypes, getMicrosoftOfficeVersions, getHardDiskCapacities, getMemoryCapacities, getOperatingSystems, getBagFabricTypes, getBagTypes, getWorkbenches, getStatuses, getDivisions, getRaidTypes, getMonitorFunctions, getMonitorTypes, getMeetingRooms, getCRAVEquipmentTypes, getSpeakerTypes, getCPUTypes, getFormFactors, getConnectionTypes, getPrinterFeatures, option_field_class, date_field_class, getLocations, getParishes, getLocationTypes, getParishLocations, getParishDivisions, getLocationParishes, getLocationDivisions, getDivisionBranches, getBranches } from '@/utils/descriptions';
 
 
 const route = useRoute();
@@ -1027,6 +1134,12 @@ const errorMessage = ref(null);
 const serial_number = route.params.serial_number;
 const category = route.query.category;
 
+
+const processor_types = ref([])
+const microsoft_office_versions = ref([])
+const hard_disk_capacities = ref([])
+const memory_capacities = ref([])
+const operating_systems = ref([])
 const workbenches = ref([])
 const branches = ref([])
 const statuses = ref([])
@@ -1058,7 +1171,7 @@ const fieldNames = [
     "hard_disk_capacity", "memory_capacity", "warranty_start_date",
     "warranty_end_date", "returned_date", "mac_address", "manufactured_date", "memory_type",
     "operating_system", "cpu_type", "processor_speed",
-    "processor_type", "computer_name", "ms_office_version",
+    "processor_type", "computer_name", "microsoft_office_version",
     "antivirus", "form_factor", "raid_type", "number_hard_drive", "number_power_supply", "parish", "location_type",
     "device_size", "imei_number", "version",
     "connection_type",
@@ -1120,7 +1233,7 @@ const {
     processor_speed,
     processor_type,
     computer_name,
-    ms_office_version,
+    microsoft_office_version,
     antivirus,
     form_factor,
     raid_type,
@@ -1183,6 +1296,16 @@ const dropdownsLoaded = ref(false);
 
 onMounted(async () => {
   try {
+    operating_systems.value = await getOperatingSystems();
+
+    memory_capacities.value = await getMemoryCapacities();
+
+    hard_disk_capacities.value = await getHardDiskCapacities();
+
+    microsoft_office_versions.value = await getMicrosoftOfficeVersions();
+
+    processor_types.value = await getProcessorTypes();
+
     workbenches.value = await getWorkbenches();
 
     statuses.value = await getStatuses();
@@ -1371,6 +1494,31 @@ function populateFields(deviceData) {
     monitor_function.value = monitor_functions.value.find(
         item => item.monitor_function_description === deviceData.monitor_function
     )?.monitor_function_id ?? null;
+
+    // Operating System
+    operating_system.value = operating_systems.value.find(
+        item => item.operating_system_description === deviceData.operating_system
+    )?.operating_system_id ?? null;
+
+    // Memory Capacity
+    memory_capacity.value = memory_capacities.value.find(
+        item => item.memory_capacity_description === deviceData.memory_capacity
+    )?.memory_capacity_id ?? null;
+
+    // Hard Disk Capacity
+    hard_disk_capacity.value = hard_disk_capacities.value.find(
+        item => item.hard_disk_capacity_description === deviceData.hard_disk_capacity
+    )?.hard_disk_capacity_id ?? null;
+
+    // Hard Disk Capacity
+    microsoft_office_version.value = microsoft_office_versions.value.find(
+        item => item.microsoft_office_version_description === deviceData.microsoft_office_version
+    )?.microsoft_office_version_id ?? null;
+
+    // Processor Type
+    processor_type.value = processor_types.value.find(
+        item => item.processor_type_description === deviceData.processor_type
+    )?.processor_type_id ?? null;
 }
 
 
@@ -1467,20 +1615,20 @@ async function updateDevice() {
         workbench_id: workbench.value,
 
 
-        hard_disk_capacity: hard_disk_capacity.value,
-        memory_capacity: memory_capacity.value,
+        hard_disk_capacity_id: hard_disk_capacity.value,
+        memory_capacity_id: memory_capacity.value,
         warranty_start_date: formatDate(warranty_start_date.value),
         warranty_end_date: formatDate(warranty_end_date.value),
         return_date: formatDate(returned_date.value),
         mac_address: mac_address.value,
         manufactured_date: formatDate(manufactured_date.value),
         memory_type: memory_type.value,
-        operating_system: operating_system.value,
+        operating_system_id: operating_system.value,
         cpu_type_id: cpu_type.value,
         processor_speed: processor_speed.value,
-        processor_type: processor_type.value,
+        processor_type_id: processor_type.value,
         computer_name: computer_name.value,
-        ms_office_version: ms_office_version.value,
+        microsoft_office_version_id: microsoft_office_version.value,
         antivirus: antivirus.value,
         form_factor_id: form_factor.value,
         raid_type_id: raid_type.value,

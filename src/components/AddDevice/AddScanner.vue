@@ -364,25 +364,16 @@ async function createScanner() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            if (response.data == "Serial Found") {
-                alert("Serial Number Already Exists", response.data)
-                console.log(response.data)
-            } else if (response.data == "Inventory Found") {
-                alert("Inventory Number Already Exists", response.data)
-                console.log(response.data)
-            } else {
-                alert("Item has been added successfully")
-                console.log("Item has been added successfully")
-            }
-        } catch (error) {
-            console.error(
-            "Error creating item:",
-            error.response?.data || error.message
-            );
-            console.error("Detail:", error.response?.data?.detail);
-            console.error("Error:", error);
+            
+            alert(response.data.message)
+            console.log("Item has been added successfully")
 
-            alert("Failed to add item. Check console.");
+        } catch (error) {
+            const errorData = error.response?.data?.detail;
+
+            console.error("Technical Error:", errorData?.error);
+
+            alert(errorData?.message || "Failed to add Scanner");
         }
     }
 }
